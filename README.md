@@ -21,19 +21,16 @@ $$g_j\left(\mathbf{r},\mathbf{r'}\right):= \frac{e^{ik_j||\mathbf{r}-\mathbf{r}'
 ## Layer operators
 
 Single and double layer operators defined for smooth densities:
-$$\begin{align*}
-DL_{0j} \left(\psi\right)\left(\mathbf{r}\right)&:=	\int_{\Gamma_j}  \psi\left(\mathbf{r}'\right) \nabla g_0\left(\mathbf{r},\mathbf{r'}\right) \cdot \widehat{\mathbf{n}}_{0j} \ dS',&
-SL_{0j} \left(\psi\right)\left(\mathbf{r}\right)&:=	\int_{\Gamma_j}  {\psi\left(\mathbf{r}'\right) g_0\left(\mathbf{r},\mathbf{r'}\right) dS'},\\
-DL_j \left(\psi\right)\left(\mathbf{r}\right)&:=	\int_{\Gamma_j}  {\psi\left(\mathbf{r}'\right) \nabla g_j\left(\mathbf{r},\mathbf{r'}\right) \cdot \widehat{\mathbf{n}}_{j} \ dS'}, &
-SL_j \left(\psi\right)\left(\mathbf{r}\right)&:=	\int_{\Gamma_j}  {\psi\left(\mathbf{r}' \right) g_j\left(\mathbf{r},\mathbf{r'}\right) dS'},
-\end{align*}$$
+$$DL_{0j} \left(\psi\right)\left(\mathbf{r}\right):=\int_{\Gamma_j}  \psi\left(\mathbf{r}'\right) \nabla g_0\left(\mathbf{r},\mathbf{r'}\right) \cdot \widehat{\mathbf{n}}_{0j} \ dS',$$
+$$SL_{0j} \left(\psi\right)\left(\mathbf{r}\right):=\int_{\Gamma_j}  {\psi\left(\mathbf{r}'\right) g_0\left(\mathbf{r},\mathbf{r'}\right) dS'},$$
+$$DL_j \left(\psi\right)\left(\mathbf{r}\right):=\int_{\Gamma_j}  {\psi\left(\mathbf{r}'\right) \nabla g_j\left(\mathbf{r},\mathbf{r'}\right) \cdot \widehat{\mathbf{n}}_{j} \ dS'},$$
+$$SL_j \left(\psi\right)\left(\mathbf{r}\right):=\int_{\Gamma_j}  {\psi\left(\mathbf{r}' \right) g_j\left(\mathbf{r},\mathbf{r'}\right) dS'}$$
+
 with the gradient being taken with respect to $\mathbf{r}'$, $\widehat{\mathbf{n}}_j$ being the exterior normal vector of $\Omega_j$, and $\widehat{\mathbf{n}}_j = -\widehat{\mathbf{n}}_{0j}$.
 
 These operators are linear and continuous in the following Sobolev spaces:
-$$\begin{align*}
-DL_{0j}&: H^{\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{0j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}  \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right)  , \\
-DL_{j}&: H^{\frac{1}{2}}(\Gamma_j)\rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right).
-\end{align*}$$
+$$DL_{0j}&: H^{\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{0j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}  \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right)  , $$
+$$DL_{j}&: H^{\frac{1}{2}}(\Gamma_j)\rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right).$$
 
 ## Laplace
 
