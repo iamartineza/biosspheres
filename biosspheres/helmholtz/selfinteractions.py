@@ -321,6 +321,8 @@ def a_j_matrix(
                 [  W_{j,j} , K*_{j,j} ]
     with Helmholtz kernel evaluated and tested with spherical harmonics of
     order 0 if azimuthal = True, or all orders if azimuthal = False.
+    
+    Each block is a diagonal matrix.
 
     Parameters
     ----------
@@ -466,12 +468,12 @@ def a_j_linear_operator(
     k : float
         wave number.
     azimuthal : bool
-        Default True
+        Default True.
     
     Returns
     -------
     linear_operator : sparse.linalg.LinearOperator
-        a scipy linear operator
+        a scipy linear operator.
     
     See Also
     --------
