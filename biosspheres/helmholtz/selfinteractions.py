@@ -240,9 +240,13 @@ def a_0j_matrix(
         azimuthal: bool = True
 ) -> np.ndarray:
     """
-    Returns the matrix
-    A_{j,j}^0 = [ -K , V  ]
-                [W   , K* ]
+    Returns a numpy array that represents the following matrix boundary
+    integral operator
+    A_{j,j}^0 = [ -K_{j,j}^0 , V_{j,j}^0  ]
+                [  W_{j,j}^0 , K*_{j,j}^0 ]
+    with Helmholtz kernel evaluated and tested with spherical harmonics of
+    order 0 if azimuthal = True, or all orders if azimuthal = False.
+    
     Each block is a diagonal matrix.
 
     Parameters
@@ -311,10 +315,12 @@ def a_j_matrix(
         azimuthal: bool = True
 ) -> np.ndarray:
     """
-    Returns the matrix
-    A_{j,j} = [ -K , V  ]
-              [W   , K* ]
-    Each block is a diagonal matrix.
+    Returns a numpy array that represents the following matrix boundary
+    integral operator
+    A_{j,j}^0 = [ -K_{j,j} , V_{j,j}  ]
+                [  W_{j,j} , K*_{j,j} ]
+    with Helmholtz kernel evaluated and tested with spherical harmonics of
+    order 0 if azimuthal = True, or all orders if azimuthal = False.
 
     Parameters
     ----------
@@ -383,10 +389,7 @@ def a_0j_linear_operator(
         azimuthal: bool = True
 ) -> sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_0j_matrix,
-    equivalent to the matrix:
-    A_{j,j}^0 = [ -K , V  ]
-                [W   , K* ]
+    Returns a scipy linear operator equivalent to the given by a_0j_matrix.
 
     Parameters
     ----------
@@ -452,10 +455,7 @@ def a_j_linear_operator(
         azimuthal: bool = True
 ) -> sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_j_matrix,
-    equivalent to the matrix:
-    A_{j,j} = [ -K , V  ]
-              [W   , K* ]
+    Returns a scipy linear operator equivalent to the given by a_j_matrix.
 
     Parameters
     ----------
