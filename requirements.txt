@@ -1,0 +1,1 @@
+pyshtools==4.10.4 # and its dependencies
