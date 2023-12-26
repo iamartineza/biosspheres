@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.sparse.linalg
 
 
 def azimuthal_trace_to_general_with_zeros(
