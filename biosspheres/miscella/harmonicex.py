@@ -3,6 +3,31 @@ import pyshtools
 import biosspheres.miscella.auxindexes as auxindexes
 
 
+def function_zero(
+        big_l: int,
+        azimuthal: bool = True
+) -> np.ndarray:
+    if azimuthal:
+        num = big_l + 1
+    else:
+        num = (big_l + 1) ** 2
+    return np.zeros(num)
+
+
+def function_cte_dirichlet(
+        big_l: int,
+        cte: float,
+        azimuthal: bool = True
+) -> np.ndarray:
+    if azimuthal:
+        num = big_l + 1
+    else:
+        num = (big_l + 1) ** 2
+    function_coefficients = np.zeros(num)
+    function_coefficients[0] = cte * 2. * np.sqrt(np.pi)
+    return function_coefficients
+
+
 def point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
         big_l: int,
         radius: float,
