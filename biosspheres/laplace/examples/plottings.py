@@ -33,9 +33,9 @@ def observing_v(
     )
     plt.title('V')
     plt.xlabel('l')
-    plt.show()
     pass
 
 
 if __name__ == '__main__':
     observing_v()
+    plt.show()
