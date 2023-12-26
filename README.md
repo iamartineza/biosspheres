@@ -29,8 +29,10 @@ $$SL_j \left(\psi\right)\left(\mathbf{r}\right):=\int_{\Gamma_j}  {\psi\left(\ma
 with the gradient being taken with respect to $\mathbf{r}'$, $\widehat{\mathbf{n}}_j$ being the exterior normal vector of $\Omega_j$, and $\widehat{\mathbf{n}}_j = -\widehat{\mathbf{n}}_{0j}$.
 
 These operators are linear and continuous in the following Sobolev spaces:
-$$DL_{0j}&: H^{\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{0j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}  \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right)  , $$
-$$DL_{j}&: H^{\frac{1}{2}}(\Gamma_j)\rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right), & SL_{j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right).$$
+$$DL_{0j}: H^{\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right),$$
+$$SL_{0j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}  \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right)  , $$
+$$DL_{j}: H^{\frac{1}{2}}(\Gamma_j)\rightarrow H^1_{loc} \left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right),$$
+$$SL_{j}&: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\IR^3 \setminus \cup_{j=1}^{\NN}\Gamma_j\right).$$
 
 ## Laplace
 
