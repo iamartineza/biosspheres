@@ -19,6 +19,20 @@ def function_cte_dirichlet(
         cte: float,
         azimuthal: bool = True
 ) -> np.ndarray:
+    """
+    Assumes radius equal to one.
+    
+    Parameters
+    ----------
+    big_l
+    cte
+    azimuthal
+
+    Returns
+    -------
+    function_coefficientes : np.ndarray
+    
+    """
     if azimuthal:
         num = big_l + 1
     else:
@@ -37,7 +51,7 @@ def point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
 ) -> np.ndarray:
     """
     Returns a numpy array with the coefficients of the spherical harmonic
-    expansion of the Dirichlet trace, on the surface of the sphere
+    expansion of the dirichlet trace, on the surface of the sphere
     of radius 1, of the function 1 / (4 pi sigma_e ||p_0 - r||_2).
     
     Only works in one half of the z axis.
