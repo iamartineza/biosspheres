@@ -12,7 +12,7 @@ import biosspheres.formulations.massmatrices as mass
 
 
 def mass_matrix_inv_preconditioning_big_as(
-        big_l: int = 50, r: float = 2.5) -> None:
+        big_l: int = 10, r: float = 2.5) -> None:
     num = (big_l + 1)
     b = np.random.random((2 * num))
     
