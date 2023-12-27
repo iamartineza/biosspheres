@@ -104,13 +104,13 @@ def rows_columns_big_a_sparse_1_sphere(big_l: int, azimuthal: bool = False):
     return rows_big_a_sparse, columns_big_a_sparse
 
 
-def diagonal_l_sparse(big_l: int) -> scipy.sparse.dia_matrix:
+def diagonal_l_sparse(big_l: int) -> scipy.sparse.dia_array:
     eles = np.arange(0, big_l+1)
     eles_times_two_plus_one = eles * 2 + 1
     diagonal = np.repeat(eles, eles_times_two_plus_one)
     num = (big_l + 1)**2
     el_diagonal = \
-        scipy.sparse.dia_matrix((diagonal, np.array([0])), shape=(num, num))
+        scipy.sparse.dia_array((diagonal, np.array([0])), shape=(num, num))
     return el_diagonal
 
 
