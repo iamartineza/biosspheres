@@ -560,8 +560,8 @@ def a_0_a_n_sparse_matrices(
             columns_big_a_sparse[number:(number + num)] = (
                     num * s_minus_1_times_2 + rango)
             number += num
-    sparse_big_a_0 = sparse.bsr_matrix(
+    sparse_big_a_0 = sparse.bsr_array(
         (big_a_0, (rows_big_a_sparse, columns_big_a_sparse)))
-    sparse_big_a_n = sparse.bsr_matrix(
+    sparse_big_a_n = sparse.bsr_array(
         (big_a_n, (rows_big_a_sparse, columns_big_a_sparse)))
     return sparse_big_a_0, sparse_big_a_n
