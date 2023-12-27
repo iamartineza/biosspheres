@@ -6,7 +6,7 @@ import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.miscella.mathfunctions as mathfunctions
 
 
-def b_convergence_in_degree_fixed_quadrature_constant_and_linear_functions(
+def sh_expansion_convergence_constant_and_linear_functions(
         max_l: int = 6,
         l_c: int = 6,
         radius: float = 10.,
@@ -91,7 +91,7 @@ def b_convergence_in_degree_fixed_quadrature_constant_and_linear_functions(
     pass
 
 
-def b_convergence_in_degree_point_source_different_distances(
+def sh_expansion_convergence_point_source_different_distances(
         max_eles: np.ndarray = np.asarray([20, 46, 80, 172], dtype=int),
         radius: float = 10.,
         sigma_e: float = 5.,
@@ -163,6 +163,6 @@ def b_convergence_in_degree_point_source_different_distances(
 
 
 if __name__ == '__main__':
-    b_convergence_in_degree_fixed_quadrature_constant_and_linear_functions()
-    b_convergence_in_degree_point_source_different_distances()
+    sh_expansion_convergence_constant_and_linear_functions()
+    sh_expansion_convergence_point_source_different_distances()
     plt.show()
