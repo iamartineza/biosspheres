@@ -9,7 +9,7 @@ import scipy.sparse.linalg
 import matplotlib.pyplot as plt
 from matplotlib import cm, colors
 import biosspheres.formulations.mtf.mtf as mtf
-import biosspheres.formulations.righthands.mtf as righthands
+import biosspheres.formulations.mtf.righthands as righthands
 import biosspheres.laplace.selfinteractions as laplace
 import biosspheres.laplace.drawing as draw
 import biosspheres.miscella.auxindexes as auxindexes
