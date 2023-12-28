@@ -153,7 +153,7 @@ def testing_big_a_azimuthal_and_no_azimuthal(
     num = (big_l + 1)**2
     solution, info = scipy.sparse.linalg.gmres(linear_operator, b2,
                                                tol=10**(-13),
-                                                restart=2 * num**3,
+                                               restart=2 * num**3,
                                                callback=callback_function,
                                                callback_type='pr_norm')
     num = (big_l + 1)
