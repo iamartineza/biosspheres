@@ -1936,7 +1936,7 @@ def all_cross_interactions_n_spheres_v1d(
     """
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
-    almost_big_a_0 = np.empty((num, num))
+    almost_big_a_0 = np.zeros((num, num))
 
     final_length, pre_vector_t, transform = \
         quadratures.real_spherical_harmonic_transform_1d(big_l, big_l_c)
@@ -1946,8 +1946,8 @@ def all_cross_interactions_n_spheres_v1d(
     phi_coord_stf = np.empty_like(r_coord_stf)
     cos_theta_coord_stf = np.empty_like(r_coord_stf)
     
-    a_sj = np.empty(2 * big_l_plus_1_square, 2 * big_l_plus_1_square)
-    a_js = np.empty_like(a_sj)
+    a_sj = np.zeros((2 * big_l_plus_1_square, 2 * big_l_plus_1_square))
+    a_js = np.zeros_like(a_sj)
     for s in np.arange(1, n + 1):
         s_minus_1 = s - 1
         for j in np.arange(s + 1, n + 1):
@@ -2028,15 +2028,15 @@ def all_cross_interactions_n_spheres_v2d(
     pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
 
     quantity_theta_points, quantity_phi_points, weights, pre_vector_t = \
-        quadratures.quadrature_points_sphere_shtools_version_2d(big_l_c)
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
     diagonal = auxindexes.diagonal_l_dense(big_l)
     
     r_coord_stf = np.empty((quantity_theta_points, quantity_phi_points))
     phi_coord_stf = np.empty_like(r_coord_stf)
     cos_theta_coord_stf = np.empty_like(r_coord_stf)
     
-    a_sj = np.empty(2 * big_l_plus_1_square, 2 * big_l_plus_1_square)
-    a_js = np.empty_like(a_sj)
+    a_sj = np.zeros((2 * big_l_plus_1_square, 2 * big_l_plus_1_square))
+    a_js = np.zeros_like(a_sj)
     for s in np.arange(1, n + 1):
         s_minus_1 = s - 1
         for j in np.arange(s + 1, n + 1):
