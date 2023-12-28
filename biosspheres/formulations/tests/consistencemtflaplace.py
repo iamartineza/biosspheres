@@ -709,7 +709,8 @@ def phantom_1_point_source_azimuthal(
     plt.ylabel('$y \\ [\\mu m]$')
     plt.colorbar(label='[V]')
     
-    temp = solution2[2 * (max_l + 1):4 * (max_l + 1)]
+    temp = np.zeros_like(solution2[2 * (max_l + 1):4 * (max_l + 1)])
+    temp[:] = solution2[2 * (max_l + 1):4 * (max_l + 1)]
     solution2[2 * (max_l + 1):4 * (max_l + 1)] = 0.
     cut = 1
     x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
@@ -840,5 +841,5 @@ if __name__ == '__main__':
     testing_mtf_reduced_linear_operators_and_matrices_laplace()
     testing_mtf_reduced_azimuthal_and_no_azimuthal_laplace()
     testing_mtf_reduced_vs_not_laplace()
-    phantom_1_point_source_azimuthal(resolution=200)
+    phantom_1_point_source_azimuthal(resolution=100)
     plt.show()
