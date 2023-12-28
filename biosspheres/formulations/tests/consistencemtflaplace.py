@@ -1,8 +1,22 @@
+import os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
 import numpy as np
 import scipy.sparse.linalg
-import biosspheres.laplace.selfinteractions as laplace
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors
 import biosspheres.formulations.mtf as mtf
+import biosspheres.formulations.righthands.mtf as righthands
+import biosspheres.laplace.selfinteractions as laplace
+import biosspheres.laplace.drawing as draw
+import biosspheres.miscella.auxindexes as auxindexes
 import biosspheres.miscella.extensions as extensions
+import biosspheres.miscella.harmonicex as harmonicex
+import biosspheres.miscella.mathfunctions as mathfunctions
+import biosspheres.quadratures.sphere as quadratures
 
 
 def testing_mtf_linear_operators_and_matrices_laplace(
@@ -477,11 +491,354 @@ def testing_mtf_reduced_vs_not_laplace(
     pass
 
 
+def phantom_1_point_source_azimuthal(
+        max_l: int = 50,
+        r: float = 1.3,
+        distance: float = 20.,
+        intensity: float = 1.,
+        resolution: int = 10,
+        horizontal: float = 10.,
+        vertical: float = 10.,
+) -> None:
+    print('\nPhantom spheres experiments for the MTF,')
+    print('- One sphere, point source, azimuthal symmetry.')
+    pi = 1.
+    sigma_e = 1.
+    num = max_l + 1
+    
+    # --- Build of phi_e.
+    b_d = (harmonicex.
+        point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
+            max_l, r, distance, sigma_e, intensity))
+    b_n = (harmonicex.
+        point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
+            max_l, r, distance, sigma_e, intensity))
+    b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
+    
+    a_0 = laplace.a_0j_matrix(max_l, r, azimuthal=True)
+    a_1 = laplace.a_j_matrix(max_l, r, azimuthal=True)
+    matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
+    solution2 = np.linalg.solve(matrix, b)
+    
+    print('--- Checking of errors.')
+    dirichlet_ex = solution2[0:num]
+    neumann_ex = solution2[num:2 * num]
+    dirichlet_in = solution2[2 * num:3 * num]
+    neumann_in = solution2[3 * num:4 * num]
+    exterior_u = solution2[0:2 * num]
+    print('---- Norm of the exterior trace (should be near zero).')
+    print(np.linalg.norm(exterior_u))
+    print('---- Norm of the difference between $\\gamma^{01} \\phi_e^L$')
+    print('and the interior trace (absolute error):')
+    print(np.linalg.norm(
+        np.concatenate((b_d, -b_n)) - solution2[2 * num:4 * num]))
+    print('---- Discrete Calderon errors:')
+    print(np.linalg.norm(2 * np.matmul(a_0, solution2[0:2 * num])
+                         - r**2 * solution2[0:2 * num]))
+    print(
+        np.linalg.norm(2 * np.matmul(a_1, solution2[2 * num:4 * num])
+                       - r**2 * solution2[2 * num:4 * num]))
+    print('---- Jump errors.')
+    print('----- Dirichlet trace:')
+    jump_dirichlet = np.linalg.norm(dirichlet_ex - dirichlet_in + b_d)
+    print(jump_dirichlet)
+    print('----- Neumann trace:')
+    jump_neumann = \
+        np.linalg.norm((neumann_ex + b_n) + neumann_in)
+    print(jump_neumann)
+    print('----- Total jump error:')
+    print(np.sqrt(jump_dirichlet**2 + jump_neumann**2))
+    
+    print('--- For plotting the convergence when the degree is increasing.')
+    solutions = np.zeros((4 * num, max_l))
+    errores = np.zeros((4 * num, max_l))
+    for el in range(0, max_l):
+        now_num = el + 1
+        b_d = (harmonicex.
+            point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
+                el, r, distance, sigma_e, intensity))
+        b_n = harmonicex. \
+            point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
+                el, r, distance, sigma_e, intensity)
+        b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
+        a_0 = laplace.a_0j_matrix(el, r, azimuthal=True)
+        a_1 = laplace.a_j_matrix(el, r, azimuthal=True)
+        matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
+        solution = np.linalg.solve(matrix, b)
+        solutions[0:now_num, el] = solution[0:now_num]
+        solutions[num:num + now_num, el] = solution[now_num:2 * now_num]
+        solutions[2 * num:2 * num + now_num, el] = solution[
+                                                   2 * now_num:3 * now_num]
+        solutions[3 * num:3 * num + now_num, el] = solution[
+                                                   3 * now_num:4 * now_num]
+        errores[:, el] = solutions[:, el] - solution2
+    y1 = np.linalg.norm(errores[0:num], axis=0)
+    y2 = np.linalg.norm(errores[num:2 * num], axis=0)
+    y3 = np.linalg.norm(errores[2 * num:3 * num], axis=0)
+    y4 = np.linalg.norm(errores[3 * num:4 * num], axis=0)
+    plt.figure()
+    plt.semilogy(
+        y1, marker='p', linestyle='dashed',
+        label='$||\\gamma_D^{01}u_0 - u_{D,01}^{L}||_{L^2(\\Gamma_1)}$')
+    plt.semilogy(
+        y2, marker='*', linestyle='dashed',
+        label='$||\\gamma_N^{01}u_0 - u_{N,01}^{L}||_{L^2(\\Gamma_1)}$')
+    plt.semilogy(
+        y3, marker='x', linestyle='dashed',
+        label='$||\\gamma_D^{1}u_1 - u_{D,1}^{L}||_{L^2(\\Gamma_1)}$')
+    plt.semilogy(
+        y4, marker='.', linestyle='dashed',
+        label='$||\\gamma_N^{1}u_1 - u_{N,1}^{L}||_{L^2(\\Gamma_1)}$')
+    plt.xlabel('$L$')
+    plt.ylabel('Error')
+    plt.legend()
+    print('--- Pictures of the phantom sphere.')
+    
+    big_l_c = 100
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(max_l)
+    quantity_theta_points, quantity_phi_points, \
+        weights, pre_vector, spherical_harmonics = \
+        quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
+            max_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q)
+    eles = np.arange(0, max_l + 1)
+    l_square_plus_l = (eles + 1) * eles
+    
+    vector = pre_vector * r
+    
+    surface_field_d0 = np.sum(
+        solution2[0:num, np.newaxis, np.newaxis] * spherical_harmonics[
+                                                   l_square_plus_l, :, :]
+        , axis=0
+    )
+    surface_field_d0_max = np.max(surface_field_d0)
+    surface_field_d0_min = np.min(surface_field_d0)
+    surface_field_d0 = (surface_field_d0 - surface_field_d0_min) \
+                       / (surface_field_d0_max - surface_field_d0_min)
+    surface_field_n0 = np.sum(
+        solution2[num:2 * num, np.newaxis, np.newaxis] * spherical_harmonics[
+                                                         l_square_plus_l, :, :]
+        , axis=0
+    )
+    surface_field_n0_max = np.max(surface_field_n0)
+    surface_field_n0_min = np.min(surface_field_n0)
+    surface_field_n0 = (surface_field_n0 - surface_field_n0_min) \
+                       / (surface_field_n0_max - surface_field_n0_min)
+    fig = plt.figure()
+    ax_1 = fig.add_subplot(111, projection='3d')
+    ax_1.plot_surface(
+        vector[0, :, :],
+        vector[1, :, :],
+        vector[2, :, :],
+        rstride=1, cstride=1,
+        facecolors=cm.viridis(surface_field_d0))
+    ax_1.set_xlabel('$x \\ [\\mu m]$')
+    ax_1.set_ylabel('$y \\ [\\mu m]$')
+    ax_1.set_zlabel('$z \\ [\\mu m]$')
+    ax_1.set_aspect('equal')
+    fig.colorbar(cm.ScalarMappable(
+        norm=colors.Normalize(vmin=surface_field_d0_min,
+                              vmax=surface_field_d0_max),
+        cmap=cm.viridis),
+        ax=ax_1,
+        label='[V]'
+    )
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(
+        vector[0, :, :],
+        vector[1, :, :],
+        vector[2, :, :],
+        rstride=1, cstride=1,
+        facecolors=cm.viridis(surface_field_n0))
+    ax.set_xlabel('$x \\ [\\mu m]$')
+    ax.set_ylabel('$y \\ [\\mu m]$')
+    ax.set_zlabel('$z \\ [\\mu m]$')
+    ax.set_aspect('equal')
+    fig.colorbar(cm.ScalarMappable(
+        norm=colors.Normalize(vmin=surface_field_d0_min,
+                              vmax=surface_field_d0_max),
+        cmap=cm.viridis),
+        ax=ax,
+        label='[V $/ \\mu m$ ]'
+    )
+    
+    def point_source(x: np.ndarray) -> float:
+        return 0.
+    
+    center = np.asarray([0., 0., 0.])
+    inter_horizontal = resolution
+    inter_vertical = resolution
+    
+    p = np.array([0., 0., distance])
+    
+    r = 1.
+    
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    temp = solution2[2 * (max_l + 1):4 * (max_l + 1)]
+    solution2[2 * (max_l + 1):4 * (max_l + 1)] = 0.
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]])
+    plt.colorbar(label='[V]')
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    
+    def point_source(x: np.ndarray) -> float:
+        return mathfunctions.point_source(x, p, sigma_e)
+    
+    solution2[2 * (max_l + 1):4 * (max_l + 1)] = temp[:]
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    solution2[2 * (max_l + 1):4 * (max_l + 1)] = 0.
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]])
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
+        solution2, r, max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               norm=colors.CenteredNorm(),
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]])
+    plt.colorbar(label='[V]')
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    
+    pass
+
+
 if __name__ == '__main__':
-    print('\nLaplace')
     testing_mtf_linear_operators_and_matrices_laplace()
     testing_mtf_linear_operators_and_matrices_laplace()
     testing_mtf_azimuthal_and_no_azimuthal_laplace()
     testing_mtf_reduced_linear_operators_and_matrices_laplace()
     testing_mtf_reduced_azimuthal_and_no_azimuthal_laplace()
     testing_mtf_reduced_vs_not_laplace()
+    phantom_1_point_source_azimuthal(resolution=200)
+    plt.show()
