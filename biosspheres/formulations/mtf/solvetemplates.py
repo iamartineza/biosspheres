@@ -13,7 +13,7 @@ def mtf_laplace_solve_one_sphere_point_source_azimuthal(
         distance: float,
         intensity: float,
 ) -> np.ndarray:
-    pi = sigma_e / sigma_i
+    pi = sigma_i / sigma_e
     
     # Build of phi_e.
     b_d = (harmonicex.
@@ -22,7 +22,7 @@ def mtf_laplace_solve_one_sphere_point_source_azimuthal(
     b_n = (harmonicex.
             point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
                 max_l, r, distance, sigma_e, intensity))
-    b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
+    b = righthands.b_vector_1_sphere_mtf(r, 1. / pi, b_d, b_n)
     
     # Build of mtf matrix
     a_0 = laplace.a_0j_matrix(max_l, r, azimuthal=True)
