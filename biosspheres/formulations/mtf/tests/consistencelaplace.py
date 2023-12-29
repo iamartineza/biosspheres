@@ -837,6 +837,8 @@ def phantom_1_point_source_azimuthal(
 def non_phantom_1_point_source_z_alignment_distance_convergence(
         max_l: int = 50,
         r: float = 1.3,
+        sigma_e: float = 5.,
+        sigma_i: float = 0.455,
         distance: float = 20.,
         intensity: float = 1.,
         resolution: int = 10,
@@ -846,9 +848,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     print(
         '1 sphere, non phantom, z-alignment, point source external function.')
     print('Fixed distance, convergence in degree.')
-    sigma_e = 5.
-    sigma_i = 0.455
-    pi = sigma_e / sigma_i
+    pi = sigma_i / sigma_e
     num = max_l + 1
     
     b_d = (harmonicex.
@@ -857,47 +857,18 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     b_n = (harmonicex.
     point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
         max_l, r, distance, sigma_e, intensity))
-    b_max = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
+    b_max = righthands.b_vector_1_sphere_mtf(r, 1./pi, b_d, b_n)
     
     a_0 = laplace.a_0j_matrix(max_l, r, azimuthal=True)
     a_1 = laplace.a_j_matrix(max_l, r, azimuthal=True)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
     solution2 = np.linalg.solve(matrix, b_max)
     
-    solutions = np.zeros((4 * num, max_l))
-    errores = np.zeros((4 * num, max_l))
-    for el in np.arange(0, max_l):
-        now_num = el + 1
-        b_d = (harmonicex.
-        point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
-            el, r, distance, sigma_e, intensity))
-        b_n = harmonicex. \
-            point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
-            el, r, distance, sigma_e, intensity)
-        b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
-        a_0 = laplace.a_0j_matrix(el, r, azimuthal=True)
-        a_1 = laplace.a_j_matrix(el, r, azimuthal=True)
-        matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
-        solution = np.linalg.solve(matrix, b)
-        solutions[0:now_num, el] = solution[0:now_num]
-        solutions[num:num + now_num, el] = solution[now_num:2 * now_num]
-        solutions[2 * num:2 * num + now_num, el] = solution[
-                                                   2 * now_num:3 * now_num]
-        solutions[3 * num:3 * num + now_num, el] = solution[
-                                                   3 * now_num:4 * now_num]
-        errores[:, el] = solutions[:, el] - solution2
     print('--- Checking of errors.')
     dirichlet_ex = solution2[0:num]
     neumann_ex = solution2[num:2 * num]
     dirichlet_in = solution2[2 * num:3 * num]
     neumann_in = solution2[3 * num:4 * num]
-    exterior_u = solution2[0:2 * num]
-    print('---- Norm of the exterior trace (should be near zero).')
-    print(np.linalg.norm(exterior_u))
-    print('---- Norm of the difference between $\\gamma^{01} \\phi_e^L$')
-    print('and the interior trace (absolute error):')
-    print(np.linalg.norm(
-        np.concatenate((b_d, -b_n)) - solution2[2 * num:4 * num]))
     print('---- Discrete Calderon errors:')
     print(np.linalg.norm(2 * np.matmul(a_0, solution2[0:2 * num])
                          - r**2 * solution2[0:2 * num]))
@@ -910,11 +881,33 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     print(jump_dirichlet)
     print('----- Neumann trace:')
     jump_neumann = \
-        np.linalg.norm((neumann_ex + b_n) + neumann_in)
+        np.linalg.norm(sigma_e * (neumann_ex + b_n) + sigma_i * neumann_in)
     print(jump_neumann)
     print('----- Total jump error:')
     print(np.sqrt(jump_dirichlet**2 + jump_neumann**2))
     
+    solutions = np.zeros((4 * num, max_l))
+    errores = np.zeros((4 * num, max_l))
+    for el in np.arange(0, max_l):
+        now_num = el + 1
+        b_d = (harmonicex.
+        point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
+            el, r, distance, sigma_e, intensity))
+        b_n = harmonicex. \
+            point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
+            el, r, distance, sigma_e, intensity)
+        b = righthands.b_vector_1_sphere_mtf(r, 1./pi, b_d, b_n)
+        a_0 = laplace.a_0j_matrix(el, r, azimuthal=True)
+        a_1 = laplace.a_j_matrix(el, r, azimuthal=True)
+        matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
+        solution = np.linalg.solve(matrix, b)
+        solutions[0:now_num, el] = solution[0:now_num]
+        solutions[num:num + now_num, el] = solution[now_num:2 * now_num]
+        solutions[2 * num:2 * num + now_num, el] = solution[
+                                                   2 * now_num:3 * now_num]
+        solutions[3 * num:3 * num + now_num, el] = solution[
+                                                   3 * now_num:4 * now_num]
+        errores[:, el] = solutions[:, el] - solution2
     y1 = np.linalg.norm(errores[0:num], axis=0) / np.linalg.norm(dirichlet_ex)
     y2 = np.linalg.norm(errores[num:2 * num], axis=0) / np.linalg.norm(
         neumann_ex)
@@ -926,47 +919,43 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.figure()
     plt.semilogy(
         y1, marker='p', linestyle='dashed',
-        #    label='$\\frac{||\\gamma_D^{01}u_0 - u_{D,01}^{50}||_{L^2(\\Gamma_1)}}{||\\gamma_D^{01}u_0||_{L^2(\\Gamma_1)}}$')
         label='$RE2\\left(\\gamma_D^{01}u_0, u_{D,01}^{L}\\right)_1$')
     plt.semilogy(
         y2, marker='*', linestyle='dashed',
-        #    label='$\\frac{||\\gamma_N^{01}u_0 - u_{N,01}^{50}||_{L^2(\\Gamma_1)}}{||\\gamma_N^{01}u_0||_{L^2(\\Gamma_1)}}$')
         label='$RE2\\left(\\gamma_N^{01}u_0, u_{N,01}^{L}\\right)_1$')
     plt.semilogy(
         y3, marker='x', linestyle='dashed',
-        #    label='$\\frac{||\\gamma_D^{1}u_1 - u_{D,1}^{50}||_{L^2(\\Gamma_1)}}{||\\gamma_D^{1}u_0||_{L^2(\\Gamma_1)}}$')
         label='$RE2\\left(\\gamma_D^{1}u_0, u_{D,1}^{L}\\right)_1$')
     plt.semilogy(
         y4, marker='.', linestyle='dashed',
-        #    label='$\\frac{||\\gamma_N^{1}u_1 - u_{N,1}^{50}||_{L^2(\\Gamma_1)}}{||\\gamma_N^{1}u_0||_{L^2(\\Gamma_1)}}$')
         label='$RE2\\left(\\gamma_N^{1}u_0, u_{N,1}^{L}\\right)_1$')
     plt.xlabel('$L$')
     plt.ylabel('Error')
     plt.legend(edgecolor='white')
     plt.rcParams.update({'font.size': 20})
     center = np.asarray([0., 0., 0.])
-    horizontal = 30.
-    vertical = 30.
     inter_horizontal = resolution
     inter_vertical = resolution
     center_positions = [center]
-    radius = np.asarray([radius])
+    radius = np.asarray([r])
+    
     
     num_big = num**2
     aux_drawing = np.zeros(4 * num_big)
     aux_drawing[
-    0:num_big] = bvectorsandtracefunctions.azimuthal_trace_to_general_with_zeros(
+    0:num_big] = extensions.azimuthal_trace_to_general_with_zeros(
         max_l, solution2[0:num])
     aux_drawing[
-    num_big:2 * num_big] = bvectorsandtracefunctions.azimuthal_trace_to_general_with_zeros(
+    num_big:2 * num_big] = extensions.azimuthal_trace_to_general_with_zeros(
         max_l, solution2[num:2 * num])
     
+    
     big_l_c = 100
-    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = helpingindexes.pes_y_kus(
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(
         max_l)
     quantity_theta_points, quantity_phi_points, \
         weights, pre_vector, spherical_harmonics = \
-        spherequadratures.quadrature_points_and_sh_sphere_shtools_version_2d(
+        quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
             max_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q)
     eles = np.arange(0, max_l + 1)
     l_square_plus_l = (eles + 1) * eles
@@ -1034,7 +1023,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         return 0.
     
     cut = 1
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1048,7 +1037,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar()
     
     cut = 2
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1062,7 +1051,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1076,14 +1065,14 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar(label='[V]')
     
     aux_drawing[2 * num_big:3 * num_big] = \
-        bvectorsandtracefunctions.azimuthal_trace_to_general_with_zeros(
+        extensions.azimuthal_trace_to_general_with_zeros(
             max_l, solution2[2 * num:3 * num] + b_max[0:num])
     aux_drawing[3 * num_big:4 * num_big] = \
-        bvectorsandtracefunctions.azimuthal_trace_to_general_with_zeros(
+        extensions.azimuthal_trace_to_general_with_zeros(
             max_l, solution2[3 * num:4 * num] - b_max[num:2 * num])
     
     cut = 1
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1097,7 +1086,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar()
     
     cut = 2
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1111,7 +1100,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         aux_drawing, radius, center_positions, max_l, point_source)
     plt.figure()
@@ -1135,4 +1124,6 @@ if __name__ == '__main__':
     testing_mtf_reduced_azimuthal_and_no_azimuthal_laplace()
     testing_mtf_reduced_vs_not_laplace()
     phantom_1_point_source_azimuthal(resolution=100)
+    plt.show()
+    non_phantom_1_point_source_z_alignment_distance_convergence(resolution=100)
     plt.show()
