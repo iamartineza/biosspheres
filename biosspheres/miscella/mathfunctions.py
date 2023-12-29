@@ -1,6 +1,19 @@
 import numpy as np
 
 
+def cte(
+        c: float
+) -> float:
+    return c
+
+
+def linear_function_3d(
+        coefficients: np.ndarray,
+        vector: np.ndarray
+) -> float:
+    return np.dot(coefficients, vector)
+
+
 def plane_wave(
         a: float,
         k: np.ndarray,
