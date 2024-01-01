@@ -1,21 +1,23 @@
 import os
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "3"
+os.environ["OPENBLAS_NUM_THREADS"] = "3"
+os.environ["MKL_NUM_THREADS"] = "3"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "3"
+os.environ["NUMEXPR_NUM_THREADS"] = "3"
 import numpy as np
-import scipy.sparse.linalg
 import matplotlib.pyplot as plt
 from matplotlib import cm, colors
+import biosspheres.formulations.massmatrices as mass
 import biosspheres.formulations.mtf.mtf as mtf
 import biosspheres.formulations.mtf.righthands as righthands
-import biosspheres.laplace.selfinteractions as laplace
+import biosspheres.laplace.selfinteractions as selfin
+import biosspheres.laplace.crossinteractions as crossin
 import biosspheres.laplace.drawing as draw
 import biosspheres.miscella.auxindexes as auxindexes
 import biosspheres.miscella.extensions as extensions
 import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.miscella.mathfunctions as mathfunctions
+import biosspheres.miscella.spherearrangements as arrangements
 import biosspheres.quadratures.sphere as quadratures
 
 
@@ -43,8 +45,8 @@ def phantom_1_point_source_azimuthal(
         max_l, r, distance, sigma_e, intensity))
     b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
     
-    a_0 = laplace.a_0j_matrix(max_l, r, azimuthal=True)
-    a_1 = laplace.a_j_matrix(max_l, r, azimuthal=True)
+    a_0 = selfin.a_0j_matrix(max_l, r, azimuthal=True)
+    a_1 = selfin.a_j_matrix(max_l, r, azimuthal=True)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
     solution2 = np.linalg.solve(matrix, b)
     
@@ -89,8 +91,8 @@ def phantom_1_point_source_azimuthal(
             point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
             el, r, distance, sigma_e, intensity)
         b = righthands.b_vector_1_sphere_mtf(r, pi, b_d, b_n)
-        a_0 = laplace.a_0j_matrix(el, r, azimuthal=True)
-        a_1 = laplace.a_j_matrix(el, r, azimuthal=True)
+        a_0 = selfin.a_0j_matrix(el, r, azimuthal=True)
+        a_1 = selfin.a_j_matrix(el, r, azimuthal=True)
         matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
         solution = np.linalg.solve(matrix, b)
         solutions[0:now_num, el] = solution[0:now_num]
@@ -387,8 +389,8 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         max_l, r, distance, sigma_e, intensity))
     b_max = righthands.b_vector_1_sphere_mtf(r, 1. / pi, b_d, b_n)
     
-    a_0 = laplace.a_0j_matrix(max_l, r, azimuthal=True)
-    a_1 = laplace.a_j_matrix(max_l, r, azimuthal=True)
+    a_0 = selfin.a_0j_matrix(max_l, r, azimuthal=True)
+    a_1 = selfin.a_j_matrix(max_l, r, azimuthal=True)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
     solution2 = np.linalg.solve(matrix, b_max)
     
@@ -425,8 +427,8 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
             point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
             el, r, distance, sigma_e, intensity)
         b = righthands.b_vector_1_sphere_mtf(r, 1. / pi, b_d, b_n)
-        a_0 = laplace.a_0j_matrix(el, r, azimuthal=True)
-        a_1 = laplace.a_j_matrix(el, r, azimuthal=True)
+        a_0 = selfin.a_0j_matrix(el, r, azimuthal=True)
+        a_1 = selfin.a_j_matrix(el, r, azimuthal=True)
         matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
         solution = np.linalg.solve(matrix, b)
         solutions[0:now_num, el] = solution[0:now_num]
@@ -642,55 +644,54 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
 
 
 def mix_phantom_total_3_different_1_point_source(
-        resolution: int
+        n: int = 3,
+        big_l: int = 20,
+        big_l_c: int = 58,
+        radii: np.ndarray = np.asarray([1.15, 1.2, 1.3]),
+        center_positions=[np.asarray([0., 0., 0.]),
+                          np.asarray([5., 0., 0.]),
+                          np.asarray([-6., 0., 0.])],
+        sigma_e: float = 1.,
+        sigma_i: float = 0.25,
+        p0: np.ndarray = np.asarray([0., 0., 20.]),
+        resolution: int = 10
 ):
-    big_l = 50
-    big_l_c = 58
-    n = 3
-    radii = np.asarray([10., 8., 9.])
-    center_positions = [np.asarray([0., 0., 0.]),
-                        np.asarray([25., 0., 0.]),
-                        np.asarray([-24., 0., 0.])]
-    sigma_e = 5.
-    sigma_i = 0.455
-    p0 = np.asarray([0., 0., 20.])
-    
     print('- ' + str(n) + ' spheres.')
     print('-- Space convergence of the traces of u for given phi_e.')
     sigmas = np.ones(n + 1) * sigma_e
     sigmas[1] = sigma_i
+    pii = sigmas[1:len(sigmas)] / sigma_e
     
-    big_a_0_times_2, sparse_big_a_1_n_times_2, x_dia = \
-        bioslaplace.mtf_numpy_scipy_pieces_lazy_version_n_medios_2d(
-            sigmas, radii, n, big_l, big_l_c, center_positions)
-    matrix = np.concatenate(
-        (np.concatenate((big_a_0_times_2,
-                         scipy.sparse.dia_matrix(
-                             ((1. / x_dia), np.array([0])),
-                             shape=np.shape(big_a_0_times_2)).toarray()),
-                        axis=1),
-         np.concatenate((
-             scipy.sparse.dia_matrix(
-                 (x_dia, np.array([0])),
-                 shape=np.shape(big_a_0_times_2)).toarray(),
-             sparse_big_a_1_n_times_2.toarray()), axis=1)), axis=0)
-    b = bioslaplace.b_vector_n_spheres_mtf_point_source(
-        big_l, n, center_positions, p0, radii, sigmas[0], x_dia)
+    big_a_0_cross = crossin.all_cross_interactions_n_spheres_v2d(
+        n, big_l, big_l_c, radii, center_positions)
+    sparse_big_a_0_self, sparse_big_a_n = selfin.a_0_a_n_sparse_matrices(
+        n, big_l, radii, azimuthal=False)
+    x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
+        n, big_l, radii, pii, azimuthal=False)
+    matrix = mtf.mtf_n_matrix(
+        big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, x_dia, x_dia_inv)
+    
+    mass_n_two = mass.n_two_j_blocks(big_l, radii, azimuthal=False)
+    b = righthands.b_vector_n_spheres_mtf_point_source(n, big_l,
+                                                       center_positions, p0,
+                                                       radii, sigmas[0], x_dia,
+                                                       mass_n_two)
     solution2 = np.linalg.solve(matrix, b)
+    
     print('--- Discrete Calderon errors:')
-    print(np.linalg.norm(
-        big_a_0_times_2.dot(solution2[0:2 * n * (big_l + 1)**2])
-        - solution2[0:2 * n * (big_l + 1)**2]))
-    print(np.linalg.norm(
-        sparse_big_a_1_n_times_2.dot(
-            solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2])
-        - solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2]))
+    print(np.linalg.norm(2.*(
+            np.matmul(big_a_0_cross, solution2[0:2 * n * (big_l + 1)**2])
+            + sparse_big_a_0_self.dot(solution2[0:2 * n * (big_l + 1)**2]))
+                         - mass_n_two * solution2[0:2 * n * (big_l + 1)**2]))
+    print(np.linalg.norm(2. * sparse_big_a_n.dot(
+        solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2]
+    ) - mass_n_two * solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2]))
     
     print('--- Jump error:')
     jump_error = np.linalg.norm(
-        solution2[0:2 * n * (big_l + 1)**2] * x_dia
-        + solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2]
-        - b[0:2 * n * (big_l + 1)**2] * x_dia)
+        -solution2[0:2 * n * (big_l + 1)**2] * x_dia
+        + mass_n_two * solution2[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2]
+        - b[2 * n * (big_l + 1)**2:4 * n * (big_l + 1)**2])
     print(jump_error)
     
     print('-- Coefficients of solution.')
@@ -704,21 +705,36 @@ def mix_phantom_total_3_different_1_point_source(
     plt.xlabel('index')
     
     intensity = 1.
-    sigma_e_i, sigma_i_e = \
-        functionsofphysicalparameters.coefficients_pre_computations_2_mediums(
-            sigmas[0], sigmas[1])
+    distance = np.linalg.norm(p0)
+    r = radii[0]
     max_l = big_l
-    num = max_l + 1
-    b_d = bioslaplace.point_source_coefficients_dirichlet_expansion(
-        max_l, radii[0], p0 - center_positions[0], sigmas[0], intensity)
-    b_n = bvectorsandtracefunctions. \
-        point_source_coefficients_neumann_expansion_0j(
-        max_l, radii[0], p0 - center_positions[0], sigmas[0], intensity)
-    b = bvectorsandtracefunctions.b_vector_1_sphere_mtf(max_l, sigma_e_i, b_d,
-                                                        b_n)
-    matrix = bioslaplace.laplace_mtf_1_sphere_matrix(
-        max_l, radii[0], sigmas[0], sigmas[1])
-    result_one_sphere = np.linalg.solve(matrix, b)
+    pi = sigma_i / sigma_e
+    
+    b_d = (harmonicex.
+    point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
+        max_l, r, distance, sigma_e, intensity))
+    b_n = (harmonicex.
+    point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
+        max_l, r, distance, sigma_e, intensity))
+    b_max = righthands.b_vector_1_sphere_mtf(r, 1. / pi, b_d, b_n)
+    
+    a_0 = selfin.a_0j_matrix(max_l, r, azimuthal=True)
+    a_1 = selfin.a_j_matrix(max_l, r, azimuthal=True)
+    matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
+    auxiliar = np.linalg.solve(matrix, b_max)
+    result_one_sphere = np.zeros(4 * (big_l + 1)**2)
+    result_one_sphere[0:(big_l + 1)**2] = (
+        extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, auxiliar[0:(big_l+1)]))
+    result_one_sphere[(big_l + 1)**2:2*(big_l + 1)**2] = (
+        extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, auxiliar[(big_l + 1):2 * (big_l + 1)]))
+    result_one_sphere[2*(big_l + 1)**2:3 * (big_l + 1)**2] = (
+        extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, auxiliar[2*(big_l + 1):3 * (big_l + 1)]))
+    result_one_sphere[3 * (big_l + 1)**2:4 * (big_l + 1)**2] = (
+        extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, auxiliar[3 * (big_l + 1):4 * (big_l + 1)]))
     
     analytic_error = \
         np.linalg.norm(
@@ -740,8 +756,10 @@ def mix_phantom_total_3_different_1_point_source(
                    2 * n * (big_l + 1)**2 + 2 * (big_l + 1)**2])),
         marker='x')
     plt.figure()
-    b1 = bioslaplace.b_vector_n_spheres_mtf_point_source(
-        big_l, n, center_positions, p0, radii, sigmas[0], x_dia)
+    b1 = righthands.b_vector_n_spheres_mtf_point_source(n, big_l,
+                                                       center_positions, p0,
+                                                       radii, sigmas[0], x_dia,
+                                                       mass_n_two)
     plt.plot(b, marker='x')
     plt.plot(np.concatenate(
         (b1[0:2 * (big_l + 1)**2],
@@ -749,13 +767,14 @@ def mix_phantom_total_3_different_1_point_source(
             2 * n * (big_l + 1)**2 + 2 * (big_l + 1)**2])),
         marker='x')
     center = np.asarray([0., 0., 0.])
-    horizontal = 100.
-    vertical = 30.
+    horizontal = 20.
+    vertical = 5.
     inter_horizontal = resolution
     inter_vertical = resolution // 2
     
     radius = radii
     max_l = big_l
+    num = big_l+1
     
     def point_source(x: np.ndarray) -> float:
         return 0.
@@ -763,7 +782,7 @@ def mix_phantom_total_3_different_1_point_source(
     solution_cut = np.zeros(np.shape(solution2))
     solution_cut[0:2 * num * n] = solution2[0:2 * num * n]
     cut = 1
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution_cut,
         radius, center_positions,
@@ -779,7 +798,7 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 2
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(cut, center,
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
                                                          horizontal,
                                                          vertical,
                                                          inter_horizontal,
@@ -799,7 +818,7 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 3
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(cut, center,
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
                                                          horizontal,
                                                          vertical,
                                                          inter_horizontal,
@@ -825,7 +844,7 @@ def mix_phantom_total_3_different_1_point_source(
         solution_cut[3 * num * n:4 * num * n] - b[num * n:2 * num * n]
     
     cut = 1
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(cut, center,
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
                                                          horizontal,
                                                          vertical,
                                                          inter_horizontal,
@@ -845,7 +864,7 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 2
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(cut, center,
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
                                                          horizontal,
                                                          vertical,
                                                          inter_horizontal,
@@ -865,7 +884,7 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 3
-    x1, y1, data = bioslaplace.draw_cut_laplace_n_sphere(cut, center,
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
                                                          horizontal,
                                                          vertical,
                                                          inter_horizontal,
@@ -886,8 +905,231 @@ def mix_phantom_total_3_different_1_point_source(
     return
 
 
+def mix_phantom_total_27_different_1_point_source(
+        big_l: int = 23,
+        big_l_c: int = 100,
+        radio_1: float = 1.,
+        sigma_e: float = 1.,
+        sigma_i: float = 0.25,
+        p0: np.ndarray = np.asarray([0., 0., -50.]),
+        resolution: int = 10
+):
+    intensity = 1.
+    max_l = 23
+    pi = sigma_i / sigma_e
+    b_d = harmonicex.point_source_coefficients_dirichlet_expansion(
+        max_l, radio_1, p0, sigma_e, intensity)
+    b_n = harmonicex.point_source_coefficients_neumann_expansion_0j(
+        max_l, radio_1, p0, sigma_e, intensity)
+    b = righthands.b_vector_1_sphere_mtf(max_l, 1. / pi, b_d, b_n)
+    a_0 = selfin.a_0j_matrix(max_l, radio_1, azimuthal=False)
+    a_1 = selfin.a_j_matrix(max_l, radio_1, azimuthal=False)
+    matrix = mtf.mtf_1_matrix(radio_1, pi, a_0, a_1)
+    result_one_sphere = np.linalg.solve(matrix, b)
+    analytic_error = np.zeros(np.shape(result_one_sphere))
+    analytic_error[0:len(analytic_error)] = \
+        result_one_sphere[0:len(result_one_sphere)]
+    
+    n = 3
+    center_positions = arrangements.cube_vertex_positions(n, radio_1, 5.)
+    n = n**3
+    sigmas = np.ones(n + 1) * sigma_e
+    sigmas[1] = sigma_i
+    radii = np.ones(n) * 10.
+    radii[0] = radio_1
+    
+    b = bioslaplace.b_vector_n_spheres_mtf_point_source_reduced(
+        big_l, n, center_positions, p0, radii, sigmas[0])
+    minisol_1, minisol_2 = \
+        bioslaplace.mtf_solving_reduced_version_n_medios_reduced_b(
+            n, big_l, big_l_c, sigmas, radii, center_positions, b)
+    big_a_0_times_2, sparse_big_a_1_n_times_2, x_dia = \
+        bioslaplace.mtf_numpy_scipy_pieces_lazy_version_n_medios(
+            sigmas, radii, n, big_l, big_l_c, center_positions)
+    solution2 = np.concatenate((minisol_1, minisol_2))
+    
+    print('- Discrete Calderon errors:')
+    print(np.linalg.norm(big_a_0_times_2.dot(minisol_1) - minisol_1))
+    print(np.linalg.norm(sparse_big_a_1_n_times_2.dot(minisol_2) - minisol_2))
+    
+    print('- Jump error:')
+    b = bioslaplace.b_vector_n_spheres_mtf_point_source_2(
+        big_l, n, center_positions, p0, radii, sigmas[0], x_dia)
+    jump_error = np.linalg.norm(
+        minisol_1 * x_dia
+        + minisol_2 - b[0:2 * n * (big_l + 1)**2] * x_dia)
+    print(jump_error)
+    
+    analytic_error[0:2 * (big_l + 1)**2] = \
+        result_one_sphere[0:2 * (big_l + 1)**2] \
+        - solution2[0:2 * (big_l + 1)**2]
+    analytic_error[2 * (max_l + 1)**2:
+                   (2 * (max_l + 1)**2 + 2 * (big_l + 1)**2)] = \
+        result_one_sphere[2 * (max_l + 1)**2:
+                          (2 * (max_l + 1)**2 + 2 * (big_l + 1)**2)] \
+        - solution2[2 * n * (big_l + 1)**2:
+                    (2 * n * (big_l + 1)**2 + 2 * (big_l + 1)**2)]
+    error = np.linalg.norm(analytic_error) / np.linalg.norm(result_one_sphere)
+    print('- Analytic error of the first sphere:')
+    print(error)
+    exterior_errors = \
+        np.linalg.norm(analytic_error[0:2 * (big_l + 1)**2])**2
+    exterior_errors += np.linalg.norm(
+        solution2[2 * (big_l + 1)**2:2 * n * (big_l + 1)**2])**2
+    exterior_errors = np.sqrt(exterior_errors)
+    print('- Errors of the exterior traces:')
+    print(exterior_errors)
+    
+    plt.figure()
+    plt.plot(solution2, marker='x')
+    
+    center = np.asarray([0., 30., 30.])
+    horizontal = 100
+    vertical = 100
+    inter_horizontal = resolution
+    inter_vertical = resolution // 2
+    
+    radius = radii
+    max_l = big_l
+    num = (big_l + 1)**2
+    
+    def point_source(x: np.ndarray) -> float:
+        return 0.
+    
+    solution_cut = np.zeros(np.shape(solution2))
+    solution_cut[0:2 * num * n] = solution2[0:2 * num * n]
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar()
+    center = np.asarray([30., 0., 30.])
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    center = np.asarray([30., 30., 0.])
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    solution_cut[2 * num * n:3 * num * n] = \
+        solution_cut[2 * num * n:3 * num * n] + b[0:num * n]
+    solution_cut[3 * num * n:4 * num * n] = \
+        solution_cut[3 * num * n:4 * num * n] - b[num * n:2 * num * n]
+    
+    cut = 1
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$y \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar()
+    
+    cut = 2
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[2], vertical / 2 + center[2]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$z \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    
+    cut = 3
+    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
+                                                         horizontal,
+                                                         vertical,
+                                                         inter_horizontal,
+                                                         inter_vertical,
+                                                         solution_cut,
+                                                         radius,
+                                                         center_positions,
+                                                         max_l, point_source)
+    plt.figure()
+    plt.imshow(data, origin='lower',
+               extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
+                       -vertical / 2 + center[1], vertical / 2 + center[1]],
+               norm=colors.CenteredNorm()
+               )
+    plt.xlabel('$x \\ [\\mu m]$')
+    plt.ylabel('$y \\ [\\mu m]$')
+    plt.colorbar(label='[V]')
+    return
+
+
 if __name__ == '__main__':
     phantom_1_point_source_azimuthal(resolution=100)
     plt.show()
     non_phantom_1_point_source_z_alignment_distance_convergence(resolution=100)
+    plt.show()
+    mix_phantom_total_3_different_1_point_source(resolution=100)
     plt.show()
