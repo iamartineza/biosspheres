@@ -87,7 +87,7 @@ def b_vector_n_spheres_mtf_point_source(
         rs: np.ndarray,
         sigma_e: float,
         x_dia: np.ndarray,
-        mass_n_j_blocks: np.ndarray
+        mass_n_two_j_blocks: np.ndarray
 ) -> np.array:
     """
     
@@ -112,7 +112,7 @@ def b_vector_n_spheres_mtf_point_source(
     sigma_e : float
         > 0, parameter.
     x_dia : np.ndarray
-    mass_n_j_blocks : np.ndarray.
+    mass_n_two_j_blocks : np.ndarray.
 
     Returns
     -------
@@ -164,5 +164,5 @@ def b_vector_n_spheres_mtf_point_source(
             legendre[l_times_l_plus_l_divided_by_2[pesykus[:, 0]]
                      + pesykus[:, 1]] * np.sin(phi * pesykus[:, 1])
     b[2 * num * n: 4 * num * n] = b[0: 2 * num * n] * x_dia
-    b[0: 2 * num * n] = -b[0: 2 * num * n] * mass_n_j_blocks
+    b[0: 2 * num * n] = -b[0: 2 * num * n] * mass_n_two_j_blocks
     return b
