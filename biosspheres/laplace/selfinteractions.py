@@ -507,8 +507,8 @@ def a_0_a_n_sparse_matrices(
                     num * s_minus_1_times_2 + rango)
             number += num
             
-            big_a_0[number:(number + num)] = big_a_n[number:(number + num)]
-            big_a_n[number:(number + num)] = big_a_0[number:(number + num)]
+            big_a_0[number:(number + num)] = big_a_n[(number-num):number]
+            big_a_n[number:(number + num)] = big_a_0[(number-num):number]
             rows_big_a_sparse[number:(number + num)] = (
                     rango + num * (s_minus_1_times_2 + 1))
             columns_big_a_sparse[number:(number + num)] = (
