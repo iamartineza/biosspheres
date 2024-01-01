@@ -131,14 +131,14 @@ def x_diagonal_with_its_inv(
         s_minus_1_times_2 = s_minus_1 * 2
         
         x_dia[(s_minus_1_times_2 * num):((s_minus_1_times_2 + 1) * num)] = \
-            -radii[s_minus_1]**2
+            radii[s_minus_1]**2
         x_inv[(s_minus_1_times_2 * num):((s_minus_1_times_2 + 1) * num)] = \
             x_dia[(s_minus_1_times_2 * num):((s_minus_1_times_2 + 1) * num)]
         
         x_dia[((s_minus_1_times_2 + 1) * num):(s * 2 * num)] = (
-                radii[s_minus_1]**2 / pii[s_minus_1])
+                -radii[s_minus_1]**2 / pii[s_minus_1])
         x_inv[((s_minus_1_times_2 + 1) * num):(s * 2 * num)] = (
-                radii[s_minus_1]**2 * pii[s_minus_1])
+                -radii[s_minus_1]**2 * pii[s_minus_1])
     return x_dia, x_inv
 
 
@@ -269,13 +269,15 @@ def mtf_n_matrix(
         x_dia_inv: np.ndarray
 ) -> np.ndarray:
     num = len(big_a_0_cross[0, :]) // 2
-    mtf_matrix = np.zeros((2 * num, 2 * num), dtype=big_a_0_cross.dtype)
+    mtf_matrix = np.zeros((4 * num, 4 * num), dtype=big_a_0_cross.dtype)
     mtf_matrix[0:2*num, 0:2*num] = 2. * big_a_0_cross + (
             2. * sparse_big_a_0_self).toarray()
-    rango = np.arange(0, num)
+    mtf_matrix[2 * num:4 * num, 2 * num:4 * num] = (
+            2. * sparse_big_a_n).toarray()
+    rango = np.arange(0, 2 * num)
     mtf_matrix[rango, rango + 2 * num] = -x_dia_inv[rango]
     mtf_matrix[rango + 2 * num, rango] = -x_dia[rango]
-    mtf_matrix[0:2 * num, 0:2 * num] = (2. * sparse_big_a_n).toarray()
+
     return mtf_matrix
 
 
