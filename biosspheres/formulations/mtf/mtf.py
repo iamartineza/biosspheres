@@ -292,7 +292,7 @@ def mtf_n_linear_operator_v1(
     
     def block_matrix_times_vector(v) -> np.ndarray:
         x = np.empty_like(v)
-        x[0:2 * num] = (2. * (big_a_0_cross.matmul(v[0:2*num])
+        x[0:2 * num] = (2. * (np.matmul(big_a_0_cross, v[0:2*num])
                               + sparse_big_a_0_self.dot(v[0:2*num]))
                         - x_dia_inv * v[2*num:4*num])
         x[2 * num:4 * num] = (-x_dia * v[0:2*num]
