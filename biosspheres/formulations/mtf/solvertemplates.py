@@ -1,9 +1,10 @@
 import numpy as np
+import scipy.sparse.linalg
 import biosspheres.formulations.massmatrices as mass
 import biosspheres.formulations.mtf.mtf as mtf
 import biosspheres.formulations.mtf.righthands as righthands
 import biosspheres.laplace.selfinteractions as laplaceself
-import biosspheres.laplace.crossinteractions as crossin
+import biosspheres.laplace.crossinteractions as laplacecross
 import biosspheres.miscella.harmonicex as harmonicex
 
 
@@ -45,7 +46,7 @@ def mtf_laplace_n_spheres_point_source_direct_solver(
         p0: np.ndarray,
 ) -> np.ndarray:
 
-    # Build of phi_e.
+    # Build of the right hand side.
     pii = sigmas[1:len(sigmas)] / sigmas[0]
     mass_n_two = mass.n_two_j_blocks(big_l, radii, azimuthal=False)
     x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
@@ -55,7 +56,7 @@ def mtf_laplace_n_spheres_point_source_direct_solver(
                                                        radii, sigmas[0], x_dia,
                                                        mass_n_two)
     # Build of mtf matrix
-    big_a_0_cross = crossin.all_cross_interactions_n_spheres_v2d(
+    big_a_0_cross = laplacecross.all_cross_interactions_n_spheres_v2d(
         n, big_l, big_l_c, radii, center_positions)
     sparse_big_a_0_self, sparse_big_a_n = laplaceself.a_0_a_n_sparse_matrices(
         n, big_l, radii, azimuthal=False)
@@ -63,5 +64,42 @@ def mtf_laplace_n_spheres_point_source_direct_solver(
         big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, x_dia, x_dia_inv)
 
     solution = np.linalg.solve(matrix, b)
+
+    return solution
+
+
+def mtf_laplace_n_spheres_point_source_indirect_solver(
+        n: int,
+        big_l: int,
+        big_l_c: int,
+        radii: np.ndarray,
+        center_positions,
+        sigmas: np.ndarray,
+        p0: np.ndarray,
+        tolerance: float
+) -> np.ndarray:
+
+    # Build of the right hand side.
+    pii = sigmas[1:len(sigmas)] / sigmas[0]
+    mass_n_two = mass.n_two_j_blocks(big_l, radii, azimuthal=False)
+    x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
+        n, big_l, radii, pii, azimuthal=False)
+    b = righthands.b_vector_n_spheres_mtf_point_source(n, big_l,
+                                                       center_positions, p0,
+                                                       radii, sigmas[0], x_dia,
+                                                       mass_n_two)
+    # Build of mtf matrix
+    big_a_0_cross = laplacecross.all_cross_interactions_n_spheres_v2d(
+        n, big_l, big_l_c, radii, center_positions)
+    sparse_big_a_0_self, sparse_big_a_n = laplaceself.a_0_a_n_sparse_matrices(
+        n, big_l, radii, azimuthal=False)
+
+    linear_operator = mtf.mtf_n_linear_operator_v1(
+        big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, x_dia, x_dia_inv)
+
+    solution, info = scipy.sparse.linalg.gmres(
+        linear_operator, b,
+        tol=tolerance,
+        restart=(4 * (big_l + 1)**2)**3)
 
     return solution
