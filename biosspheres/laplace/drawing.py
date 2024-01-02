@@ -1,33 +1,43 @@
+from typing import Callable
 import numpy as np
 import pyshtools
 
 
-def draw_cut_laplace_one_sphere_azimuthal_symmetry(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        coefficients, radius, big_l, exterior):
+def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
+        cut: int, center: np.ndarray, horizontal: float, vertical: float,
+        inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
+        radius: float, big_l: int, exterior: Callable[[np.ndarray], float]):
     """
 
     Parameters
     ----------
-    cut: int . 1, 2 or 3. Indicates if the drawing is a parallel cut of the
-        plane: xy if = 1, xz if = 2, yz if other.
-    center: array of floats of length 2. Coordinates of the center of the
-        drawing.
-    horizontal: float, horizontal length of the rectangle that is going to be
-        drawn.
-    vertical: float, vertical length of the rectangle that is going to be
-        drawn.
-    inter_horizontal: int > 0, quantity of points in the horizontal axis.
-    inter_vertical: int > 0, quantity of points in the vertical axis.
-    coefficients: coefficients of the spherical harmonics expansion.
-    radius: radius of the sphere.
-    big_l: int > 0, maximum order of the spherical harmonics used to discretize
-        the traces.
-    exterior: exterior function, to be evaluated in each point
+    cut : int
+        1, 2 or 3. Indicates if the drawing is a parallel cut of the
+        plane: xy if = 1, xz if = 2, yz = 3 if other.
+    center : np.ndarray
+        array of floats of length 2. Coordinates of the center of the drawing.
+    horizontal : float
+        horizontal length of the rectangle that is going to be drawn.
+    vertical : float
+        vertical length of the rectangle that is going to be drawn.
+    inter_horizontal : int
+        > 0, quantity of points in the horizontal axis.
+    inter_vertical : int
+        > 0, quantity of points in the vertical axis.
+    coefficients : np.ndarray
+        coefficients of the spherical harmonics expansion.
+    radius : float
+        radius of the sphere.
+    big_l : int
+        > 0, maximum order of the spherical harmonics used to discretize the
+        traces.
+    exterior : Callable[[np.ndarray], float]
+        exterior function, to be evaluated in each point.
 
     Returns
     -------
-    data_for_plotting: array 2D of floats for plotting.
+    data_for_plotting : np.ndarray
+        2D of floats for plotting.
     """
     n = 1
     ps = [np.asarray([0., 0., 0.])]
@@ -225,35 +235,45 @@ def draw_cut_laplace_one_sphere_azimuthal_symmetry(
         return x1, y1, data_for_plotting
 
 
-def draw_cut_laplace_n_sphere(
+def draw_cut_representation_formula_n_sphere(
         cut: int, center: np.ndarray, horizontal: float, vertical: float,
         inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
-        radii: np.ndarray, positions, big_l: int, exterior):
+        radii: np.ndarray, positions, big_l: int,
+        exterior: Callable[[np.ndarray], float]):
     """
 
     Parameters
     ----------
-    cut: int . 1, 2 or 3. Indicates if the drawing is a parallel cut of the
+    cut : int
+        1, 2 or 3. Indicates if the drawing is a parallel cut of the
         plane: xy if = 1, xz if = 2, yz = 3 if other.
-    center: array of floats of length 2. Coordinates of the center of the
-        drawing.
-    horizontal: float, horizontal length of the rectangle that is going to be
-        drawn.
-    vertical: float, vertical length of the rectangle that is going to be
-        drawn.
-    inter_horizontal: int > 0, quantity of points in the horizontal axis.
-    inter_vertical: int > 0, quantity of points in the vertical axis.
-    coefficients: coefficients of the spherical harmonics expansion.
-    radii: numpy array of floats with the radii of the spheres.
-    positions: list with numpy arrays that represents the position vector of
-        the center of the spheres.
-    big_l: int > 0, maximum order of the spherical harmonics used to discretize
-        the traces.
-    exterior: exterior function, to be evaluated in each point.
+    center : np.ndarray
+        array of floats of length 2. Coordinates of the center of the drawing.
+    horizontal : float
+        horizontal length of the rectangle that is going to be drawn.
+    vertical : float
+        vertical length of the rectangle that is going to be drawn.
+    inter_horizontal : int
+        > 0, quantity of points in the horizontal axis.
+    inter_vertical : int
+        > 0, quantity of points in the vertical axis.
+    coefficients : np.ndarray
+        coefficients of the spherical harmonics expansion.
+    radii : np.ndarray
+        numpy array of floats with the radii of the spheres.
+    positions : list
+        with numpy arrays that represents the position vector of the center of
+        the spheres.
+    big_l : int
+        > 0, maximum order of the spherical harmonics used to discretize the
+        traces.
+    exterior : Callable[[np.ndarray], float]
+        exterior function, to be evaluated in each point.
 
     Returns
     -------
-    data_for_plotting: array 2D of floats for plotting.
+    data_for_plotting : np.ndarray
+        2D of floats for plotting.
     """
     n = len(radii)
 
