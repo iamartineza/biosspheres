@@ -63,6 +63,9 @@ def mtf_laplace_n_spheres_point_source_direct_solver(
     matrix = mtf.mtf_n_matrix(
         big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, x_dia, x_dia_inv)
 
+    del big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, mass_n_two, x_dia
+    del x_dia_inv, pii
+
     solution = np.linalg.solve(matrix, b)
 
     return solution
@@ -96,6 +99,9 @@ def mtf_laplace_n_spheres_point_source_indirect_solver(
 
     linear_operator = mtf.mtf_n_linear_operator_v1(
         big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, x_dia, x_dia_inv)
+
+    del big_a_0_cross, sparse_big_a_0_self, sparse_big_a_n, mass_n_two, x_dia
+    del x_dia_inv, pii
 
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator, b,
