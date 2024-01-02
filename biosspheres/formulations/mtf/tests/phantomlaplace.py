@@ -204,7 +204,7 @@ def phantom_1_point_source_azimuthal(
     r = 1.
     
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -216,7 +216,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -228,7 +228,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -243,7 +243,7 @@ def phantom_1_point_source_azimuthal(
     temp[:] = solution2[2 * (max_l + 1):4 * (max_l + 1)]
     solution2[2 * (max_l + 1):4 * (max_l + 1)] = 0.
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -256,7 +256,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -269,7 +269,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -286,7 +286,7 @@ def phantom_1_point_source_azimuthal(
     
     solution2[2 * (max_l + 1):4 * (max_l + 1)] = temp[:]
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -298,7 +298,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -310,7 +310,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -323,7 +323,7 @@ def phantom_1_point_source_azimuthal(
     
     solution2[2 * (max_l + 1):4 * (max_l + 1)] = 0.
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -336,7 +336,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -349,7 +349,7 @@ def phantom_1_point_source_azimuthal(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_one_sphere_azimuthal_symmetry(
+    x1, y1, data = draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
         solution2, r, max_l, point_source)
     plt.figure()
@@ -551,9 +551,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         return 0.
     
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -565,9 +572,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar()
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',  # vmin=0., vmax=0.0032,
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -579,9 +593,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',  # vmin=0., vmax=0.0032,
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -600,9 +621,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
             max_l, solution2[3 * num:4 * num] - b_max[num:2 * num])
     
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -614,9 +642,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar()
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -628,9 +663,16 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        aux_drawing, radius, center_positions, max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 aux_drawing,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -782,11 +824,16 @@ def mix_phantom_total_3_different_1_point_source(
     solution_cut = np.zeros(np.shape(solution2))
     solution_cut[0:2 * num * n] = solution2[0:2 * num * n]
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(
-        cut, center, horizontal, vertical, inter_horizontal, inter_vertical,
-        solution_cut,
-        radius, center_positions,
-        max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',  # vmax=0.004,
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -798,15 +845,16 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -818,15 +866,16 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -844,15 +893,16 @@ def mix_phantom_total_3_different_1_point_source(
         solution_cut[3 * num * n:4 * num * n] - b[num * n:2 * num * n]
     
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -864,15 +914,16 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -884,15 +935,16 @@ def mix_phantom_total_3_different_1_point_source(
     plt.colorbar(label='[V]', orientation='horizontal')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -935,7 +987,7 @@ def mix_phantom_total_27_different_1_point_source(
     n = n**3
     sigmas = np.ones(n + 1) * sigma_e
     sigmas[1] = sigma_i
-    radii = np.ones(n) * 10.
+    radii = np.ones(n)
     radii[0] = radio_1
     
     b = bioslaplace.b_vector_n_spheres_mtf_point_source_reduced(
@@ -999,15 +1051,16 @@ def mix_phantom_total_27_different_1_point_source(
     solution_cut = np.zeros(np.shape(solution2))
     solution_cut[0:2 * num * n] = solution2[0:2 * num * n]
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -1019,15 +1072,16 @@ def mix_phantom_total_27_different_1_point_source(
     plt.colorbar()
     center = np.asarray([30., 0., 30.])
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -1040,15 +1094,16 @@ def mix_phantom_total_27_different_1_point_source(
     
     center = np.asarray([30., 30., 0.])
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -1065,15 +1120,16 @@ def mix_phantom_total_27_different_1_point_source(
         solution_cut[3 * num * n:4 * num * n] - b[num * n:2 * num * n]
     
     cut = 1
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[1], horizontal / 2 + center[1],
@@ -1085,15 +1141,16 @@ def mix_phantom_total_27_different_1_point_source(
     plt.colorbar()
     
     cut = 2
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
@@ -1105,15 +1162,16 @@ def mix_phantom_total_27_different_1_point_source(
     plt.colorbar(label='[V]')
     
     cut = 3
-    x1, y1, data = draw.draw_cut_laplace_n_sphere(cut, center,
-                                                         horizontal,
-                                                         vertical,
-                                                         inter_horizontal,
-                                                         inter_vertical,
-                                                         solution_cut,
-                                                         radius,
-                                                         center_positions,
-                                                         max_l, point_source)
+    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(cut, center,
+                                                                 horizontal,
+                                                                 vertical,
+                                                                 inter_horizontal,
+                                                                 inter_vertical,
+                                                                 solution_cut,
+                                                                 radius,
+                                                                 center_positions,
+                                                                 max_l,
+                                                                 point_source)
     plt.figure()
     plt.imshow(data, origin='lower',
                extent=[-horizontal / 2 + center[0], horizontal / 2 + center[0],
