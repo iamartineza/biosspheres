@@ -317,7 +317,7 @@ def mtf_1_reduced_matrix_laplace(
     Notes
     -----
     In this case it holds:
-    M_red = 2 [2 K_0        , (1 + pi^{-1}) V_0]
+    M_red = 2 [- 2 K_0        , (1 + pi^{-1}) V_0]
               [(1 + pi) W_0 ,      2 K_0^{*}   ]
 
 
@@ -359,7 +359,7 @@ def mtf_1_reduced_linear_operator(
     Notes
     -----
     In this case it holds:
-    M_red = 2 [2 K_0        , (1 + pi^{-1}) V_0]
+    M_red = 2 [- 2 K_0        , (1 + pi^{-1}) V_0]
               [(1 + pi) W_0 ,      2 K_0^{*}   ]
 
     Parameters
@@ -582,3 +582,16 @@ def mtf_1_reduced_linear_operator_helmholtz(
             rmatvec=matrix_transpose_times_vector,
             rmatmat=matrix_transpose_times_vector)
     return linear_operator
+
+
+def mtf_n_reduced_matrix(
+        big_a_0_cross: np.ndarray,
+        sparse_reduced_big_a_self: sparse.bsr_array
+) -> np.ndarray:
+    num = len(big_a_0_cross[0, :]) // 2
+    mtf_matrix = np.zeros((2 * num, 2 * num), dtype=big_a_0_cross.dtype)
+    mtf_matrix[0:2*num, 0:2*num] = 2. * (
+            big_a_0_cross[0:2*num, 0:2*num]
+            + sparse_reduced_big_a_self.toarray()[0:2*num, 0:2*num])
+    return mtf_matrix
+
