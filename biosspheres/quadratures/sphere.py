@@ -183,15 +183,18 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     pesykus : np.ndarray
         dtype int, shape ((big_l+1) * big_l // 2, 2).
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
     p2_plus_p_plus_q : np.ndarray
         dtype int, length (big_l+1) * big_l // 2.
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
     p2_plus_p_minus_q : np.ndarray
         dtype int, length (big_l+1) * big_l // 2.
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
     
     Returns
     -------
