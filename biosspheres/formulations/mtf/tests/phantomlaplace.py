@@ -1,9 +1,3 @@
-import os
-os.environ["OMP_NUM_THREADS"] = "3"
-os.environ["OPENBLAS_NUM_THREADS"] = "3"
-os.environ["MKL_NUM_THREADS"] = "3"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "3"
-os.environ["NUMEXPR_NUM_THREADS"] = "3"
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm, colors
