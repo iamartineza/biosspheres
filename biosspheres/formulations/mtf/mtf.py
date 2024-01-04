@@ -1,4 +1,3 @@
-from typing import Callable
 import numpy as np
 from scipy import sparse
 import biosspheres.helmholtz.selfinteractions as helmholtz
