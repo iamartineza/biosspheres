@@ -350,7 +350,8 @@ def real_spherical_harmonic_transform_1d(
 
     sin_theta = np.sqrt(1. - np.square(cos_theta))
 
-    # Help: first is tile (theta integral) and then is repeat (phi integral)
+    # Help:
+    # first is tile (theta integral) and then is repeat (phi integral)
     total_weights = weights * 2.*np.pi / quantity_phi_points
 
     final_length = quantity_theta_points * quantity_phi_points
@@ -453,14 +454,17 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
     from_sphere_s_cartesian_to_j_spherical_1d
     
     """
-    # temp is an array of 3 x quantity_theta_points x quantity_phi_points
-    # with its components in the Cartesian coordinate system of system s.
+    # temp is an array of
+    # 3 x quantity_theta_points x quantity_phi_points
+    # with its components in the Cartesian coordinate system of
+    # system s.
     # The first row are the x coordinates,
     # the second the y,
     # the third the z.
     temp = np.multiply(r_s, pre_vector)
 
-    # I want to write temp in the Cartesian coordinate system of system j.
+    # I want to write temp in the Cartesian coordinate system of
+    # system j.
     # For that, I add d_js to temp.
     d_js = p_s - p_j
     erres = np.zeros((3, quantity_theta_points, quantity_phi_points))
@@ -573,14 +577,17 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     
     """
-    # temp is an array of 3 x quantity_theta_points x quantity_phi_points
-    # with its components in the Cartesian coordinate system of system s.
+    # temp is an array of
+    # 3 x quantity_theta_points x quantity_phi_points
+    # with its components in the Cartesian coordinate system of
+    # system s.
     # The first row are the x coordinates,
     # the second the y,
     # the third the z.
     temp = np.multiply(r_s, pre_vector)
 
-    # I want to write temp in the Cartesian coordinate system of system j.
+    # I want to write temp in the Cartesian coordinate system of
+    # system j.
     # For that, I add d_js to temp.
     d_js = p_s - p_j
     erres = np.zeros((3, quantity_theta_points, quantity_phi_points))
@@ -689,14 +696,17 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
     from_sphere_s_cartesian_to_j_spherical_2d
     
     """
-    # temp is an array of 3 x quantity_theta_points x quantity_phi_points
-    # with its components in the Cartesian coordinate system of system s.
+    # temp is an array of
+    # 3 x quantity_theta_points x quantity_phi_points
+    # with its components in the Cartesian coordinate system of
+    # system s.
     # The first row are the x coordinates,
     # the second the y,
     # the third the z.
     temp = np.multiply(r_s, pre_vector)
 
-    # I want to write temp in the Cartesian coordinate system of system j.
+    # I want to write temp in the Cartesian coordinate system of
+    # system j.
     # For that, I add d_js to temp.
     d_js = p_s - p_j
     erres = np.zeros((3, final_length))
@@ -796,14 +806,17 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         system s. Shape equals to (3, final_length).
         
     """
-    # temp is an array of 3 x quantity_theta_points x quantity_phi_points
-    # with its components in the Cartesian coordinate system of system s.
+    # temp is an array of
+    # 3 x quantity_theta_points x quantity_phi_points
+    # with its components in the Cartesian coordinate system of
+    # system s.
     # The first row are the x coordinates,
     # the second the y,
     # the third the z.
     temp = np.multiply(r_s, pre_vector)
 
-    # I want to write temp in the Cartesian coordinate system of system j.
+    # I want to write temp in the Cartesian coordinate system of
+    # system j.
     # For that, I add d_js to temp.
     d_js = p_s - p_j
     erres = np.zeros((3, final_length))
