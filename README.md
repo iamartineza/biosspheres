@@ -95,3 +95,8 @@ and
 	&K^*_{j}(\psi) &= -\frac{1}{2} \psi + \trazaN^j {SL_{j}(\psi)}.
 \end{align*}
 ```
+
+## Comments about the code.
+
+All Legendre's functions are computed using the package pyshtools 
+([documentation of pyshtools](https://shtools.github.io/SHTOOLS/index.html))
