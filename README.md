@@ -50,7 +50,7 @@ For $u\in C^\infty(\overline\Omega)$, Dirichlet and Neumann traces operators are
 ```
 where $\widehat{n}$ is the exterior unit normal.
 
-By density arguments, the definition of Dirichlet and Neumann traces operator can be extended to $u_j \in H^1_{loc}(\Omega_j)$, with $j \{0, ..., N \}$. We extend the notation as follows
+By density arguments, the definition of Dirichlet and Neumann traces operator can be extended to $u_j \in H^1_{loc}(\Omega_j)$, with $j \in \{ 0, ..., N \}$. We extend the notation as follows
 
 ```math
 \gamma_d^{0j} u_0 := u_0|_{\Gamma_j},
