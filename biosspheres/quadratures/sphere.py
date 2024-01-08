@@ -4,7 +4,7 @@ import pyshtools
 
 def gauss_legendre_trapezoidal_2d(
         big_l_c: int
-):
+) -> tuple[int, int, np.ndarray, np.ndarray]:
     """
     It returns the weights and vectors for the Gauss-Legendre and
     trapezoidal quadrature rule for computing a numerical integral in
@@ -77,7 +77,7 @@ def gauss_legendre_trapezoidal_2d(
 
 def gauss_legendre_trapezoidal_1d(
         big_l_c: int
-):
+) -> tuple[int, np.ndarray, np.ndarray]:
     """
     It returns the weights and vectors for the Gauss-Legendre and
     trapezoidal quadrature rule for computing a numerical integral in
@@ -160,7 +160,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         pesykus: np.ndarray,
         p2_plus_p_plus_q: np.ndarray,
         p2_plus_p_minus_q: np.ndarray
-):
+) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
     """
     It returns the weights and vectors for the Gauss-Legendre and
     trapezoidal quadrature rule for computing a numerical integral in
@@ -293,7 +293,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
 def real_spherical_harmonic_transform_1d(
         big_l: int,
         big_l_c: int
-):
+) -> tuple[int, np.ndarray, np.ndarray]:
     """
     It returns the vectors for the Gauss-Legendre and trapezoidal
     quadrature rule for computing a numerical integral in the surface
@@ -393,7 +393,7 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
         quantity_theta_points: int,
         quantity_phi_points: int,
         pre_vector: np.ndarray
-):
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j". The "j" has its
@@ -489,7 +489,9 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         quantity_theta_points: int,
         quantity_phi_points: int,
         pre_vector: np.ndarray
-):
+) -> tuple[
+        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
+]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j", and also gives
@@ -636,7 +638,7 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
         p_s: np.ndarray,
         final_length: int,
         pre_vector: np.ndarray
-):
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j". The "j" has its
@@ -729,7 +731,9 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         p_s: np.ndarray,
         final_length: int,
         pre_vector: np.ndarray
-):
+) -> tuple[
+        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
+]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j", and also gives
