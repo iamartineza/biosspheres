@@ -6,37 +6,40 @@ def gauss_legendre_trapezoidal_2d(
         big_l_c: int
 ):
     """
-    It returns the weights and vectors for the Gauss-Legendre and trapezoidal
-    quadrature rule for computing a numerical integral in the surface of a
-    sphere.
+    It returns the weights and vectors for the Gauss-Legendre and
+    trapezoidal quadrature rule for computing a numerical integral in
+    the surface of a sphere.
     
     Notes
     -----
-    Gauss-legendre quadrature in theta. This one uses the package pyshtools.
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
     Trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
     numbers, the quadrature must be exact for functions consisting in
-    polynomials of big_l_c degree times an exponential power to (m times i),
-    with |m| <= big_l_c.
+    polynomials of big_l_c degree times an exponential power to (m times
+    i), with |m| <= big_l_c.
 
     Parameters
     ----------
     big_l_c : int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
 
     Returns
     -------
     quantity_theta_points : int
         how many points for the integral in theta, (big_l_c + 1).
     quantity_phi_points : int
-        how many points for the integral in phi, (2 * big_l_c + 1)
+        how many points for the integral in phi, (2 * big_l_c + 1).
     weights : np.ndarray
-        of floats, with the weights for the integral quadrature in theta.
+        of floats, with the weights for the integral quadrature in
+        theta.
     pre_vector : np.ndarray
-        of floats. Represents the vectors of the quadrature points. Shape
-        (3, quantity_theta_points, quantity_phi_points).
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, quantity_theta_points, quantity_phi_points).
     
     See Also
     --------
@@ -76,25 +79,27 @@ def gauss_legendre_trapezoidal_1d(
         big_l_c: int
 ):
     """
-    It returns the weights and vectors for the Gauss-Legendre and trapezoidal
-    quadrature rule for computing a numerical integral in the surface of a
-    sphere.
+    It returns the weights and vectors for the Gauss-Legendre and
+    trapezoidal quadrature rule for computing a numerical integral in
+    the surface of a sphere.
     
     Notes
     -----
-    Gauss-legendre quadrature in theta. This one uses the package pyshtools.
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
     Trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
     numbers, the quadrature must be exact for functions consisting in
-    polynomials of big_l_c degree times an exponential power to (m times i),
-    with |m| <= big_l_c.
+    polynomials of big_l_c degree times an exponential power to (m times
+    i), with |m| <= big_l_c.
 
     Parameters
     ----------
     big_l_c : int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
 
     Returns
     -------
@@ -102,11 +107,11 @@ def gauss_legendre_trapezoidal_1d(
         how many points for the surface integral,
         = (big_l_c + 1) * (2 * big_l_c + 1).
     total_weights : np.ndarray
-        of floats, with the weights for the integral quadrature and length
-        final_length.
+        of floats, with the weights for the integral quadrature and
+        length final_length.
     pre_vector : np.ndarray
-        of floats. Represents the vectors of the quadrature points. Shape
-        (3, final_length).
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, final_length).
     
     See Also
     --------
@@ -157,21 +162,23 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         p2_plus_p_minus_q: np.ndarray
 ):
     """
-    It returns the weights and vectors for the Gauss-Legendre and trapezoidal
-    quadrature rule for computing a numerical integral in the surface of a
-    sphere. It also returns the real spherical harmonics of degree and
-    order l and m evaluated in the quadrature points.
+    It returns the weights and vectors for the Gauss-Legendre and
+    trapezoidal quadrature rule for computing a numerical integral in
+    the surface of a sphere. It also returns the real spherical
+    harmonics of degree l and order m evaluated in the quadrature
+    points.
     
     Notes
     -----
-    Gauss-legendre quadrature in theta. This one uses the package pyshtools.
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
     Trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
     numbers, the quadrature must be exact for functions consisting in
-    polynomials of big_l_c degree times an exponential power to (m times i),
-    with |m| <= big_l_c.
+    polynomials of big_l_c degree times an exponential power to (m times
+    i), with |m| <= big_l_c.
     Legendre's functions are computed used pyshtools.
     
     Parameters
@@ -179,7 +186,8 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     big_l : int
         >= 0, max degree.
     big_l_c : int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
     pesykus : np.ndarray
         dtype int, shape ((big_l+1) * big_l // 2, 2).
         Used for the vectorization of some computations.
@@ -203,13 +211,14 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     quantity_phi_points : int
         how many points for the integral in phi, (2 * big_l_c + 1)
     weights : np.ndarray
-        of floats, with the weights for the integral quadrature in theta.
+        of floats, with the weights for the integral quadrature in
+        theta.
     pre_vector : np.ndarray
-        of floats. Represents the vectors of the quadrature points. Shape
-        (3, quantity_theta_points, quantity_phi_points).
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, quantity_theta_points, quantity_phi_points).
     spherical_harmonics : np.ndarray
-        of floats, represent the real spherical harmonics of degree and order
-        l and m evaluated in the points given by pre_vector. Shape
+        of floats, represent the real spherical harmonics of degree and
+        order l and m evaluated in the points given by pre_vector. Shape
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
     
     """
@@ -286,20 +295,21 @@ def real_spherical_harmonic_transform_1d(
         big_l_c: int
 ):
     """
-    It returns the vectors for the Gauss-Legendre and trapezoidal quadrature
-    rule for computing a numerical integral in the surface of a sphere.
-    It also returns the real spherical harmonics of degree and
-    order l and m evaluated in the quadrature points multiplied by the
-    corresponding weights.
+    It returns the vectors for the Gauss-Legendre and trapezoidal
+    quadrature rule for computing a numerical integral in the surface
+    of a sphere. It also returns the real spherical harmonics of degree
+    and order l and m evaluated in the quadrature points multiplied by
+    the corresponding weights.
     
-    Is for SLOW routines.
+    The use of the results of this routine is for SLOW routines.
     
     Parameters
     ----------
     big_l : int
         >= 0.
     big_l_c: int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
 
     Returns
     -------
@@ -307,11 +317,11 @@ def real_spherical_harmonic_transform_1d(
         how many points for the surface integral,
         = (big_l_c + 1) * (2 * big_l_c + 1).
     pre_vector : np.ndarray
-        of floats. Represents the vectors of the quadrature points. Shape
-        (3, final_length).
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, final_length).
     transform : np.ndarray
-        of floats. Mapping of the real spherical harmonics times the weights.
-        Shape ((big_l+1)**2, final_length)
+        of floats. Mapping of the real spherical harmonics times the
+        weights. Shape ((big_l+1)**2, final_length)
     
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
@@ -384,9 +394,10 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
         pre_vector: np.ndarray
 ):
     """
-    Given points in the cartesian coordinate system "s", this algorithm writes
-    them in the spherical coordinate system "j". The "j" has its center in a
-    different point than the center of the coordinate system "s".
+    Given points in the cartesian coordinate system "s", this algorithm
+    writes them in the spherical coordinate system "j". The "j" has its
+    center in a different point than the center of the coordinate system
+    "s".
     
     Notes
     -----
@@ -408,11 +419,11 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
     r_s : float
         > 0, radius of the sphere s.
     p_j : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere j.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere j.
     p_s : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere s.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere s.
     quantity_theta_points : int
         how many points in theta.
     quantity_phi_points : int
@@ -424,8 +435,8 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
     Returns
     -------
     r_coord : np.ndarray
-        Two dimensional array of floats with the spherical coordinate r of the
-        points in the coordinate system s. Shape equals to
+        Two dimensional array of floats with the spherical coordinate r
+        of the points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
     phi_coord : np.ndarray
         Two dimensional array of floats with the phi coordinate r of the
@@ -476,9 +487,10 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         pre_vector: np.ndarray
 ):
     """
-    Given points in the cartesian coordinate system "s", this algorithm writes
-    them in the spherical coordinate system "j", and also gives the coordinates
-    of the unitary vectors of the spherical system in each point.
+    Given points in the cartesian coordinate system "s", this algorithm
+    writes them in the spherical coordinate system "j", and also gives
+    the coordinates of the unitary vectors of the spherical system in
+    each point.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
     
@@ -500,7 +512,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         widehat{mathbf{e}}_r = sin theta cos varphi widehat{mathbf{e}}_x
             + sin theta sin varphi widehat{mathbf{e}}_y
             + cos theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_theta = cos theta cos varphi widehat{mathbf{e}}_x
+        widehat{mathbf{e}}_theta = cos theta cos varphi
+            widehat{mathbf{e}}_x
             + cos theta sin varphi widehat{mathbf{e}}_y
             - sin theta widehat{mathbf{e}}_z
         widehat{mathbf{e}}_{varphi} = -sin varphi widehat{mathbf{e}}_x
@@ -511,11 +524,11 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     r_s : float
         > 0, radius of the sphere s.
     p_j : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere j.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere j.
     p_s : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere s.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere s.
     quantity_theta_points : int
         how many points in theta.
     quantity_phi_points : int
@@ -527,8 +540,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     Returns
     -------
     r_coord : np.ndarray
-        Two dimensional array of floats with the spherical coordinate r of the
-        points in the coordinate system s. Shape equals to
+        Two dimensional array of floats with the spherical coordinate r
+        of the points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
     phi_coord : np.ndarray
         Two dimensional array of floats with the phi coordinate r of the
@@ -539,17 +552,20 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         coordinate theta of the points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
     er_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate r in the points in the coordinate system s. Shape
-        equals to (3, quantity_theta_points, quantity_phi_points).
+        Three dimensional array of floats with the canonical vector of
+        the spherical coordinate r in the points in the coordinate
+        system s. Shape equals to
+        (3, quantity_theta_points, quantity_phi_points).
     etheta_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate theta in the points in the coordinate system s.
-        Shape equals to (3, quantity_theta_points, quantity_phi_points).
+        Three dimensional array of floats with the canonical vector of
+        the spherical coordinate theta in the points in the coordinate
+        system s. Shape equals to
+        (3, quantity_theta_points, quantity_phi_points).
     ephi_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate phi in the points in the coordinate system s.
-        Shape equals to (3, quantity_theta_points, quantity_phi_points).
+        Three dimensional array of floats with the canonical vector of
+        the spherical coordinate phi in the points in the coordinate
+        system s. Shape equals to
+        (3, quantity_theta_points, quantity_phi_points).
     
     See Also
     --------
@@ -615,9 +631,10 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
         pre_vector: np.ndarray
 ):
     """
-    Given points in the cartesian coordinate system "s", this algorithm writes
-    them in the spherical coordinate system "j". The "j" has its center in a
-    different point than the center of the coordinate system "s".
+    Given points in the cartesian coordinate system "s", this algorithm
+    writes them in the spherical coordinate system "j". The "j" has its
+    center in a different point than the center of the coordinate system
+    "s".
     
     This one is for a slow routine.
     
@@ -641,11 +658,11 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
     r_s : float
         > 0, radius of the sphere s.
     p_j : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere j.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere j.
     p_s : np.ndarray
-        of floats of dimension 1, length 3, represents the position vector of
-        the center of the sphere s.
+        of floats of dimension 1, length 3, represents the position
+        vector of the center of the sphere s.
     final_length : int
         how many points.
     pre_vector : np.ndarray
@@ -654,11 +671,13 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
     Returns
     -------
     r_coord : np.ndarray
-        One dimensional array of floats with the spherical coordinate r of the
-        points in the coordinate system s. Length equals to final_length.
+        One dimensional array of floats with the spherical coordinate r
+        of the points in the coordinate system s. Length equals to
+        final_length.
     phi_coord : np.ndarray
         One dimensional array of floats with the phi coordinate r of the
-        points in the coordinate system s. Length equals to final_length.
+        points in the coordinate system s. Length equals to
+        final_length.
     cos_theta_coord : np.ndarray
         One dimensional array of floats with the coseno of the spherical
         coordinate theta of the points in the coordinate system s.
@@ -702,9 +721,10 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         pre_vector: np.ndarray
 ):
     """
-    Given points in the cartesian coordinate system "s", this algorithm writes
-    them in the spherical coordinate system "j", and also gives the coordinates
-    of the unitary vectors of the spherical system in each point.
+    Given points in the cartesian coordinate system "s", this algorithm
+    writes them in the spherical coordinate system "j", and also gives
+    the coordinates of the unitary vectors of the spherical system in
+    each point.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
     
@@ -726,7 +746,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         widehat{mathbf{e}}_r = sin theta cos varphi widehat{mathbf{e}}_x
             + sin theta sin varphi widehat{mathbf{e}}_y
             + cos theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_theta = cos theta cos varphi widehat{mathbf{e}}_x
+        widehat{mathbf{e}}_theta = cos theta cos varphi
+            widehat{mathbf{e}}_x
             + cos theta sin varphi widehat{mathbf{e}}_y
             - sin theta widehat{mathbf{e}}_z
         widehat{mathbf{e}}_{varphi} = -sin varphi widehat{mathbf{e}}_x
@@ -750,11 +771,13 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
     Returns
     -------
     r_coord : np.ndarray
-        One dimensional array of floats with the spherical coordinate r of the
-        points in the coordinate system s. Length equals to final_length.
+        One dimensional array of floats with the spherical coordinate r
+        of the points in the coordinate system s. Length equals to
+        final_length.
     phi_coord : np.ndarray
         One dimensional array of floats with the phi coordinate r of the
-        points in the coordinate system s. Length equals to final_length.
+        points in the coordinate system s. Length equals to
+        final_length.
     cos_theta_coord : np.ndarray
         One dimensional array of floats with the coseno of the spherical
         coordinate theta of the points in the coordinate system s.
