@@ -45,15 +45,25 @@ $$SL_{j}: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\mathbb{R}^3 \se
 ## Boundary integral operators
 
 For $u\in C^\infty(\overline\Omega)$, Dirichlet and Neumann traces operators are defined as 
-$$\gamma_d u := u|_{\Gamma},\qquad \gamma_n u := \nabla  u|_{\Gamma} \cdot \widehat{n},$$
+```math
+\gamma_d u := u|_{\Gamma},\qquad \gamma_n u := \nabla  u|_{\Gamma} \cdot \widehat{n},
+```
 where $\widehat{n}$ is the exterior unit normal.
 
 By density arguments, the definition of Dirichlet and Neumann traces operator can be extended to $u_j \in H^1_{loc}(\Omega_j)$, with $j \{0, ..., N \}$. We extend the notation as follows
 
-$$\gamma_d^{0j} u_0 := u_0|_{\Gamma_j},$$
-$$\gamma_d^{j} u_j := u_0|_{\Gamma_j},$$
-$$\gamma_n^{0j} u_0 := \nabla u_0|_{\Gamma_j} \cdot \widehat{n}_{0j},$$
-$$\gamma_n^{j} u_j := \nabla u_0|_{\Gamma_j}\cdot \widehat{n}_{j},$$
+```math
+\gamma_d^{0j} u_0 := u_0|_{\Gamma_j},
+```
+```math
+\gamma_d^{j} u_j := u_0|_{\Gamma_j},
+```
+```math
+\gamma_n^{0j} u_0 := \nabla u_0|_{\Gamma_j} \cdot \widehat{n}_{0j},
+```
+```math
+\gamma_n^{j} u_j := \nabla u_0|_{\Gamma_j}\cdot \widehat{n}_{j},
+```
 where $\widehat{n}_{j}$ is the exterior normal of $\Omega_j$, with $j\in \{ 1, ..., N\}$ and $\widehat{n}_{0j}=-\widehat{n}_{j}$.
 
 Now, we recall the definition of the boundary integral operators:
