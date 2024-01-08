@@ -45,19 +45,28 @@ $$SL_{j}: H^{-\frac{1}{2}}(\Gamma_j) \rightarrow H^1_{loc}\left(\mathbb{R}^3 \se
 ## Boundary integral operators
 
 For $u\in C^\infty(\overline\Omega)$, Dirichlet and Neumann traces operators are defined as 
-$$\trazaD u := u|_{\Gamma},\qquad \trazaN u := \nabla  u|_{\Gamma} \cdot \Unormal,$$
-where $\Unormal$ is the exterior unit normal.
+$$\gamma_d u := u|_{\Gamma},\qquad \gamma_n u := \nabla  u|_{\Gamma} \cdot \widehat{n},$$
+where $\widehat{n}$ is the exterior unit normal.
 
+By density arguments, the definition of Dirichlet and Neumann traces operator can be extended to $u_j \in H^1_{loc}(\Omega_j)$, with $j \{0, ..., N \}$. We extend the notation as follows
+
+$$\gamma_d^{0j} u_0 := u_0|_{\Gamma_j},$$
+$$\gamma_d^{j} u_j := u_0|_{\Gamma_j},$$
+$$\gamma_n^{0j} u_0 := \nabla u_0|_{\Gamma_j} \cdot \widehat{n}_{0j},$$
+$$\gamma_n^{j} u_j := \nabla u_0|_{\Gamma_j}\cdot \widehat{n}_{j},$$
+where $\widehat{n}_{j}$ is the exterior normal of $\Omega_j$, with $j\in \{ 1, ..., N\}$ and $\widehat{n}_{0j}=-\widehat{n}_{j}$.
+
+Now, we recall the definition of the boundary integral operators:
 ```math
 \begin{align*}
-	V_{i,j}^0 &:=  \frac{1}{2} \left( \trazaD^{i} SL_{0j} + \trazaD^{0i} SL_{0j} \right) ,
-	& V_{j}&:= \frac{1}{2} \left(  \trazaD^{0j} SL_{j} + \trazaD^{j} SL_{j} \right) ,\\
-	K_{i,j}^0&:= \frac{1}{2} \left(\trazaD^{i} DL_{0j} + \trazaD^{0i} DL_{0j} \right) ,
-	&K_{j}&:= \frac{1}{2} \left(\trazaD^{0j} DL_{j} + \trazaD^{j} DL_{j} \right),\\
-	K^{*0}_{i,j}&:= \frac{1}{2} \left( - \trazaN ^{i} SL_{0j} + \trazaN ^{0i} SL_{0j}  \right),
-	 & K^{*}_{j} &:= \frac{1}{2} \left( -\trazaN ^{0j} SL_{j}  + \trazaN ^{j} SL_{j} \right), \\
-	W_{i,j}^0 &:= -\frac{1}{2} \left( - \trazaN^{i} DL_{0j}  + \trazaN^{0i} DL_{0j} \right) ,
-	& W_{j} &:=- \frac{1}{2} \left( -\trazaN^{0j} DL_{j} + \trazaN^{j} DL_{j} \right).
+	V_{i,j}^0 &:=  \frac{1}{2} \left( \gamma_d^{i} SL_{0j} + \gamma_d^{0i} SL_{0j} \right) ,
+	& V_{j}&:= \frac{1}{2} \left(  \gamma_d^{0j} SL_{j} + \gamma_d^{j} SL_{j} \right) ,\\
+	K_{i,j}^0&:= \frac{1}{2} \left(\gamma_d^{i} DL_{0j} + \gamma_d^{0i} DL_{0j} \right) ,
+	&K_{j}&:= \frac{1}{2} \left(\gamma_d^{0j} DL_{j} + \gamma_d^{j} DL_{j} \right),\\
+	K^{*0}_{i,j}&:= \frac{1}{2} \left( - \gamma_n ^{i} SL_{0j} + \gamma_n ^{0i} SL_{0j}  \right),
+	 & K^{*}_{j} &:= \frac{1}{2} \left( -\gamma_n ^{0j} SL_{j}  + \gamma_n ^{j} SL_{j} \right), \\
+	W_{i,j}^0 &:= -\frac{1}{2} \left( - \gamma_n^{i} DL_{0j}  + \gamma_n^{0i} DL_{0j} \right) ,
+	& W_{j} &:=- \frac{1}{2} \left( -\gamma_n^{0j} DL_{j} + \gamma_n^{j} DL_{j} \right).
 \end{align*}
 ```
 
@@ -78,21 +87,21 @@ These operators are linear and continuous in the following Sobolev spaces:
 Since the domains are smooth, the jump relations for the potentials across a closed boundary yield
 ```math
 \begin{align*}
-	V_{{i},j}^0 &=   \trazaD^{0{i}} SL_{0j},
-	& V_{j}&=  \trazaD^{j} SL_{j},\\
-	W_{{i},j}^0 &=-  \trazaN^{0{i}} DL_{0j},
-	& W_{j} &=- \trazaN^{j} DL_{j}, \\
-	  K_{{i},j}^0&= \trazaD^{0{i}} DL_{0j}\mbox{ with } {i} \not=j,
-	 & K^{*0}_{{i},j} &= \trazaN ^{0{i}} SL_{0j}\mbox{ with } {i}  \not=j,
+	V_{{i},j}^0 &=   \gamma_d^{0{i}} SL_{0j},
+	& V_{j}&=  \gamma_d^{j} SL_{j},\\
+	W_{{i},j}^0 &=-  \gamma_n^{0{i}} DL_{0j},
+	& W_{j} &=- \gamma_n^{j} DL_{j}, \\
+	  K_{{i},j}^0&= \gamma_d^{0{i}} DL_{0j}\mbox{ with } {i} \not=j,
+	 & K^{*0}_{{i},j} &= \gamma_n ^{0{i}} SL_{0j}\mbox{ with } {i}  \not=j,
 \end{align*}
 ```
 and
 ```math
 \begin{align*}
-	K_{j,j}^0(\psi) &= \frac{1}{2}\psi +\trazaD^{0j} {DL_{0j}(\psi)} ,
-	&K_{j}(\psi) &= \frac{1}{2} \psi +\trazaD^{j} {DL_{j}(\psi)} ,\\
-	 K^{*0}_{j,j}(\psi) &= -\frac{1}{2} \psi + \trazaN^{0j} {SL_{0j}(\psi)},
-	&K^*_{j}(\psi) &= -\frac{1}{2} \psi + \trazaN^j {SL_{j}(\psi)}.
+	K_{j,j}^0(\psi) &= \frac{1}{2}\psi +\gamma_d^{0j} {DL_{0j}(\psi)} ,
+	&K_{j}(\psi) &= \frac{1}{2} \psi +\gamma_d^{j} {DL_{j}(\psi)} ,\\
+	 K^{*0}_{j,j}(\psi) &= -\frac{1}{2} \psi + \gamma_n^{0j} {SL_{0j}(\psi)},
+	&K^*_{j}(\psi) &= -\frac{1}{2} \psi + \gamma_n^j {SL_{j}(\psi)}.
 \end{align*}
 ```
 
