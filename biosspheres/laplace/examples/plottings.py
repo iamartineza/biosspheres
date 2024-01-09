@@ -3,11 +3,11 @@ from biosspheres.laplace.selfinteractions import v_jj_azimuthal_symmetry
 
 
 def observing_v(
-        big_l: int = 50,
-        r: float = 2.5
+        big_l: int,
+        r: float
 ) -> None:
     """
-    Plots the V operator. It shows the plot.
+    Plots the V operator.
 
     Parameters
     ----------
@@ -37,5 +37,5 @@ def observing_v(
 
 
 if __name__ == '__main__':
-    observing_v()
+    observing_v(50, 2.5)
     plt.show()
