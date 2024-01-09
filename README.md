@@ -1,3 +1,22 @@
+# Installing instructions
+
+An example installation using conda:
+- Clone the repository.
+- Create a new conda environment.
+- Add conda-forge channel
+`conda config --add channels conda-forge`
+- cd to local directory.
+- Install the packages in requirements.txt using
+`conda install --file requirements.txt`
+- If the jupyter notebooks are needed install also
+`conda install --file requirements_notebooks.txt`
+- Install pip (if not installed)
+`conda install pip`
+- Install biosspheres
+`pip install --editable .`
+
+# Overview of the library
+
 ## Geometry
 
 $N$ disjoint spheres in $\mathbb{R}^3$:
