@@ -2,7 +2,7 @@
 
 An example installation using conda:
 - Clone the repository.
-- Create a new conda environment.
+- Create a new conda environment and activate it.
 - Add conda-forge channel
 `conda config --add channels conda-forge`
 - cd to local directory.
