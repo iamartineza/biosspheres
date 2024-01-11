@@ -3,7 +3,11 @@ import biosspheres.miscella.spherearrangements as pos
 import biosspheres.formulations.mtf.solvertemplates as solver
 
 
-def mtf_example_notebook():
+def mtf_example_notebook() -> None:
+    """
+    Summary of the code (without the plots) of the jupyter notebook
+    mtf_example.ipynb
+    """
     n = 8
     big_l = 15
     big_l_c = 55
@@ -30,6 +34,7 @@ def mtf_example_notebook():
         n, big_l, big_l_c, radii, center_positions, sigmas, p0, tolerance)
     print("Difference between the solutions")
     print(np.linalg.norm(traces_dir-traces_in))
+    pass
     
 
 if __name__ == '__main__':
