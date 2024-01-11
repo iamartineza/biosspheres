@@ -13,8 +13,8 @@ def testing_mtf_linear_operators_and_matrices_one_sphere(
 ) -> None:
     """
     Test for Laplace operators.
-    Testing that the MTF linear operators and the MTF matrix do the same matrix
-    for one sphere and azimuthal symmetry
+    Testing that the MTF linear operators and the MTF matrix do the same
+    matrix for one sphere and azimuthal symmetry
 
     Parameters
     ----------

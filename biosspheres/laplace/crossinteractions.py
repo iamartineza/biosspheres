@@ -1918,8 +1918,8 @@ def all_cross_interactions_n_spheres_v1d(
         >= 0. It's the parameter used to compute the points of the quadrature.
     radii : np.ndarray
         Array with the radii of the spheres.
-    center_positions : array_like
-        List or array with the center position of the spheres
+    center_positions :
+        List or arrays with the center position of the spheres
 
     Returns
     -------
