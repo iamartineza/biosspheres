@@ -9,8 +9,9 @@ def v_jj_azimuthal_symmetry(
         r: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator V_{j,j} with
-    Laplace kernel evaluated and tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator V_{j,j}
+    with Laplace kernel evaluated and tested with spherical harmonics of
+    order 0.
     
     Notes
     -----
@@ -43,22 +44,23 @@ def k_0_jj_azimuthal_symmetry(
         r: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator K_{j,j}^0, with
-    normals from out to in of the sphere, with Laplace kernel evaluated and
-    tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator K_{j,j}^0,
+    with normals from out to in of the sphere, with Laplace kernel
+    evaluated and tested with spherical harmonics of order 0.
     
     Notes
     -----
-    k_0_jj[l] = < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
-    = r**2 / (2*(2l + 1))
+    k_0_jj[l] =
+        < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+        = r**2 / (2*(2l + 1))
     for each l such that 0 <= l <= big_l, and with
     Y_l,0: spherical harmonic degree l, order 0.
     
     Notice that in this specific case
     < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
     = < K_{j,j}^{*0} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    where K_{j,j}^{*0} has normals from out to in of the sphere, and with
-    Laplace kernel.
+    where K_{j,j}^{*0} has normals from out to in of the sphere, and
+    with Laplace kernel.
     
     Parameters
     ----------
@@ -84,9 +86,9 @@ def k_1_jj_azimuthal_symmetry(
         r: float,
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator K_{j,j}, with
-    normals from in to out of the sphere, with Laplace kernel evaluated and
-    tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator K_{j,j},
+    with normals from in to out of the sphere, with Laplace kernel
+    evaluated and tested with spherical harmonics of order 0.
     
     Notes
     -----
@@ -124,8 +126,9 @@ def w_jj_azimuthal_symmetry(
         r: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator W_{j,j} with
-    Laplace kernel evaluated and tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator W_{j,j}
+    with Laplace kernel evaluated and tested with spherical harmonics of
+    order 0.
     
     Notes
     -----
@@ -159,17 +162,19 @@ def bio_jj(
         bio_azimuthal: Callable[[int, float], np.ndarray]
 ) -> np.ndarray:
     """
-    Returns a numpy array with the corresponding boundary integral operator
-    from the function bio_azimuthal with Laplace kernel evaluated and tested
-    with spherical harmonics of all orders.
+    Returns a numpy array with the corresponding boundary integral
+    operator from the function bio_azimuthal with Laplace kernel
+    evaluated and tested with spherical harmonics of all orders.
     
     Notes
     -----
-    D[l*(2l+1) + m] = < D_{j,j} Y_l,m ; Y_l,m >_L^2(surface sphere radius r).
+    D[l*(2l+1) + m] =
+        < D_{j,j} Y_l,m ; Y_l,m >_L^2(surface sphere radius r).
     which in this case is equal to
     = D[l*(2l+1)]
     for each l such that 0 <= l <= big_l, and with
-    D: boundary integral operator corresponding to the function bio_azimuthal
+    D: boundary integral operator corresponding to the function
+        bio_azimuthal
     Y_l,m: spherical harmonic degree l, order m.
 
     Parameters
@@ -179,8 +184,8 @@ def bio_jj(
     r : float
         > 0, radius.
     bio_azimuthal : Callable[[int, float], np.ndarray]
-        python function for computing the operator for m = 0. Must be one of
-        the functions written before this one.
+        python function for computing the operator for m = 0. Must be
+        one of the functions written before this one.
 
     Returns
     -------
@@ -205,8 +210,8 @@ def a_0j_matrix(
     integral operator
     A_{j,j}^0 = [ -K_{j,j}^0 , V_{j,j}^0  ]
                 [  W_{j,j}^0 , K*_{j,j}^0 ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics of
-    order 0 if azimuthal = True, or all orders if azimuthal = False.
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0 if azimuthal = True, or all orders if azimuthal = False.
     
     Each block is a diagonal matrix.
 
@@ -272,8 +277,8 @@ def a_j_matrix(
     integral operator
     A_{j,j}^0 = [ -K_{j,j} , V_{j,j}  ]
                 [  W_{j,j} , K*_{j,j} ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics of
-    order 0 if azimuthal = True, or all orders if azimuthal = False.
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0 if azimuthal = True, or all orders if azimuthal = False.
     
     Each block is a diagonal matrix.
 
@@ -335,7 +340,8 @@ def a_0j_linear_operator(
         azimuthal: bool = True
 ) -> scipy.sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_0j_matrix.
+    Returns a scipy linear operator equivalent to the given by
+    a_0j_matrix.
     
     Parameters
     ----------
@@ -401,7 +407,8 @@ def a_j_linear_operator(
         azimuthal: bool = True
 ) -> scipy.sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_j_matrix.
+    Returns a scipy linear operator equivalent to the given by
+    a_j_matrix.
     
     Parameters
     ----------
