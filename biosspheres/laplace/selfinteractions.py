@@ -338,7 +338,7 @@ def a_0j_linear_operator(
         big_l: int,
         r: float,
         azimuthal: bool = True
-) -> scipy.sparse.linalg.LinearOperator:
+) -> sparse.linalg.LinearOperator:
     """
     Returns a scipy linear operator equivalent to the given by
     a_0j_matrix.
@@ -405,7 +405,7 @@ def a_j_linear_operator(
         big_l: int,
         r: float,
         azimuthal: bool = True
-) -> scipy.sparse.linalg.LinearOperator:
+) -> sparse.linalg.LinearOperator:
     """
     Returns a scipy linear operator equivalent to the given by
     a_j_matrix.
@@ -473,7 +473,7 @@ def a_0_a_n_sparse_matrices(
         big_l: int,
         radii: np.ndarray,
         azimuthal: bool = False
-):
+) -> tuple[sparse.bsr_array, sparse.bsr_array]:
     if not azimuthal:
         num = (big_l + 1)**2
     else:
