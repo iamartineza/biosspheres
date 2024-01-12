@@ -20,7 +20,6 @@ def function_cte_dirichlet(
         azimuthal: bool = True
 ) -> np.ndarray:
     """
-    Assumes radius equal to one.
     
     Parameters
     ----------
@@ -50,9 +49,10 @@ def point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
         intensity: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the coefficients of the spherical harmonic
-    expansion of the dirichlet trace, on the surface of the sphere
-    of radius 1, of the function 1 / (4 pi sigma_e ||p_0 - r||_2).
+    Returns a numpy array with the coefficients of the spherical
+    harmonic expansion of the dirichlet trace, on the surface of the
+    sphere of radius 1, of the function
+    1 / (4 pi sigma_e ||p_0 - r||_2).
     
     Only works in one half of the z axis.
 
@@ -89,9 +89,10 @@ def point_source_coefficients_dirichlet_expansion(
         intensity: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the coefficients of the spherical harmonic
-    expansion of the Dirichlet trace, on the surface of the sphere
-    of radius 1, of the function 1 / (4 pi sigma_e ||p_0 - r||_2).
+    Returns a numpy array with the coefficients of the spherical
+    harmonic expansion of the Dirichlet trace, on the surface of the
+    sphere of radius 1, of the function
+    1 / (4 pi sigma_e ||p_0 - r||_2).
     
     Parameters
     ----------
@@ -100,8 +101,8 @@ def point_source_coefficients_dirichlet_expansion(
     radius : float
         > 0, sphere radius.
     p_0 : numpy array
-        of three floats, position in cartesian coordinates relative to the
-        center of the sphere.
+        of three floats, position in cartesian coordinates relative to
+        the center of the sphere.
     sigma_e : float
         > 0 , parameter.
     intensity : float
@@ -150,9 +151,10 @@ def point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry(
         intensity: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the coefficients of the spherical harmonic
-    expansion of the Neumann trace, on the surface of the sphere
-    of radius 1, of the function 1 / (4 pi sigma_e ||p_0 - r||_2).
+    Returns a numpy array with the coefficients of the spherical
+    harmonic expansion of the Neumann trace, on the surface of the
+    sphere of radius 1, of the function
+    1 / (4 pi sigma_e ||p_0 - r||_2).
     
     Only works in one half of the z axis.
 
@@ -190,9 +192,10 @@ def point_source_coefficients_neumann_expansion_0j(
         intensity: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the coefficients of the spherical harmonic
-    expansion of the Neumann trace, on the surface of the sphere
-    of radius 1, of the function 1 / (4 pi sigma_e ||p_0 - r||_2).
+    Returns a numpy array with the coefficients of the spherical
+    harmonic expansion of the Neumann trace, on the surface of the
+    sphere of radius 1, of the function
+    1 / (4 pi sigma_e ||p_0 - r||_2).
 
     Parameters
     ----------
@@ -201,8 +204,8 @@ def point_source_coefficients_neumann_expansion_0j(
     radius : float
         > 0, sphere radius.
     p_0 : numpy array
-        of three floats, position in cartesian coordinates relative to the
-        center of the sphere.
+        of three floats, position in cartesian coordinates relative to
+        the center of the sphere.
     sigma_e : float
         > 0, parameter.
     intensity : float
