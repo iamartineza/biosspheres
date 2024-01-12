@@ -2,7 +2,7 @@ import numpy as np
 import scipy.sparse
 
 
-def pes_y_kus(big_l: int):
+def pes_y_kus(big_l: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Returns three helping arrays.
 
@@ -36,7 +36,9 @@ def pes_y_kus(big_l: int):
     return pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
 
 
-def rows_columns_big_a_sparse_1_sphere(big_l: int, azimuthal: bool = False):
+def rows_columns_big_a_sparse_1_sphere(
+        big_l: int, azimuthal: bool = False
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Returns two helping arrays
 
