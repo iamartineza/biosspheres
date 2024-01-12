@@ -6,7 +6,8 @@ import pyshtools
 def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         cut: int, center: np.ndarray, horizontal: float, vertical: float,
         inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
-        radius: float, big_l: int, exterior: Callable[[np.ndarray], float]):
+        radius: float, big_l: int, exterior: Callable[[np.ndarray], float]
+) -> np.ndarray:
     """
 
     Parameters
@@ -238,8 +239,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 def draw_cut_representation_formula_n_sphere(
         cut: int, center: np.ndarray, horizontal: float, vertical: float,
         inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
-        radii: np.ndarray, positions, big_l: int,
-        exterior: Callable[[np.ndarray], float]):
+        radii: np.ndarray, positions: list[np.ndarray], big_l: int,
+        exterior: Callable[[np.ndarray], float]) -> np.ndarray:
     """
 
     Parameters
