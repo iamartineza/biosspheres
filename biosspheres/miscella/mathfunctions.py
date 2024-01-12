@@ -33,16 +33,17 @@ def point_source(
     
     Notes
     -----
-    All arrays that represent vectors are in the cartesian coordinate system.
+    All arrays that represent vectors are in the cartesian coordinate
+    system.
 
     Parameters
     ----------
     r : numpy array
-        of length 3 in the cartesian coordinate system. Position vector to be
-        evaluated.
+        of length 3 in the cartesian coordinate system. Position vector
+        to be evaluated.
     p : numpy array
-        of length 3 in the cartesian coordinate system. Position vector of the
-        point source.
+        of length 3 in the cartesian coordinate system. Position vector
+        of the point source.
     sigma_e : float
         > 0.
 
@@ -59,7 +60,7 @@ def laplace_almost_fundamental_function(
         p_1: np.ndarray, p_2: np.ndarray
 ) -> float:
     """
-    Evaluating in two points in DIFFERENT spheres
+    Evaluating in two DIFFERENT points.
     
     Parameters
     ----------
