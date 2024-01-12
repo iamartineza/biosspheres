@@ -16,13 +16,13 @@ def v_0_sj_semi_analytic_v1d(
         transform: np.ndarray
 ) -> np.ndarray:
     """
-    Returns a numpy array that represents a numerical approximation of the
-    matrix formed by the boundary integral operator V_{s,j}^0 with Laplace
-    kernel evaluated and tested with real spherical harmonics.
-    In this routine the quadrature points NEED to be ordered in an array of one
-    dimension.
-    It is a SLOW routine, because it does not use any symmetry or properties
-    of the spherical harmonics.
+    Returns a numpy array that represents a numerical approximation of
+    the matrix formed by the boundary integral operator V_{s,j}^0 with
+    Laplace kernel evaluated and tested with real spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
+    It is a SLOW routine, because it does not use any symmetry or
+    properties of the spherical harmonics.
     
     Notes
     -----
@@ -32,13 +32,14 @@ def v_0_sj_semi_analytic_v1d(
         system j.
     S_s : surface of the sphere s.
     
-    The expression V_{s,j}^0 Y_{l,m,j} is analytic. A quadrature scheme is used
-    to compute the surface integral corresponding to the inner product.
+    The expression V_{s,j}^0 Y_{l,m,j} is analytic. A quadrature scheme
+    is used to compute the surface integral corresponding to the inner
+    product.
     
-    In this routine the quadrature points NEED to be ordered in an array of one
-    dimension.
-    It is a SLOW routine, because it does not use any symmetry or properties
-    of the spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
+    It is a SLOW routine, because it does not use any symmetry or
+    properties of the spherical harmonics.
 
     Parameters
     ----------
@@ -49,41 +50,42 @@ def v_0_sj_semi_analytic_v1d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        Array of floats with the spherical coordinate r of the quadrature
-        points in the coordinate system s. Length equals to final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the spherical coordinate r of the
+        quadrature points in the coordinate system s. Length equals to
+        final_length. Can come from the
+        function from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     phi_coord : np.ndarray
-        Array of floats with the phi coordinate r of the quadrature points in
-        the coordinate system s. Length equals to final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the phi coordinate r of the quadrature
+        points in the coordinate system s. Length equals to
+        final_length. Can come from the function
+        from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate theta of
-        the quadrature points in the coordinate system s. Lengths equal to
-        final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the coseno of the spherical coordinate
+        theta of the quadrature points in the coordinate system s.
+        Lengths equal to final_length. Can come from the function
+        from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     final_length : int
         How many points for the surface integral.
-        Can come from the function spherical_harmonic_transform_1d of the
-        module biosspheres.quadratures.spheres.
+        Can come from the function spherical_harmonic_transform_1d of
+        the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats with the evaluation of the spherical harmonics along with
-        their weights in the quadrature points.
-        Can come from the function real_spherical_harmonic_transform_1d of the
-        module biosspheres.quadratures.spheres.
+        of floats with the evaluation of the spherical harmonics along
+        with their weights in the quadrature points.
+        Can come from the function real_spherical_harmonic_transform_1d
+        of the module biosspheres.quadratures.spheres.
 
     Returns
     -------
     data_v : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
+        ordering.
     
     See Also
     --------
     v_0_sj_semi_analytic_v2d
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_1d
-    biosspheres.quadratures.spheres.real_spherical_harmonic_transform_1d
     
     """
     ratio = r_j / r_coord
