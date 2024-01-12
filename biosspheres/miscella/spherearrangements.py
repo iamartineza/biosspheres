@@ -1,9 +1,20 @@
 import numpy as np
 
 
-def cube_vertex_positions(number: int, r: float, d: float):
+def cube_vertex_positions(
+        number: int,
+        r: float,
+        d: float
+) -> list[np.ndarray]:
     """
     To obtain an arrangement of number**3 spheres.
+    
+    Notes
+    -----
+    This functions assumes the radii of all spheres are the same, and
+    orders them in the corners of an array of cubes, starting in the
+    origin of the coordinate system and placing them in the first
+    quadrant.
     
     Parameters
     ----------
@@ -12,7 +23,8 @@ def cube_vertex_positions(number: int, r: float, d: float):
     r: float
         radius of each sphere.
     d: float
-        distance between two surfaces of spheres.
+        distance between two surfaces of spheres. The length of the edge
+        of each cube 2r + d. If d =0 the spheres will touch each other.
     
     Returns
     -------
