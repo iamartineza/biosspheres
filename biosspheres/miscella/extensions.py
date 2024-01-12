@@ -6,8 +6,8 @@ def azimuthal_trace_to_general_with_zeros(
         trace: np.ndarray
 ) -> np.ndarray:
     """
-    Returns the extension by 0, for all m, of an array that has entries for all
-    m = 0
+    Returns the extension by 0, for all m, of an array that has entries
+    for all m = 0
     
     Parameters
     ----------
