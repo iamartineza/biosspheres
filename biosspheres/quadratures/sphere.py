@@ -6,6 +6,8 @@ def gauss_legendre_trapezoidal_2d(
         big_l_c: int
 ) -> tuple[int, int, np.ndarray, np.ndarray]:
     """
+    This function is for obtaining the quadratures points to
+    approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
     trapezoidal quadrature rule for computing a numerical integral in
     the surface of a sphere.
