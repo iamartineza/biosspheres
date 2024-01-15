@@ -9,8 +9,7 @@ def gauss_legendre_trapezoidal_2d(
     This function is for obtaining the quadratures points to
     approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule for computing a numerical integral in
-    the surface of a sphere.
+    trapezoidal quadrature rule. See the shape of the returns.
     
     Notes
     -----
@@ -81,9 +80,10 @@ def gauss_legendre_trapezoidal_1d(
         big_l_c: int
 ) -> tuple[int, np.ndarray, np.ndarray]:
     """
+    This function is for obtaining the quadratures points to
+    approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule for computing a numerical integral in
-    the surface of a sphere.
+    trapezoidal quadrature rule. See the shape of the returns.
     
     Notes
     -----
@@ -164,11 +164,14 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         p2_plus_p_minus_q: np.ndarray
 ) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
     """
+    This function is for obtaining the quadratures points to
+    approximate numerically the integral in a surface of a sphere, and
+    it also returns the evaluation of the real spherical harmonics in
+    those points.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule for computing a numerical integral in
-    the surface of a sphere. It also returns the real spherical
-    harmonics of degree l and order m evaluated in the quadrature
-    points.
+    trapezoidal quadrature rule. The real spherical
+    harmonics evaluated are of degree l and order m, with l <= big_l.
+    See the shape of the returns.
     
     Notes
     -----
