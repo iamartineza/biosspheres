@@ -64,8 +64,8 @@ def gauss_legendre_trapezoidal_2d(
     
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in np.arange(0, quantity_theta_points):
-        pre_vector[0, i, :] = np.multiply(sen_theta[i], cos_phi)
-        pre_vector[1, i, :] = np.multiply(sen_theta[i], sen_phi)
+        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
     
     del sen_theta
@@ -149,9 +149,9 @@ def gauss_legendre_trapezoidal_1d(
     sin_theta = np.tile(sin_theta, quantity_phi_points)
     cos_theta = np.tile(cos_theta, quantity_phi_points)
 
-    pre_vector[0, :] = sin_theta * cos_phi
-    pre_vector[1, :] = sin_theta * sin_phi
-    pre_vector[2, :] = cos_theta
+    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
+    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
+    pre_vector[2, :] = cos_theta[:]
 
     return final_length, total_weights, pre_vector
 
@@ -241,8 +241,8 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
     for m in np.arange(1, big_l + 1):
-        cos_m_phi[m - 1, :] = np.cos(m * phi)
-        sin_m_phi[m - 1, :] = np.sin(m * phi)
+        np.cos(m * phi, out=cos_m_phi[m - 1, :])
+        np.sin(m * phi, out=sin_m_phi[m - 1, :])
     del phi
     
     cos_theta = zeros
@@ -269,10 +269,12 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     j_range = np.arange(0, quantity_phi_points)
     for i in i_range:
         for j in j_range:
-            spherical_harmonics[p2_plus_p_plus_q, i, j] = \
-                legendre_functions[index_temp, i] * cos_m_phi[index_temp_m, j]
-            spherical_harmonics[p2_plus_p_minus_q, i, j] = \
-                legendre_functions[index_temp, i] * sin_m_phi[index_temp_m, j]
+            np.multiply(legendre_functions[index_temp, i],
+                        cos_m_phi[index_temp_m, j],
+                        out=spherical_harmonics[p2_plus_p_plus_q, i, j])
+            np.multiply(legendre_functions[index_temp, i],
+                        sin_m_phi[index_temp_m, j],
+                        out=spherical_harmonics[p2_plus_p_minus_q, i, j])
     del legendre_functions
     del cos_m_phi
     del sin_m_phi
@@ -282,8 +284,8 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in i_range:
-        pre_vector[0, i, :] = np.multiply(sen_theta[i], cos_phi)
-        pre_vector[1, i, :] = np.multiply(sen_theta[i], sen_phi)
+        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
     
     del sen_theta
@@ -341,8 +343,8 @@ def real_spherical_harmonic_transform_1d(
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
     for m in np.arange(1, big_l + 1):
-        cos_m_phi[m-1, :] = np.cos(m * phi)
-        sin_m_phi[m-1, :] = np.sin(m * phi)
+        np.cos(m * phi, out=cos_m_phi[m-1, :])
+        np.sin(m * phi, out=sin_m_phi[m-1, :])
     del phi
 
     legendre_functions = \
@@ -385,9 +387,9 @@ def real_spherical_harmonic_transform_1d(
     sin_theta = np.tile(sin_theta, quantity_phi_points)
     cos_theta = np.tile(cos_theta, quantity_phi_points)
 
-    pre_vector[0, :] = sin_theta * cos_phi
-    pre_vector[1, :] = sin_theta * sin_phi
-    pre_vector[2, :] = cos_theta
+    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
+    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
+    pre_vector[2, :] = cos_theta[:]
 
     return final_length, pre_vector, transform
 
@@ -618,16 +620,16 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     sin_phi_coord = np.sin(phi_coord)
 
     etheta_coord = np.zeros((3, quantity_theta_points, quantity_phi_points))
-    etheta_coord[0, :, :] = np.multiply(cos_theta_coord, cos_phi_coord)
-    etheta_coord[1, :, :] = np.multiply(cos_theta_coord, sin_phi_coord)
-    etheta_coord[2, :, :] = np.multiply(-1, sin_theta_coord)
+    np.multiply(cos_theta_coord, cos_phi_coord, out=etheta_coord[0, :, :])
+    np.multiply(cos_theta_coord, sin_phi_coord, out=etheta_coord[1, :, :])
+    np.multiply(-1, sin_theta_coord, out=etheta_coord[2, :, :])
 
     etheta_times_n = np.sum(np.multiply(etheta_coord, pre_vector), axis=0)
     del etheta_coord
 
     ephi_coord = np.zeros((3, quantity_theta_points, quantity_phi_points))
-    ephi_coord[0, :, :] = np.multiply(-1, sin_phi_coord)
-    ephi_coord[1, :, :] = cos_phi_coord
+    np.multiply(-1, sin_phi_coord, out=ephi_coord[0, :, :])
+    ephi_coord[1, :, :] = cos_phi_coord[:]
 
     del sin_phi_coord
     del cos_phi_coord
@@ -849,16 +851,16 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
     sin_phi_coord = np.sin(phi_coord)
 
     etheta_coord = np.zeros((3, final_length))
-    etheta_coord[0, :] = np.multiply(cos_theta_coord, cos_phi_coord)
-    etheta_coord[1, :] = np.multiply(cos_theta_coord, sin_phi_coord)
-    etheta_coord[2, :] = np.multiply(-1, sin_theta_coord)
+    np.multiply(cos_theta_coord, cos_phi_coord, out=etheta_coord[0, :])
+    np.multiply(cos_theta_coord, sin_phi_coord, out=etheta_coord[1, :])
+    np.multiply(-1, sin_theta_coord, out=etheta_coord[2, :])
 
     etheta_times_n = np.sum(np.multiply(etheta_coord, pre_vector), axis=0)
     del etheta_coord
 
     ephi_coord = np.zeros((3, final_length))
-    ephi_coord[0, :] = np.multiply(-1, sin_phi_coord)
-    ephi_coord[1, :] = cos_phi_coord
+    np.multiply(-1, sin_phi_coord, out=ephi_coord[0, :])
+    ephi_coord[1, :] = cos_phi_coord[:]
 
     del sin_phi_coord
     del cos_phi_coord
