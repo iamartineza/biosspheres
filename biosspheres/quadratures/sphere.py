@@ -306,7 +306,8 @@ def real_spherical_harmonic_transform_1d(
     and order l and m evaluated in the quadrature points multiplied by
     the corresponding weights.
     
-    The use of the results of this routine is for SLOW routines.
+    The use of the results of this routine is for SLOW routines, but
+    those routines are good for comparing results with other algorithms.
     
     Parameters
     ----------
