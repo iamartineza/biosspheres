@@ -37,7 +37,7 @@ def gauss_legendre_trapezoidal_2d(
         how many points for the integral in phi, (2 * big_l_c + 1).
     weights : np.ndarray
         of floats, with the weights for the integral quadrature in
-        theta.
+        theta. Length (big_l_c + 1).
     pre_vector : np.ndarray
         of floats. Represents the vectors of the quadrature points.
         Shape (3, quantity_theta_points, quantity_phi_points).
@@ -217,7 +217,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         how many points for the integral in phi, (2 * big_l_c + 1)
     weights : np.ndarray
         of floats, with the weights for the integral quadrature in
-        theta.
+        theta. Length (big_l_c + 1).
     pre_vector : np.ndarray
         of floats. Represents the vectors of the quadrature points.
         Shape (3, quantity_theta_points, quantity_phi_points).
@@ -353,7 +353,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
         how many points for the integral in phi, (2 * big_l_c + 1)
     weights : np.ndarray
         of floats, with the weights for the integral quadrature in
-        theta.
+        theta. Length (big_l_c + 1).
     pre_vector : np.ndarray
         of floats. Represents the vectors of the quadrature points.
         Shape (3, quantity_theta_points, quantity_phi_points).
