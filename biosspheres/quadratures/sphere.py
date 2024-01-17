@@ -297,6 +297,145 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         weights, pre_vector, spherical_harmonics
 
 
+def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
+        big_l: int,
+        big_l_c: int,
+        pesykus: np.ndarray,
+        p2_plus_p_plus_q: np.ndarray,
+        p2_plus_p_minus_q: np.ndarray
+) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
+    """
+    This function is for obtaining the quadratures points to
+    approximate numerically the integral in a surface of a sphere, and
+    it also returns the evaluation of the complex spherical harmonics in
+    those points.
+    It returns the weights and vectors for the Gauss-Legendre and
+    trapezoidal quadrature rule. The complex spherical
+    harmonics evaluated are of degree l and order m, with l <= big_l.
+    See the shape of the returns.
+
+    Notes
+    -----
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
+    Trapezoidal rule in phi.
+    Integral on theta are (big_l_c + 1) quadrature points.
+    Integral on phi are (2 * big_l_c + 1) quadrature points.
+    Without considering errors produced by the approximation by finite
+    numbers, the quadrature must be exact for functions consisting in
+    polynomials of big_l_c degree times an exponential power to (m times
+    i), with |m| <= big_l_c.
+    Legendre's functions are computed used pyshtools.
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0, max degree.
+    big_l_c : int
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
+    pesykus : np.ndarray
+        dtype int, shape ((big_l+1) * big_l // 2, 2).
+        Used for the vectorization of some computations.
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+    p2_plus_p_plus_q : np.ndarray
+        dtype int, length (big_l+1) * big_l // 2.
+        Used for the vectorization of some computations.
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+    p2_plus_p_minus_q : np.ndarray
+        dtype int, length (big_l+1) * big_l // 2.
+        Used for the vectorization of some computations.
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+
+    Returns
+    -------
+    quantity_theta_points : int
+        how many points for the integral in theta, (big_l_c + 1).
+    quantity_phi_points : int
+        how many points for the integral in phi, (2 * big_l_c + 1)
+    weights : np.ndarray
+        of floats, with the weights for the integral quadrature in
+        theta.
+    pre_vector : np.ndarray
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, quantity_theta_points, quantity_phi_points).
+    spherical_harmonics : np.ndarray
+        of complex numbers, represent the real spherical harmonics of
+        degree and order l and m evaluated in the points given by
+        pre_vector. Shape
+        ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
+
+    """
+    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
+    phi = np.linspace(0, 2 * np.pi,
+                      num=(2 * big_l_c + 1),
+                      endpoint=False
+                      )
+    quantity_theta_points = len(zeros)
+    quantity_phi_points = len(phi)
+    
+    cos_phi = np.cos(phi)
+    sen_phi = np.sin(phi)
+    
+    exp_pos = np.zeros((big_l, quantity_phi_points))
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi, out=exp_pos[m - 1, :])
+    del phi
+    exp_neg = 1. / exp_pos
+    
+    cos_theta = zeros
+    
+    legendre_functions = \
+        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+    i_range = np.arange(0, quantity_theta_points)
+    for i in i_range:
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta[i], csphase=-1, cnorm=1)
+    
+    spherical_harmonics = np.zeros(
+        ((big_l + 1)**2, quantity_theta_points, quantity_phi_points),
+        dtype=np.complex128
+    )
+    eles = np.arange(0, big_l + 1)
+    el_square_plus_el = eles * (eles + 1)
+    el_square_plus_el_divided_by_two = el_square_plus_el // 2
+    spherical_harmonics[el_square_plus_el, :, :] = \
+        legendre_functions[el_square_plus_el_divided_by_two, :, np.newaxis]
+    index_temp = (pesykus[:, 0] * (pesykus[:, 0] + 1)) // 2 + pesykus[:, 1]
+    index_temp_m = pesykus[:, 1] - 1
+    j_range = np.arange(0, quantity_phi_points)
+    for i in i_range:
+        for j in j_range:
+            np.multiply(legendre_functions[index_temp, i],
+                        exp_pos[index_temp_m, j],
+                        out=spherical_harmonics[p2_plus_p_plus_q, i, j])
+            np.multiply(legendre_functions[index_temp, i],
+                        exp_neg[index_temp_m, j],
+                        out=spherical_harmonics[p2_plus_p_minus_q, i, j])
+    del legendre_functions
+    del j_range
+    
+    sen_theta = np.sqrt(1. - np.square(cos_theta))
+    
+    pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
+    for i in i_range:
+        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
+        pre_vector[2, i, :] = cos_theta[i]
+    
+    del i_range
+    del sen_theta
+    del cos_phi
+    del sen_phi
+    del cos_theta
+    
+    return quantity_theta_points, quantity_phi_points, \
+        weights, pre_vector, spherical_harmonics
+
+
 def real_spherical_harmonic_transform_1d(
         big_l: int,
         big_l_c: int
