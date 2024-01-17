@@ -567,8 +567,8 @@ def complex_spherical_harmonic_transform_1d(
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
     
-    cos_phi = np.cos(phi)
-    sin_phi = np.sin(phi)
+    cos_phi = np.repeat(np.cos(phi), quantity_theta_points)
+    sin_phi = np.repeat(np.sin(phi), quantity_theta_points)
     
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
@@ -1099,14 +1099,13 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
 
 def pyshtools_format_to_everything_in_a_line_format(
         pyshtools_format: np.ndarray,
-        length_out_vector: int,
         pesykus: np.ndarray,
         p2_plus_p_plus_q: np.ndarray,
         p2_plus_p_minus_q: np.ndarray,
         eles: np.ndarray,
         l_square_plus_l: np.ndarray
 ) -> np.ndarray:
-    out_vector = np.empty(length_out_vector)
+    out_vector = np.empty((eles[-1] + 1)**2)
     out_vector[p2_plus_p_plus_q] = \
         pyshtools_format[0, pesykus[:, 0], pesykus[:, 1]]
     out_vector[p2_plus_p_minus_q] = \
