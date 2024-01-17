@@ -251,11 +251,8 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
     i_range = np.arange(0, quantity_theta_points)
     for i in i_range:
-        legendre_functions[:, i] = \
-            pyshtools.legendre.PlmON(big_l,
-                                     cos_theta[i],
-                                     csphase=-1, cnorm=0
-                                     )
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta[i], csphase=-1, cnorm=0)
     
     spherical_harmonics = np.zeros((
         (big_l + 1)**2, quantity_theta_points, quantity_phi_points))
@@ -269,12 +266,10 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     j_range = np.arange(0, quantity_phi_points)
     for i in i_range:
         for j in j_range:
-            np.multiply(legendre_functions[index_temp, i],
-                        cos_m_phi[index_temp_m, j],
-                        out=spherical_harmonics[p2_plus_p_plus_q, i, j])
-            np.multiply(legendre_functions[index_temp, i],
-                        sin_m_phi[index_temp_m, j],
-                        out=spherical_harmonics[p2_plus_p_minus_q, i, j])
+            spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j])
+            spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j])
     del legendre_functions
     del cos_m_phi
     del sin_m_phi
@@ -380,7 +375,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     cos_phi = np.cos(phi)
     sen_phi = np.sin(phi)
     
-    exp_pos = np.zeros((big_l, quantity_phi_points))
+    exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
     del phi
@@ -409,12 +404,10 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     j_range = np.arange(0, quantity_phi_points)
     for i in i_range:
         for j in j_range:
-            np.multiply(legendre_functions[index_temp, i],
-                        exp_pos[index_temp_m, j],
-                        out=spherical_harmonics[p2_plus_p_plus_q, i, j])
-            np.multiply(legendre_functions[index_temp, i],
-                        exp_neg[index_temp_m, j],
-                        out=spherical_harmonics[p2_plus_p_minus_q, i, j])
+            spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], exp_pos[index_temp_m, j])
+            spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], exp_neg[index_temp_m, j])
     del legendre_functions
     del j_range
     
