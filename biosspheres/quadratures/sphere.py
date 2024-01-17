@@ -483,10 +483,8 @@ def real_spherical_harmonic_transform_1d(
         np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
     cos_theta = zeros
     for i in np.arange(0, quantity_theta_points):
-        legendre_functions[:, i] = \
-                pyshtools.legendre.PlmON(big_l, cos_theta[i],
-                                         csphase=-1, cnorm=0
-                                         )
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta[i], csphase=-1, cnorm=0)
 
     sin_theta = np.sqrt(1. - np.square(cos_theta))
 
@@ -523,6 +521,102 @@ def real_spherical_harmonic_transform_1d(
     np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
     pre_vector[2, :] = cos_theta[:]
 
+    return final_length, pre_vector, transform
+
+
+def complex_spherical_harmonic_transform_1d(
+        big_l: int,
+        big_l_c: int
+) -> tuple[int, np.ndarray, np.ndarray]:
+    """
+    It returns the vectors for the Gauss-Legendre and trapezoidal
+    quadrature rule for computing a numerical integral in the surface
+    of a sphere. It also returns the real spherical harmonics of degree
+    and order l and m evaluated in the quadrature points multiplied by
+    the corresponding weights.
+
+    The use of the results of this routine is for SLOW routines, but
+    those routines are good for comparing results with other algorithms.
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0.
+    big_l_c: int
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
+
+    Returns
+    -------
+    final_length : int
+        how many points for the surface integral,
+        = (big_l_c + 1) * (2 * big_l_c + 1).
+    pre_vector : np.ndarray
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, final_length).
+    transform : np.ndarray
+        of floats. Mapping of the real spherical harmonics times the
+        weights. Shape ((big_l+1)**2, final_length)
+
+    """
+    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
+    phi = np.linspace(0., 2. * np.pi,
+                      num=(2 * big_l_c + 1),
+                      endpoint=False
+                      )
+    quantity_theta_points = len(zeros)
+    quantity_phi_points = len(phi)
+    
+    cos_phi = np.cos(phi)
+    sin_phi = np.sin(phi)
+    
+    exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi, out=exp_pos[m - 1, :])
+    del phi
+    exp_neg = 1. / exp_pos
+    
+    legendre_functions = \
+        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+    cos_theta = zeros
+    for i in np.arange(0, quantity_theta_points):
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta[i], csphase=-1, cnorm=1)
+    
+    sin_theta = np.sqrt(1. - np.square(cos_theta))
+    
+    # Help:
+    # first is tile (theta integral) and then is repeat (phi integral)
+    total_weights = weights * 2. * np.pi / quantity_phi_points
+    
+    final_length = quantity_theta_points * quantity_phi_points
+    
+    transform = np.zeros(((big_l + 1)**2, final_length),
+                         dtype=np.complex128)
+    for el in np.arange(0, big_l + 1):
+        el_square_plus_el = (el + 1) * el
+        el_square_plus_el_divided_by_two = el_square_plus_el // 2
+        transform[el_square_plus_el, :] = np.tile(
+            legendre_functions[el_square_plus_el_divided_by_two, :]
+            * total_weights, quantity_phi_points)
+        for m in np.arange(1, el + 1):
+            temp = np.tile(
+                legendre_functions[el_square_plus_el_divided_by_two + m, :]
+                * total_weights, quantity_phi_points)
+            transform[el_square_plus_el + m, :] = temp * np.repeat(
+                np.conjugate(exp_pos[m - 1, :]), quantity_theta_points)
+            transform[el_square_plus_el - m, :] = temp * np.repeat(
+                np.conjugate(exp_neg[m - 1, :]), quantity_theta_points)
+    
+    pre_vector = np.zeros((3, final_length))
+    
+    sin_theta = np.tile(sin_theta, quantity_phi_points)
+    cos_theta = np.tile(cos_theta, quantity_phi_points)
+    
+    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
+    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
+    pre_vector[2, :] = cos_theta[:]
+    
     return final_length, pre_vector, transform
 
 
