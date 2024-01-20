@@ -436,12 +436,13 @@ def real_spherical_harmonic_transform_1d(
     """
     It returns the vectors for the Gauss-Legendre and trapezoidal
     quadrature rule for computing a numerical integral in the surface
-    of a sphere. It also returns the real spherical harmonics of degree
-    and order l and m evaluated in the quadrature points multiplied by
-    the corresponding weights.
+    of a sphere. It also returns a vector that can be used to calculate
+    the real spherical harmonic transport in the surface of a sphere of
+    radius equal to one.
     
-    The use of the results of this routine is for SLOW routines, but
-    those routines are good for comparing results with other algorithms.
+    The use of the results of this routine is for SLOW routines, because
+    the vector used for the spherical harmonic transform does not have
+    any performance improvements.
     
     Parameters
     ----------
@@ -460,8 +461,8 @@ def real_spherical_harmonic_transform_1d(
         of floats. Represents the vectors of the quadrature points.
         Shape (3, final_length).
     transform : np.ndarray
-        of floats. Mapping of the real spherical harmonics times the
-        weights. Shape ((big_l+1)**2, final_length)
+        of floats. Vector that can be used to calculate the real
+        spherical transform. Shape ((big_l+1)**2, final_length)
     
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
