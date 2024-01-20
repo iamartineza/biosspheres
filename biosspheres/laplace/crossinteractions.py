@@ -21,8 +21,8 @@ def v_0_sj_semi_analytic_v1d(
     Laplace kernel evaluated and tested with real spherical harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of one dimension.
-    It is a SLOW routine, because it does not use any symmetry or
-    properties of the spherical harmonics.
+    It is a SLOW routine, because it does not have performance
+    improvements for the real spherical harmonic transform algorithm.
     
     Notes
     -----
