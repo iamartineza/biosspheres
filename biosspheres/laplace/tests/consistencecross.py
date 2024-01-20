@@ -91,19 +91,6 @@ def testing_consistence_for_the_routines_for_the_cross_interactions() -> None:
     plt.title('K*, 1d vs 2d')
     print('Plotting K*, 1d vs 2d')
     
-    data_v12 = crossinteractions.v_0_sj_semi_analytic_v1d(
-        big_l, radio_2, radio_1, r_coord_2tf, phi_coord_2tf,
-        cos_theta_coord_2tf, final_length, transform)
-    aux_tr = np.abs(data_v12 - np.transpose(data_v21)) / np.abs(data_v12)
-    print('- V_{1,2}^0 vs V_{2,1}^{0t}, both semi-analytically computed (1d)')
-    plt.figure()
-    plt.imshow(aux_tr, cmap='RdBu')
-    plt.colorbar()
-    plt.title(
-        'Relative error between $V_{1,2}^0$ and $V_{2,1}^{0t}$, ' +
-        'semi-analytically routine.')
-    print('Plotting V_{1,2}^0 vs V_{2,1}^{0t}')
-    
     print('- V_{1,2}^0 from V_{2,1}^{0t} (2d)')
     data_v12 = crossinteractions.v_0_js_from_v_0_sj(data_v21_2d)
     aux_tr = np.abs(data_v12 - np.transpose(data_v21_2d)) / np.abs(data_v12)
