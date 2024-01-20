@@ -295,9 +295,9 @@ def overview_complex_spherical_harmonic_transform_1d() -> None:
 
 
 if __name__ == '__main__':
-    overview_complex_spherical_harmonic_transform_1d()
     overview_gauss_legendre_trapezoidal_2d()
     overview_gauss_legendre_trapezoidal_1d()
     overview_gauss_legendre_trapezoidal_real_sh_mapping_2d()
     overview_gauss_legendre_trapezoidal_complex_sh_mapping_2d()
     overview_real_spherical_harmonic_transform_1d()
+    overview_complex_spherical_harmonic_transform_1d()
