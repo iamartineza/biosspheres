@@ -177,7 +177,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Trapezoidal rule in phi.
+    Composed trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
@@ -313,7 +313,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Trapezoidal rule in phi.
+    Composed trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
