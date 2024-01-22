@@ -6,15 +6,15 @@ import biosspheres.quadratures.sphere as quadratures
 
 
 def v_transpose_check() -> None:
-    radio_1 = 1.
-    radio_2 = 1.
+    radio_1 = 1.2
+    radio_2 = 3.
     
     p_1 = np.asarray([2., 3., 4.])
     p_2 = -p_1
     
     k0 = 7.
     
-    big_l = 1
+    big_l = 2
     big_l_c = 25
     
     j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
@@ -41,10 +41,14 @@ def v_transpose_check() -> None:
     sign_array = np.diag(
         (-np.ones((big_l + 1)**2))**(np.arange(0, (big_l + 1)**2)))
     giro_array = np.eye((big_l + 1)**2)
-    for el in np.arange(0, big_l):
-        giro_array[2*el + 1:2*(el + 1) + 2, 2*el + 1:2*(el + 1) + 2] = (
-            np.fliplr(
-                giro_array[2*el + 1:2*(el + 1) + 2, 2*el + 1:2*(el + 1) + 2]))
+    eles = np.arange(0, big_l+1)
+    l_square_plus_l = eles * (eles + 1)
+    for el in np.arange(1, big_l + 1):
+        giro_array[l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+                   l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1] = (
+            np.fliplr(giro_array[
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
     aux = giro_array@sign_array@np.transpose(data_v21)@sign_array@giro_array
     
     plt.figure(dpi=75., layout='constrained')
