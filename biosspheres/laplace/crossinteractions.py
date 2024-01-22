@@ -447,14 +447,13 @@ def k_0_sj_semi_analytic_v1d(
     Returns
     -------
     data_k : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
+        ordering.
     
     See Also
     --------
     k_0_sj_semi_analytic_v2d
     k_0_sj_from_v_0_sj
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_1d
-    biosspheres.quadratures.spheres.real_spherical_harmonic_transform_1d
     
     """
     ratio = r_j / r_coord
