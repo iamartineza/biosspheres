@@ -348,3 +348,59 @@ def v_0_sj_semi_analytic_v2d(
     del temp_l_m
     data_v[:] = 1j * k0 * r_j**2 * r_s**2 * data_v[:]
     return data_v
+
+
+def v_0_js_from_v_0_sj(
+        data_v_sj: np.ndarray
+) -> np.ndarray:
+    """
+    Returns a numpy array that represents a numerical approximation of
+    the matrix formed by the boundary integral operator V_{j,s}^0 with
+    Helmholtz kernel evaluated and tested with spherical harmonics.
+    This routine needs the numpy array corresponding to V_{s,j}^0
+    (notice the change of the order of the indexes indicating the
+    spheres).
+
+    Notes
+    -----
+    data_v_js[p*(2p+1) + q, l*(2l+1) + m] =
+        ( V_{j,s}^0 Y_{l,m,s} ; Y_{p,q,j} )_{L^2(S_j)}.
+    Y_{l,m,s} : spherical harmonic degree l, order m, in the coordinate
+        system s.
+    S_j : surface of the sphere j.
+
+    This computation uses the following result for this specific case:
+    ( V_{j,s}^0 Y_{l,m,s} ; Y_{p,q,j} )_{L^2(S_j)}.
+        = (-1)**(m+q) ( V_{s,j}^0 Y_{p,-q,j} ; Y_{l,-m,s} )_{L^2(S_s)}
+
+    Parameters
+    ----------
+    data_v_sj: np.ndarray
+        represents a numerical approximation of the matrix formed by the
+        boundary integral operator V_{s,j}^0 with Helmholtz kernel
+        evaluated and tested with spherical harmonics.
+
+    Returns
+    -------
+    data_v_js: np.ndarray
+        Same shape than data_v_sj. See notes for the indexes ordering.
+
+    See Also
+    --------
+    v_0_sj_semi_analytic_v1d
+    v_0_sj_semi_analytic_v2d
+
+    """
+    sign_array = np.diag(
+        (-np.ones(len(data_v_sj[0, :])))**(np.arange(0, len(data_v_sj[0, :]))))
+    giro_array = np.eye(len(data_v_sj[0, :]))
+    eles = np.arange(0, int(np.sqrt(len(data_v_sj[0, :]))))
+    l_square_plus_l = eles * (eles + 1)
+    for el in np.arange(1, len(eles)):
+        giro_array[l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+        l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1] = (
+            np.fliplr(giro_array[
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
+    data_v_js = giro_array @ sign_array @ data_v_sj.T @ sign_array @ giro_array
+    return data_v_js
