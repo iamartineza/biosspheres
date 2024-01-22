@@ -294,6 +294,142 @@ def overview_complex_spherical_harmonic_transform_1d() -> None:
     pass
 
 
+def overview_from_sphere_s_cartesian_to_j_spherical_2d() -> None:
+    radio_1 = 1.2
+    radio_2 = 1.7
+    p_1 = np.asarray([2., 1., 2.5])
+    p_2 = -p_1
+    big_l = 1
+    big_l_c = 10
+    quantity_theta_points, quantity_phi_points, weights, pre_vector = (
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c))
+    r_coord, phi_coord, cos_theta_coord = (
+        quadratures.from_sphere_s_cartesian_to_j_spherical_2d(
+            radio_2, p_1, p_2, quantity_theta_points, quantity_phi_points,
+            pre_vector))
+    fig = plt.figure(figsize=plt.figaspect(1.), dpi=68., layout='constrained')
+    ax_1 = fig.add_subplot(111, projection='3d')
+    vector = radio_1 * pre_vector
+    ax_1.scatter3D(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :])
+    sin_theta = np.sqrt(1 - cos_theta_coord**2)
+    ax_1.scatter3D(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord)
+    ax_1.set_xlabel('$x$')
+    ax_1.set_ylabel('$y$')
+    ax_1.set_zlabel('$z$')
+    ax_1.set_aspect('equal')
+    plt.show()
+    pass
+
+
+def overview_from_sphere_s_cartesian_to_j_spherical_1d() -> None:
+    radio_1 = 1.2
+    radio_2 = 1.7
+    p_1 = np.asarray([2., 1., 2.5])
+    p_2 = -p_1
+    big_l = 1
+    big_l_c = 10
+    final_length, total_weights, pre_vector = (
+        quadratures.gauss_legendre_trapezoidal_1d(big_l_c))
+    r_coord, phi_coord, cos_theta_coord = (
+        quadratures.from_sphere_s_cartesian_to_j_spherical_1d(
+            radio_2, p_1, p_2, final_length, pre_vector))
+    fig = plt.figure(figsize=plt.figaspect(1.), dpi=68., layout='constrained')
+    ax_1 = fig.add_subplot(111, projection='3d')
+    vector = radio_1 * pre_vector
+    ax_1.scatter3D(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :])
+    sin_theta = np.sqrt(1 - cos_theta_coord**2)
+    ax_1.scatter3D(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord)
+    ax_1.set_xlabel('$x$')
+    ax_1.set_ylabel('$y$')
+    ax_1.set_zlabel('$z$')
+    ax_1.set_aspect('equal')
+    plt.show()
+    pass
+
+
+def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
+    radio_1 = 1.2
+    radio_2 = 1.7
+    p_1 = np.asarray([2., 1., 2.5])
+    p_2 = -p_1
+    big_l = 1
+    big_l_c = 10
+    quantity_theta_points, quantity_phi_points, weights, pre_vector = (
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c))
+    (r_coord, phi_coord, cos_theta_coord, er_times_n, etheta_times_n,
+     ephi_times_n) = (quadratures.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
+            radio_2, p_1, p_2, quantity_theta_points, quantity_phi_points,
+            pre_vector))
+    fig = plt.figure(figsize=plt.figaspect(.3), dpi=68., layout='constrained')
+    ax_1 = fig.add_subplot(131, projection='3d')
+    vector = radio_1 * pre_vector
+    ax_1.plot_surface(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :],
+        rstride=1, cstride=1,
+        facecolors=cm.coolwarm(er_times_n))
+    ax_1.set_xlabel('$x$')
+    ax_1.set_ylabel('$y$')
+    ax_1.set_zlabel('$z$')
+    ax_1.set_aspect('equal')
+    
+    ax_1 = fig.add_subplot(132, projection='3d')
+    ax_1.plot_surface(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :],
+        rstride=1, cstride=1,
+        facecolors=cm.coolwarm(etheta_times_n))
+    ax_1.set_xlabel('$x$')
+    ax_1.set_ylabel('$y$')
+    ax_1.set_zlabel('$z$')
+    ax_1.set_aspect('equal')
+    
+    ax_1 = fig.add_subplot(133, projection='3d')
+    ax_1.plot_surface(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :],
+        rstride=1, cstride=1,
+        facecolors=cm.coolwarm(ephi_times_n))
+    ax_1.set_xlabel('$x$')
+    ax_1.set_ylabel('$y$')
+    ax_1.set_zlabel('$z$')
+    ax_1.set_aspect('equal')
+    plt.show()
+    pass
+
+
+def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d() -> None:
+    radio_1 = 1.2
+    radio_2 = 1.7
+    p_1 = np.asarray([2., 1., 2.5])
+    p_2 = -p_1
+    big_l = 1
+    big_l_c = 10
+    final_length, total_weights, pre_vector = (
+        quadratures.gauss_legendre_trapezoidal_1d(big_l_c))
+    (r_coord, phi_coord, cos_theta_coord, er_times_n, etheta_times_n,
+     ephi_times_n) = (quadratures.
+    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
+        radio_2, p_1, p_2, final_length, pre_vector))
+    pass
+
+
 if __name__ == '__main__':
     overview_gauss_legendre_trapezoidal_2d()
     overview_gauss_legendre_trapezoidal_1d()
@@ -301,3 +437,7 @@ if __name__ == '__main__':
     overview_gauss_legendre_trapezoidal_complex_sh_mapping_2d()
     overview_real_spherical_harmonic_transform_1d()
     overview_complex_spherical_harmonic_transform_1d()
+    overview_from_sphere_s_cartesian_to_j_spherical_2d()
+    overview_from_sphere_s_cartesian_to_j_spherical_1d()
+    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d()
+    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d()
