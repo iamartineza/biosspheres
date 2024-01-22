@@ -85,15 +85,7 @@ def testing_consistence_for_the_routines_for_the_cross_interactions() -> None:
     plt.title('K*, 1d vs 2d')
     print('Plotting K*, 1d vs 2d')
     
-    print('- V_{1,2}^0 from V_{2,1}^{0t} (2d)')
     data_v12 = crossinteractions.v_0_js_from_v_0_sj(data_v21_2d)
-    aux_tr = np.abs(data_v12 - np.transpose(data_v21_2d)) / np.abs(data_v12)
-    plt.figure()
-    plt.imshow(aux_tr, cmap='RdBu')
-    plt.colorbar()
-    plt.title(
-        'Relative error between $V_{1,2}^0$ and $V_{2,1}^{0t}$')
-    print('Plotting V_{1,2}^0 vs V_{2,1}^{0t}, with property.')
     
     print('- K_{2,1}^0 from V_{2,1} (1d), checking')
     el_diagonal = auxindexes.diagonal_l_sparse(big_l)
