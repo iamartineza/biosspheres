@@ -1,5 +1,5 @@
-import scipy.special
 import numpy as np
+import scipy.special
 import matplotlib.pyplot as plt
 import biosspheres.helmholtz.crossinteractions as crossinteractions
 import biosspheres.quadratures.sphere as quadratures
