@@ -1097,21 +1097,3 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
 
     return r_coord, phi_coord, cos_theta_coord, \
         er_times_n, etheta_times_n, ephi_times_n
-
-
-def pyshtools_format_to_everything_in_a_line_format(
-        pyshtools_format: np.ndarray,
-        pesykus: np.ndarray,
-        p2_plus_p_plus_q: np.ndarray,
-        p2_plus_p_minus_q: np.ndarray,
-        eles: np.ndarray,
-        l_square_plus_l: np.ndarray
-) -> np.ndarray:
-    out_vector = np.empty((eles[-1] + 1)**2)
-    out_vector[p2_plus_p_plus_q] = \
-        pyshtools_format[0, pesykus[:, 0], pesykus[:, 1]]
-    out_vector[p2_plus_p_minus_q] = \
-        pyshtools_format[1, pesykus[:, 0], pesykus[:, 1]]
-    out_vector[l_square_plus_l] = \
-        pyshtools_format[0, eles, 0]
-    return out_vector
