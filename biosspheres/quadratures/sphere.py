@@ -576,7 +576,7 @@ def complex_spherical_harmonic_transform_1d(
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
     del phi
-    exp_neg = (-1.)**np.arange(1, big_l + 1) / exp_pos
+    exp_neg = (-1.)**np.arange(1, big_l + 1)[:, np.newaxis] / exp_pos
     
     legendre_functions = \
         np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
