@@ -15,7 +15,7 @@ def v_1d_vs_2d() -> None:
     
     k0 = 7.
     
-    big_l = 1
+    big_l = 5
     big_l_c = 25
     
     j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
@@ -26,7 +26,6 @@ def v_1d_vs_2d() -> None:
         quadratures.
         from_sphere_s_cartesian_to_j_spherical_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
-    
     data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
         big_l, k0, radio_1, radio_2, j_l_1, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
