@@ -731,8 +731,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j", and also gives
-    the coordinates of the unitary vectors of the spherical system in
-    each point.
+    the dot product between the unitary vectors of the spherical system
+    obtained times the normal of the unitary sphere.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
     
@@ -973,8 +973,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j", and also gives
-    the coordinates of the unitary vectors of the spherical system in
-    each point.
+    the dot product between the unitary vectors of the spherical system
+    obtained times the normal of the unitary sphere.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
     
