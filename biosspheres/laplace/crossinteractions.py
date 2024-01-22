@@ -361,7 +361,7 @@ def v_0_js_from_v_0_sj(
     Returns
     -------
     data_v_js: np.ndarray
-        Same shape than data_v_js. See notes for the indexes ordering.
+        Same shape than data_v_sj. See notes for the indexes ordering.
     
     See Also
     --------
