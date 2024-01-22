@@ -86,7 +86,7 @@ def v_js_from_the_other() -> None:
     im = np.abs(data_v21_2d - data_v21) / np.abs(data_v21)
     plt.imshow(im, cmap='RdBu')
     plt.colorbar()
-    plt.title('Relative error between $V_{2,1}^0$ with direct and indirect'
+    plt.title('Relative error between $V_{2,1}^0$ with direct and indirect '
               'routines')
     plt.show()
     pass
