@@ -296,16 +296,16 @@ def v_0_sj_semi_analytic_v2d(
     el_plus_1_square = num**2
     
     eles = np.arange(0, num)
-    l2_1 = 2 * eles + 1
     eles_plus_1 = eles + 1
     
     l_square_plus_l = eles_plus_1 * eles
     l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
     
-    data_v = np.empty((el_plus_1_square, el_plus_1_square), dtype=np.complex128)
+    data_v = np.empty((el_plus_1_square, el_plus_1_square),
+                      dtype=np.complex128)
     
-    coefficients = np.empty((2, big_l + 1, big_l + 1))
-    temp_l = np.empty_like(argument)
+    coefficients = np.empty((2, big_l + 1, big_l + 1), dtype=np.complex128)
+    temp_l = np.empty_like(h_l[:, :, 0])
     temp_l_m = np.empty_like(temp_l)
     for el in eles:
         temp_l[:] = h_l[:, :, el]
