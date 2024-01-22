@@ -794,20 +794,20 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         coordinate theta of the points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
     er_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of
-        the spherical coordinate r in the points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points).
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate r in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points).
     etheta_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of
-        the spherical coordinate theta in the points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points).
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate theta in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points).
     ephi_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of
-        the spherical coordinate phi in the points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points).
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate phi in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points).
     
     See Also
     --------
@@ -1033,17 +1033,20 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         coordinate theta of the points in the coordinate system s.
         Length equals to final_length.
     er_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate r in the points in the coordinate
-        system s. Shape equals to (3, final_length).
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate r in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length.
     etheta_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate theta in the points in the coordinate
-        system s. Shape equals to (3, final_length).
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate theta in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length.
     ephi_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate phi in the points in the coordinate
-        system s. Shape equals to (3, final_length).
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate phi in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length.
         
     """
     # temp is an array of
