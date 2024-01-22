@@ -335,8 +335,9 @@ def v_0_js_from_v_0_sj(
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator V_{j,s}^0 with
     Laplace kernel evaluated and tested with spherical harmonics.
-    This routine needs the numpy array corresponding to V_{s,j}^0 (notice the
-    change of the order of the indexes indicating the spheres).
+    This routine needs the numpy array corresponding to V_{s,j}^0
+    (notice the change of the order of the indexes indicating the
+    spheres).
     
     Notes
     -----
@@ -354,8 +355,8 @@ def v_0_js_from_v_0_sj(
     ----------
     data_v_sj: np.ndarray
         represents a numerical approximation of the matrix formed by the
-        boundary integral operator V_{s,j}^0 with Laplace kernel evaluated and
-        tested with spherical harmonics.
+        boundary integral operator V_{s,j}^0 with Laplace kernel
+        evaluated and tested with spherical harmonics.
 
     Returns
     -------
