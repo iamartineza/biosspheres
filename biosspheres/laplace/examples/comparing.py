@@ -21,7 +21,6 @@ def v_1d_vs_2d() -> None:
         quadratures.
         from_sphere_s_cartesian_to_j_spherical_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
-    
     data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
         big_l, radio_1, radio_2, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
