@@ -864,7 +864,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
 
     ephi_times_n = np.sum(np.multiply(ephi_coord, pre_vector), axis=0)
 
-    return r_coord, phi_coord, cos_theta_coord, pre_vector[2, :, :], \
+    return r_coord, phi_coord, cos_theta_coord, \
         er_times_n, etheta_times_n, ephi_times_n
 
 
