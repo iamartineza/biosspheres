@@ -50,12 +50,6 @@ def testing_consistence_for_the_routines_for_the_cross_interactions() -> None:
     data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
         big_l, radio_1, radio_2, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
-    aux_tr = np.abs(data_v21_2d - data_v21)
-    plt.figure()
-    plt.imshow(aux_tr, cmap='RdBu')
-    plt.colorbar()
-    plt.title('V, 1d vs 2d')
-    print('Plotting V, 1d vs 2d')
     
     print('- K operator 1d vs 2d.')
     data_k21_2d = crossinteractions.k_0_sj_semi_analytic_v2d(
