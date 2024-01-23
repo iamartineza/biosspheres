@@ -720,9 +720,9 @@ def k_0_sj_from_v_0_sj(
     Parameters
     ----------
     data_v : np.ndarray
-        that represents a numerical approximation of the matrix formed by the
-        boundary integral operator V_{s,j}^0 with Laplace kernel evaluated and
-        tested with spherical harmonics.
+        that represents a numerical approximation of the matrix formed
+        by the boundary integral operator V_{s,j}^0 with Laplace kernel
+        evaluated and tested with spherical harmonics.
     r_j : float
         > 0, radius of the sphere j.
     el_diagonal : scipy.sparse.dia_array
