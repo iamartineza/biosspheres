@@ -52,20 +52,9 @@ def testing_consistence_for_the_routines_for_the_cross_interactions() -> None:
         cos_theta_coord_1tf, final_length, transform)
     
     print('- K operator 1d vs 2d.')
-    data_k21_2d = crossinteractions.k_0_sj_semi_analytic_v2d(
-        big_l, radio_1, radio_2, r_coord_1tf_2d, phi_coord_1tf_2d,
-        cos_theta_coord_1tf_2d, weights, pre_vector_t_2d[2, :, 0],
-        quantity_theta_points, quantity_phi_points, pesykus, p2_plus_p_plus_q,
-        p2_plus_p_minus_q)
     data_k21 = crossinteractions.k_0_sj_semi_analytic_v1d(
         big_l, radio_1, radio_2, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
-    aux_tr = np.abs(data_k21_2d - data_k21)
-    plt.figure()
-    plt.imshow(aux_tr, cmap='RdBu')
-    plt.colorbar()
-    plt.title('K, 1d vs 2d')
-    print('Plotting K, 1d vs 2d')
     
     print("- K* operator 1d vs 2d.")
     data_ka21_2d = crossinteractions.ka_0_sj_semi_analytic_recurrence_v2d(
