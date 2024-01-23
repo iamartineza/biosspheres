@@ -520,12 +520,13 @@ def k_0_sj_semi_analytic_v2d(
         p2_plus_p_minus_q: np.ndarray
 ) -> np.ndarray:
     """
-    Returns a numpy array that represents a numerical approximation of the
-    matrix formed by the boundary integral operator K_{s,j}^0 with Laplace
-    kernel evaluated and tested with real spherical harmonics.
-    In this routine the quadrature points NEED to be ordered in an array of two
-    dimensions, given by the function from_sphere_s_cartesian_to_j_spherical_2d
-    of the module biosspheres.quadratures.spheres.
+    Returns a numpy array that represents a numerical approximation of
+    the matrix formed by the boundary integral operator K_{s,j}^0 with
+    Laplace kernel evaluated and tested with real spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of two dimensions, given by the function
+    from_sphere_s_cartesian_to_j_spherical_2d of the module
+    biosspheres.quadratures.spheres.
 
     Notes
     -----
@@ -536,12 +537,9 @@ def k_0_sj_semi_analytic_v2d(
     S_s : surface of the sphere s.
 
     The expression K_{s,j}^0 Y_l,m,j can be obtained analytically.
-    A quadrature scheme is used to compute the other surface integral. In this
-    routine the quadrature points NEED to be ordered in an array of two
-    dimensions, given by the function from_sphere_s_cartesian_to_j_spherical_2d
-    of the module biosspheres.quadratures.spheres.
-    It uses functions from the package pyshtools to compute the spherical
-    harmonic transforms.
+    A quadrature scheme is used to compute the other surface integral.
+    It uses functions from the package pyshtools to compute the
+    spherical harmonic transforms.
 
     Parameters
     ----------
@@ -552,31 +550,34 @@ def k_0_sj_semi_analytic_v2d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        Two dimensional array of floats with the spherical coordinate r of the
-        quadrature points in the coordinate system s. Shape equals to
-        (quantity_theta_points, quantity_phi_points).
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_2d of
-        the module biosspheres.quadratures.spheres.
+        Two dimensional array of floats with the spherical coordinate r
+        of the quadrature points in the coordinate system s.
+        Shape equals to (quantity_theta_points, quantity_phi_points).
+        Comes from the function
+        from_sphere_s_cartesian_to_j_spherical_2d of the module
+        biosspheres.quadratures.spheres.
     phi_coord : np.ndarray
         Two dimensional array of floats with the phi coordinate r of the
         quadrature points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_2d of
-        the module biosspheres.quadratures.spheres.
+        Comes from the function
+        from_sphere_s_cartesian_to_j_spherical_2d of the module
+        biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
         Two dimensional array of floats with the coseno of the spherical
-        coordinate theta of the quadrature points in the coordinate system s.
-        Shape equals to (quantity_theta_points, quantity_phi_points).
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_2d of
+        coordinate theta of the quadrature points in the coordinate
+        system s. Shape equals to
+        (quantity_theta_points, quantity_phi_points). Comes from the
+        function from_sphere_s_cartesian_to_j_spherical_2d of
         the module biosspheres.quadratures.spheres.
     weights : np.ndarray
-        of floats. Weights for the integral quadrature in the theta variable.
-        Can come from the function
+        of floats. Weights for the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     zeros : np.ndarray
-        of floats. Zeros of the integral quadrature in the theta variable.
-        Can come from the function
+        of floats. Zeros of the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     quantity_theta_points : int
@@ -592,26 +593,29 @@ def k_0_sj_semi_analytic_v2d(
     pesykus : np.ndarray
         dtype int, shape ((big_l+1) * big_l // 2, 2).
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
     p2_plus_p_plus_q : np.ndarray
         dtype int, length (big_l+1) * big_l // 2.
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
     p2_plus_p_minus_q : np.ndarray
         dtype int, length (big_l+1) * big_l // 2.
         Used for the vectorization of some computations.
-        Come from the function biosspheres.miscella.auxindexes.pes_y_kus(big_l)
+        Comes from the function
+        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
 
     Returns
     -------
     data_k : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
+        ordering.
 
     See Also
     --------
     k_0_sj_semi_analytic_v1d
     k_0_sj_from_v_0_sj
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_2d
     gauss_legendre_trapezoidal_shtools_2d
     biosspheres.miscella.auxindexes.pes_y_kus
 
