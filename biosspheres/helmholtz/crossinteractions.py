@@ -699,7 +699,6 @@ def k_0_sj_semi_analytic_v2d(
     el_plus_1_square = num**2
     
     eles = np.arange(0, num)
-    l2_1 = 2 * eles + 1
     eles_plus_1 = eles + 1
     
     l_square_plus_l = eles_plus_1 * eles
@@ -714,7 +713,7 @@ def k_0_sj_semi_analytic_v2d(
     data_k[:, 0] = 0.
     for el in eles:
         temp_l[:] = h_l[:, :, el]
-        coefficients[:] = j_lp_j[el] * pyshtools.expand.SHExpandGLQ(
+        coefficients[:] = j_lp_j[el] * pyshtools.expand.SHExpandGLQC(
             temp_l *
             legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :],
             weights, zeros, norm=4, csphase=-1, lmax_calc=big_l)
@@ -729,7 +728,7 @@ def k_0_sj_semi_analytic_v2d(
                     temp_l *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
                                        :])
-            coefficients[:] = j_lp_j[el] * pyshtools.expand.SHExpandGLQ(
+            coefficients[:] = j_lp_j[el] * pyshtools.expand.SHExpandGLQC(
                 temp_l_m * exp_pos[m - 1, :, :], weights, zeros,
                 norm=4, csphase=-1, lmax_calc=big_l)
             data_k[p2_plus_p_plus_q, l_square_plus_l[el] + m] = \
@@ -740,7 +739,7 @@ def k_0_sj_semi_analytic_v2d(
                 coefficients[0, eles, 0]
             
             coefficients[:] = (j_lp_j[el] * (-1)**m
-                               * pyshtools.expand.SHExpandGLQ(
+                               * pyshtools.expand.SHExpandGLQC(
                 temp_l_m / exp_pos[m - 1, :, :], weights, zeros,
                 norm=4, csphase=-1, lmax_calc=big_l))
             data_k[p2_plus_p_plus_q, l_square_plus_l[el] - m] = \
@@ -750,4 +749,64 @@ def k_0_sj_semi_analytic_v2d(
             data_k[l_square_plus_l, l_square_plus_l[el] - m] = \
                 coefficients[0, eles, 0]
     data_k[:] = -1j * (k0 * r_j * r_s)**2 * data_k[:]
+    return data_k
+
+
+def k_0_sj_from_v_0_sj(
+        data_v: np.ndarray,
+        k0: float,
+        r_j: float
+) -> np.ndarray:
+    """
+    Returns a numpy array that represents a numerical approximation of
+    the matrix formed by the boundary integral operator K_{s,j}^0 with
+    Helmholtz kernel evaluated and tested with spherical harmonics.
+    This routine needs the numpy array corresponding to the testing of
+    V_{s,j}^0.
+
+    Notes
+    -----
+    data_k[p*(2p+1) + q, l*(2l+1) + m] =
+        ( K_{s,j}^0 Y_{l,m,j} ; Y_{p,q,s} )_{L^2(S_s)}.
+    Y_{l,m,j} : spherical harmonic degree l, order m, in the coordinate
+        system j.
+    S_s : surface of the sphere s.
+
+    This computation uses the following result for this specific case:
+    K_{s,j}^0 Y_{l,m} = -k0 * (j_l'(k0 r_j) / j_l (k0 r_j))
+                        * V_{s,j}^0 Y_{l,m}.
+    With j_l' the derivative of the spherical Bessel function, and j_l
+    the spherical Bessel function.
+    
+    It will blow up if k0 r_j is a root of any j_l.
+    
+    Parameters
+    ----------
+    data_v : np.ndarray
+        that represents a numerical approximation of the matrix formed
+        by the boundary integral operator V_{s,j}^0 with Helmholtz
+        kernel evaluated and tested with spherical harmonics.
+    k0 : float
+        > 0
+    r_j : float
+        > 0, radius of the sphere j.
+
+    Returns
+    -------
+    data_k : np.ndarray
+        Same shape than data_v. See notes for the indexes ordering.
+
+    See Also
+    --------
+    k_0_sj_semi_analytic_v1d
+    k_0_sj_semi_analytic_v2d
+    biosspheres.miscella.auxindexes.diagonal_l_sparse
+
+    """
+    big_l = int(np.sqrt(len(data_v))) - 1
+    eles = np.arange(0, big_l + 1)
+    j_l_1 = scipy.special.spherical_jn(eles, r_j * k0)
+    j_lp_1 = scipy.special.spherical_jn(eles, r_j * k0, derivative=True)
+    jeys_array = np.diag(np.repeat(-k0 * (j_lp_1 / j_l_1), 2 * eles + 1))
+    data_k = data_v@jeys_array
     return data_k
