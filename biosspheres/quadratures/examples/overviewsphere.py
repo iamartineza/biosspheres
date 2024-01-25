@@ -299,7 +299,7 @@ def overview_from_sphere_s_cartesian_to_j_spherical_2d() -> None:
     radio_2 = 1.7
     p_1 = np.asarray([2., 1., 2.5])
     p_2 = -p_1
-    big_l = 1
+
     big_l_c = 10
     quantity_theta_points, quantity_phi_points, weights, pre_vector = (
         quadratures.gauss_legendre_trapezoidal_2d(big_l_c))
@@ -319,6 +319,17 @@ def overview_from_sphere_s_cartesian_to_j_spherical_2d() -> None:
         r_coord * sin_theta * np.cos(phi_coord),
         r_coord * sin_theta * np.sin(phi_coord),
         r_coord * cos_theta_coord)
+    for i in np.arange(0, quantity_theta_points):
+        for j in np.arange(0, quantity_phi_points):
+            ax_1.quiver(
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                sin_theta[i, j] * np.cos(phi_coord[i, j]),
+                sin_theta[i, j] * np.sin(phi_coord[i, j]),
+                cos_theta_coord[i, j],
+                pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
+                alpha=0.325)
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
@@ -332,7 +343,7 @@ def overview_from_sphere_s_cartesian_to_j_spherical_1d() -> None:
     radio_2 = 1.7
     p_1 = np.asarray([2., 1., 2.5])
     p_2 = -p_1
-    big_l = 1
+
     big_l_c = 10
     final_length, total_weights, pre_vector = (
         quadratures.gauss_legendre_trapezoidal_1d(big_l_c))
@@ -351,6 +362,16 @@ def overview_from_sphere_s_cartesian_to_j_spherical_1d() -> None:
         r_coord * sin_theta * np.cos(phi_coord),
         r_coord * sin_theta * np.sin(phi_coord),
         r_coord * cos_theta_coord)
+    for i in np.arange(0, final_length):
+        ax_1.quiver(
+            np.zeros_like(vector[0, i]),
+            np.zeros_like(vector[0, i]),
+            np.zeros_like(vector[0, i]),
+            sin_theta[i] * np.cos(phi_coord[i]),
+            sin_theta[i] * np.sin(phi_coord[i]),
+            cos_theta_coord[i],
+            pivot='tail', length=r_coord[i], arrow_length_ratio=0.0625,
+            alpha=0.325)
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
@@ -376,50 +397,117 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
     fig = plt.figure(figsize=plt.figaspect(.3), dpi=68., layout='constrained')
     ax_1 = fig.add_subplot(131, projection='3d')
     vector = radio_1 * pre_vector
-    ax_1.plot_surface(
+    ax_1.scatter3D(
         vector[0, :],
         vector[1, :],
-        vector[2, :],
+        vector[2, :])
+    sin_theta = np.sqrt(1 - cos_theta_coord**2)
+    ax_1.scatter3D(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord)
+    
+    for i in np.arange(0, quantity_theta_points):
+        for j in np.arange(0, quantity_phi_points):
+            ax_1.quiver(
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                sin_theta[i, j] * np.cos(phi_coord[i, j]),
+                sin_theta[i, j] * np.sin(phi_coord[i, j]),
+                cos_theta_coord[i, j],
+                pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
+                alpha=0.005)
+    ax_1.plot_surface(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord,
         rstride=1, cstride=1,
         facecolors=cm.coolwarm(er_times_n))
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
     ax_1.set_aspect('equal')
+    ax_1.set_title(
+        'Projection of the unitary vector corresponding to the radius')
     
     ax_1 = fig.add_subplot(132, projection='3d')
-    ax_1.plot_surface(
+    vector = radio_1 * pre_vector
+    ax_1.scatter3D(
         vector[0, :],
         vector[1, :],
-        vector[2, :],
+        vector[2, :])
+    sin_theta = np.sqrt(1 - cos_theta_coord**2)
+    ax_1.scatter3D(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord)
+    
+    for i in np.arange(0, quantity_theta_points):
+        for j in np.arange(0, quantity_phi_points):
+            ax_1.quiver(
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                sin_theta[i, j] * np.cos(phi_coord[i, j]),
+                sin_theta[i, j] * np.sin(phi_coord[i, j]),
+                cos_theta_coord[i, j],
+                pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
+                alpha=0.005)
+    ax_1.plot_surface(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord,
         rstride=1, cstride=1,
         facecolors=cm.coolwarm(etheta_times_n))
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
     ax_1.set_aspect('equal')
+    ax_1.set_title('Projection of the unitary vector $\\theta$')
     
     ax_1 = fig.add_subplot(133, projection='3d')
-    ax_1.plot_surface(
+    vector = radio_1 * pre_vector
+    ax_1.scatter3D(
         vector[0, :],
         vector[1, :],
-        vector[2, :],
+        vector[2, :])
+    sin_theta = np.sqrt(1 - cos_theta_coord**2)
+    ax_1.scatter3D(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord)
+    
+    for i in np.arange(0, quantity_theta_points):
+        for j in np.arange(0, quantity_phi_points):
+            ax_1.quiver(
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                np.zeros_like(vector[0, i, j]),
+                sin_theta[i, j] * np.cos(phi_coord[i, j]),
+                sin_theta[i, j] * np.sin(phi_coord[i, j]),
+                cos_theta_coord[i, j],
+                pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
+                alpha=0.005)
+    ax_1.plot_surface(
+        r_coord * sin_theta * np.cos(phi_coord),
+        r_coord * sin_theta * np.sin(phi_coord),
+        r_coord * cos_theta_coord,
         rstride=1, cstride=1,
         facecolors=cm.coolwarm(ephi_times_n))
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
     ax_1.set_aspect('equal')
+    ax_1.set_title('Projection of the unitary vector $\\phi$')
     plt.show()
     pass
 
 
 def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d() -> None:
-    radio_1 = 1.2
     radio_2 = 1.7
     p_1 = np.asarray([2., 1., 2.5])
     p_2 = -p_1
-    big_l = 1
     big_l_c = 10
     final_length, total_weights, pre_vector = (
         quadratures.gauss_legendre_trapezoidal_1d(big_l_c))
