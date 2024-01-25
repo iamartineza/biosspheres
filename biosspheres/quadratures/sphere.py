@@ -9,13 +9,13 @@ def gauss_legendre_trapezoidal_2d(
     This function is for obtaining the quadratures points to
     approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule. See the shape of the returns.
+    a composite trapezoidal quadrature rule.
     
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Composed trapezoidal rule in phi.
+    Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
@@ -83,13 +83,13 @@ def gauss_legendre_trapezoidal_1d(
     This function is for obtaining the quadratures points to
     approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule. See the shape of the returns.
+    composite trapezoidal quadrature rule. See the shape of the returns.
     
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Composed trapezoidal rule in phi.
+    Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
@@ -169,7 +169,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     it also returns the evaluation of the real spherical harmonics in
     those points.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule. The real spherical
+    composite trapezoidal quadrature rule. The real spherical
     harmonics evaluated are of degree l and order m, with l <= big_l.
     See the shape of the returns.
     
@@ -177,7 +177,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Composed trapezoidal rule in phi.
+    Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
@@ -305,7 +305,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     it also returns the evaluation of the complex spherical harmonics in
     those points.
     It returns the weights and vectors for the Gauss-Legendre and
-    trapezoidal quadrature rule. The complex spherical
+    composite trapezoidal quadrature rule. The complex spherical
     harmonics evaluated are of degree l and order m, with l <= big_l.
     See the shape of the returns.
 
@@ -313,7 +313,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     -----
     Gauss-legendre quadrature in theta. This one uses the package
     pyshtools.
-    Composed trapezoidal rule in phi.
+    Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
     Without considering errors produced by the approximation by finite
@@ -444,6 +444,14 @@ def real_spherical_harmonic_transform_1d(
     the vector used for the spherical harmonic transform does not have
     any performance improvements.
     
+    Notes
+    -----
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
+    Composite trapezoidal rule in phi.
+    Integral on theta are (big_l_c + 1) quadrature points.
+    Integral on phi are (2 * big_l_c + 1) quadrature points.
+    
     Parameters
     ----------
     big_l : int
@@ -463,6 +471,10 @@ def real_spherical_harmonic_transform_1d(
     transform : np.ndarray
         of floats. Vector that can be used to calculate the real
         spherical transform. Shape ((big_l+1)**2, final_length)
+    
+    See Also
+    --------
+    gauss_legendre_trapezoidal_1d
     
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
@@ -540,6 +552,14 @@ def complex_spherical_harmonic_transform_1d(
     the vector used for the spherical harmonic transform does not have
     any performance improvements.
 
+    Notes
+    -----
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools.
+    Composite trapezoidal rule in phi.
+    Integral on theta are (big_l_c + 1) quadrature points.
+    Integral on phi are (2 * big_l_c + 1) quadrature points.
+
     Parameters
     ----------
     big_l : int
@@ -559,6 +579,10 @@ def complex_spherical_harmonic_transform_1d(
     transform : np.ndarray
         of complex numbers. Vector that can be used to calculate the
         complex spherical transform. Shape ((big_l+1)**2, final_length)
+
+    See Also
+    --------
+    gauss_legendre_trapezoidal_1d
 
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
@@ -680,7 +704,7 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
         points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
     
@@ -790,7 +814,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
     er_times_n : np.ndarray
@@ -924,7 +948,7 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
         points in the coordinate system s. Length equals to
         final_length.
     cos_theta_coord : np.ndarray
-        One dimensional array of floats with the coseno of the spherical
+        One dimensional array of floats with the cosine of the spherical
         coordinate theta of the points in the coordinate system s.
         Length equals to final_length.
 
@@ -1029,7 +1053,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         points in the coordinate system s. Length equals to
         final_length.
     cos_theta_coord : np.ndarray
-        One dimensional array of floats with the coseno of the spherical
+        One dimensional array of floats with the cosine of the spherical
         coordinate theta of the points in the coordinate system s.
         Length equals to final_length.
     er_times_n : np.ndarray
