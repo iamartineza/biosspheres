@@ -976,12 +976,12 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
 ) -> np.ndarray:
     """
     Returns a numpy array that represents a numerical approximation of
-    the matrix formed by the boundary integral operator K_{s,j}^{*0} with
-    Laplace kernel evaluated and tested with spherical harmonics.
-    In this routine the quadrature points NEED to be ordered in an array of two
-    dimensions, given by the function
-    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d of the
-    module biosspheres.quadratures.spheres.
+    the matrix formed by the boundary integral operator K_{s,j}^{*0}
+    with Laplace kernel evaluated and tested with spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of two dimensions, given by the function
+    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d of
+    the module biosspheres.quadratures.spheres.
 
     Notes
     -----
@@ -994,15 +994,15 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
     The expression K_{s,j}^{*0} Y_l,m,j can be obtained analytically.
     A quadrature scheme is used to compute the other surface integral
     corresponding to the inner product.
-    For computing the derivative in theta a recurrence formula for Legendre
-    Functions is used.
+    For computing the derivative in theta a recurrence formula for
+    Legendre Functions is used.
     
-    In this routine the quadrature points NEED to be ordered in an array of two
-    dimensions, given by the function
-    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d of the
-    module biosspheres.quadratures.spheres.
-    It uses functions from the package pyshtools to compute the spherical
-    harmonic transforms.
+    In this routine the quadrature points NEED to be ordered in an array
+    of two dimensions, given by the function
+    from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d of
+    the module biosspheres.quadratures.spheres.
+    It uses functions from the package pyshtools to compute the
+    spherical harmonic transforms.
 
     Parameters
     ----------
@@ -1013,9 +1013,9 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        Two dimensional array of floats with the spherical coordinate r of the
-        quadrature points in the coordinate system s. Shape equals to
-        (quantity_theta_points, quantity_phi_points).
+        Two dimensional array of floats with the spherical coordinate r
+        of the quadrature points in the coordinate system s. Shape
+        equals to (quantity_theta_points, quantity_phi_points).
         Comes from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     phi_coord : np.ndarray
@@ -1026,39 +1026,40 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     cos_theta_coord : np.ndarray
         Two dimensional array of floats with the cosine of the spherical
-        coordinate theta of the quadrature points in the coordinate system s.
-        Shape equals to (quantity_theta_points, quantity_phi_points).
+        coordinate theta of the quadrature points in the coordinate
+        system s. Shape equals to
+        (quantity_theta_points, quantity_phi_points).
         Comes from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     er_times_n : np.ndarray
         Two dimensional array of floats with the dot product of the
         canonical vector of the spherical coordinate r in the points
         in the coordinate system s and the normal of a sphere. Shape
-        equals to (quantity_theta_points, quantity_phi_points). Comes from
-        biosspheres.quadratures.spheres.
+        equals to (quantity_theta_points, quantity_phi_points). Comes
+        from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     etheta_times_n : np.ndarray
         Two dimensional array of floats with the dot product of the
         canonical vector of the spherical coordinate theta in the points
         in the coordinate system s and the normal of a sphere. Shape
-        equals to (quantity_theta_points, quantity_phi_points). Comes from
-        biosspheres.quadratures.spheres.
+        equals to (quantity_theta_points, quantity_phi_points). Comes
+        from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     ephi_times_n : np.ndarray
         Two dimensional array of floats with the dot product of the
         canonical vector of the spherical coordinate phi in the points
         in the coordinate system s and the normal of a sphere. Shape
-        equals to (quantity_theta_points, quantity_phi_points). Comes from
-        biosspheres.quadratures.spheres.
+        equals to (quantity_theta_points, quantity_phi_points). Comes
+        from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     weights : np.ndarray
-        of floats. Weights for the integral quadrature in the theta variable.
-        Comes from the function
+        of floats. Weights for the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     zeros : np.ndarray
-        of floats. Zeros of the integral quadrature in the theta variable.
-        Comes from the function
+        of floats. Zeros of the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     quantity_theta_points : int
@@ -1090,7 +1091,8 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
     Returns
     -------
     data_ka : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
+        ordering.
 
     See Also
     --------
