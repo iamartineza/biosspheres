@@ -69,7 +69,7 @@ def v_0_sj_semi_analytic_v1d(
         from_sphere_s_cartesian_to_j_spherical_1d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate
+        Array of floats with the cosine of the spherical coordinate
         theta of the quadrature points in the coordinate system s.
         Lengths equal to final_length. Can come from the function
         from_sphere_s_cartesian_to_j_spherical_1d of the module
@@ -214,7 +214,7 @@ def v_0_sj_semi_analytic_v2d(
         from_sphere_s_cartesian_to_j_spherical_2d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate
         system s. Shape equals to
         (quantity_theta_points, quantity_phi_points). Comes from the
@@ -468,7 +468,7 @@ def k_0_sj_semi_analytic_v1d(
         from_sphere_s_cartesian_to_j_spherical_1d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate
+        Array of floats with the cosine of the spherical coordinate
         theta of the quadrature points in the coordinate system s.
         Lengths equal to final_length. Can come from the function
         from_sphere_s_cartesian_to_j_spherical_1d of the module
@@ -616,7 +616,7 @@ def k_0_sj_semi_analytic_v2d(
         from_sphere_s_cartesian_to_j_spherical_2d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate
         system s. Shape equals to
         (quantity_theta_points, quantity_phi_points). Comes from the
