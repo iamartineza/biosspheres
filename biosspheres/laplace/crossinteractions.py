@@ -72,16 +72,16 @@ def v_0_sj_semi_analytic_v1d(
         Can come from the function spherical_harmonic_transform_1d of
         the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats with the evaluation of the spherical harmonics along
-        with their weights in the quadrature points.
+        of floats, for doing the real spherical harmonic
+        transform.
         Can come from the function real_spherical_harmonic_transform_1d
         of the module biosspheres.quadratures.spheres.
 
     Returns
     -------
     data_v : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
-        ordering.
+        of floats. Shape ((big_l+1)**2, (big_l+1)**2).
+        See notes for the indexes ordering.
     
     See Also
     --------
@@ -244,7 +244,8 @@ def v_0_sj_semi_analytic_v2d(
     Returns
     -------
     data_v : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        of floats. Shape ((big_l+1)**2, (big_l+1)**2).
+        See notes for the indexes ordering.
     
     See Also
     --------
@@ -334,7 +335,7 @@ def v_0_js_from_v_0_sj(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator V_{j,s}^0 with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     This routine needs the numpy array corresponding to V_{s,j}^0
     (notice the change of the order of the indexes indicating the
     spheres).
@@ -354,14 +355,15 @@ def v_0_js_from_v_0_sj(
     Parameters
     ----------
     data_v_sj: np.ndarray
-        represents a numerical approximation of the matrix formed by the
-        boundary integral operator V_{s,j}^0 with Laplace kernel
-        evaluated and tested with spherical harmonics.
+        of floats. Represents a numerical approximation of the matrix
+        formed by the boundary integral operator V_{s,j}^0 with Laplace
+        kernel evaluated and tested with spherical harmonics.
 
     Returns
     -------
     data_v_js: np.ndarray
-        Same shape than data_v_sj. See notes for the indexes ordering.
+        of floats. Same shape than data_v_sj.
+        See notes for the indexes ordering.
     
     See Also
     --------
@@ -385,7 +387,7 @@ def k_0_sj_semi_analytic_v1d(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^0 with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of one dimension.
     It is a SLOW routine, because it does not use any symmetry or
@@ -439,16 +441,16 @@ def k_0_sj_semi_analytic_v1d(
         Can come from the function spherical_harmonic_transform_1d of
         the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats with the evaluation of the spherical harmonics along
-        with their weights in the quadrature points.
+        of floats, for doing the real spherical harmonic
+        transform.
         Can come from the function real_spherical_harmonic_transform_1d
         of the module biosspheres.quadratures.spheres.
 
     Returns
     -------
     data_k : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
-        ordering.
+        of floats. Shape ((big_l+1)**2, (big_l+1)**2).
+        See notes for the indexes ordering.
     
     See Also
     --------
@@ -609,8 +611,8 @@ def k_0_sj_semi_analytic_v2d(
     Returns
     -------
     data_k : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
-        ordering.
+        of floats. Shape ((big_l+1)**2, (big_l+1)**2).
+        See notes for the indexes ordering.
 
     See Also
     --------
@@ -702,7 +704,7 @@ def k_0_sj_from_v_0_sj(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^0 with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     This routine needs the numpy array corresponding to the testing of
     V_{s,j}^0.
     
@@ -760,7 +762,8 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^{*0}
-    with Laplace kernel evaluated and tested with spherical harmonics.
+    with Laplace kernel evaluated and tested with real spherical
+    harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of one dimension.
     It is a SLOW routine, because it does not use any symmetry or
@@ -833,8 +836,8 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
         how many points for the surface integral,
         (big_l_c + 1) * (2 * big_l_c + 1).
     transform : np.ndarray
-        of floats. Mapping of the real spherical harmonics times the
-        weights. Shape ((big_l+1)**2, final_length)
+        of floats, for doing the real spherical harmonic
+        transform. Shape ((big_l+1)**2, final_length)
 
     Returns
     -------
@@ -977,7 +980,8 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^{*0}
-    with Laplace kernel evaluated and tested with spherical harmonics.
+    with Laplace kernel evaluated and tested with real spherical
+    harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of two dimensions, given by the function
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d of
@@ -1243,7 +1247,7 @@ def ka_0_sj_from_k_js(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^{*0} with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     This routine needs the numpy array corresponding to K_{j,s}^0 (notice the
     change of the order of the indexes indicating the spheres).
     
@@ -1290,7 +1294,7 @@ def ka_0_sj_from_v_sj(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator K_{s,j}^{*0} with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     This routine needs the numpy array corresponding to V_{s,j}^0.
     
     Notes
@@ -1341,7 +1345,7 @@ def w_0_sj_from_v_sj(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator W_{s,j}^0 with
-    Laplace kernel evaluated and tested with spherical harmonics.
+    Laplace kernel evaluated and tested with real spherical harmonics.
     This routine needs the numpy array corresponding to V_{s,j}^0.
 
     Notes
@@ -1443,8 +1447,8 @@ def a_0_sj_and_js_v1d(
         Can come from the function spherical_harmonic_transform_1d of the
         module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats with the evaluation of the spherical harmonics along with
-        their weights in the quadrature points.
+        of floats, for doing the real spherical harmonic
+        transform.
         Can come from the function real_spherical_harmonic_transform_1d of the
         module biosspheres.quadratures.spheres.
     diagonal : np.ndarray
