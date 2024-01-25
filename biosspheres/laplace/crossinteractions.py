@@ -62,7 +62,7 @@ def v_0_sj_semi_analytic_v1d(
         from_sphere_s_cartesian_to_j_spherical_1d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate
+        Array of floats with the cosine of the spherical coordinate
         theta of the quadrature points in the coordinate system s.
         Lengths equal to final_length. Can come from the function
         from_sphere_s_cartesian_to_j_spherical_1d of the module
@@ -173,8 +173,8 @@ def v_0_sj_semi_analytic_v2d(
     is used to compute the surface integral corresponding to the inner
     product.
     
-    It uses functions from the package pyshtools to compute the spherical
-    harmonic transforms.
+    It uses functions from the package pyshtools to compute the
+    spherical harmonic transforms.
     
     Parameters
     ----------
@@ -199,7 +199,7 @@ def v_0_sj_semi_analytic_v2d(
         from_sphere_s_cartesian_to_j_spherical_2d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate
         system s. Shape equals to
         (quantity_theta_points, quantity_phi_points). Comes from the
@@ -429,7 +429,7 @@ def k_0_sj_semi_analytic_v1d(
         from_sphere_s_cartesian_to_j_spherical_1d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate
+        Array of floats with the cosine of the spherical coordinate
         theta of the quadrature points in the coordinate system s.
         Lengths equal to final_length. Can come from the function
         from_sphere_s_cartesian_to_j_spherical_1d of the module
@@ -564,7 +564,7 @@ def k_0_sj_semi_analytic_v2d(
         from_sphere_s_cartesian_to_j_spherical_2d of the module
         biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate
         system s. Shape equals to
         (quantity_theta_points, quantity_phi_points). Comes from the
@@ -759,12 +759,12 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
 ) -> np.ndarray:
     """
     Returns a numpy array that represents a numerical approximation of
-    the matrix formed by the boundary integral operator K_{s,j}^{*0} with
-    Laplace kernel evaluated and tested with spherical harmonics.
-    In this routine the quadrature points NEED to be ordered in an array of one
-    dimension.
-    It is a SLOW routine, because it does not use any symmetry or properties
-    of the spherical harmonics.
+    the matrix formed by the boundary integral operator K_{s,j}^{*0}
+    with Laplace kernel evaluated and tested with spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
+    It is a SLOW routine, because it does not use any symmetry or
+    properties of the spherical harmonics.
     
     Notes
     -----
@@ -777,13 +777,11 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
     The expression K_{s,j}^{*0} Y_l,m,j can be obtained analytically.
     A quadrature scheme is used to compute the other surface integral
     corresponding to the inner product.
-    For computing the derivative in theta a recurrence formula for Legendre
-    Functions is used.
+    For computing the derivative in theta a recurrence formula for
+    Legendre Functions is used.
     
-    In this routine the quadrature points NEED to be ordered in an array of one
-    dimension.
-    It is a SLOW routine, because it does not use any symmetry or properties
-    of the spherical harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
     
     Parameters
     ----------
@@ -794,9 +792,10 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        One dimensional array of floats with the spherical coordinate r of the
-        quadrature points in the coordinate system s. Length equals to
-        final_length. Can come from biosspheres.quadratures.spheres.
+        One dimensional array of floats with the spherical coordinate r
+        of the quadrature points in the coordinate system s. Length
+        equals to final_length. Can come from
+        biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     phi_coord : np.ndarray
         One dimensional array of floats with the phi coordinate r of the
@@ -804,40 +803,44 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
         final_length. Can come from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     cos_theta_coord : np.ndarray
-        One dimensional array of floats with the coseno of the spherical
-        coordinate theta of the quadrature points in the coordinate system s.
-        Lenght equals to final_length.
+        One dimensional array of floats with the cosine of the spherical
+        coordinate theta of the quadrature points in the coordinate
+        system s. Lenght equals to final_length.
         Can come from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     er_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate r in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, final_length). Can come from biosspheres.quadratures.spheres.
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate r in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     etheta_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate theta in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, final_length). Can come from biosspheres.quadratures.spheres.
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate theta in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     ephi_times_n : np.ndarray
-        Two dimensional array of floats with the canonical vector of the
-        spherical coordinate phi in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, final_length). Can come from biosspheres.quadratures.spheres.
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate phi in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     final_length : int
         how many points for the surface integral,
         (big_l_c + 1) * (2 * big_l_c + 1).
     transform : np.ndarray
-        of floats. Mapping of the real spherical harmonics times the weights.
-        Shape ((big_l+1)**2, final_length)
+        of floats. Mapping of the real spherical harmonics times the
+        weights. Shape ((big_l+1)**2, final_length)
 
     Returns
     -------
     data_ka : numpy array
-        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes ordering.
+        Shape ((big_l+1)**2, (big_l+1)**2). See notes for the indexes
+        ordering.
     
     See Also
     --------
@@ -1022,30 +1025,30 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
         Comes from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
         Comes from biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     er_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate r in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points).  Comes from
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate r in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points). Comes from
         biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     etheta_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate theta in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points). Comes from
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate theta in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points). Comes from
         biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     ephi_times_n : np.ndarray
-        Three dimensional array of floats with the canonical vector of the
-        spherical coordinate phi in the quadrature points in the coordinate
-        system s. Shape equals to
-        (3, quantity_theta_points, quantity_phi_points). Comes from
+        Two dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate phi in the points
+        in the coordinate system s and the normal of a sphere. Shape
+        equals to (quantity_theta_points, quantity_phi_points). Comes from
         biosspheres.quadratures.spheres.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     weights : np.ndarray
@@ -1428,7 +1431,7 @@ def a_0_sj_and_js_v1d(
         Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
         the module biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the coseno of the spherical coordinate theta of
+        Array of floats with the cosine of the spherical coordinate theta of
         the quadrature points in the coordinate system s. Lengths equal to
         final_length.
         Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
@@ -1667,7 +1670,7 @@ def a_0_sj_and_js_v2d(
         Comes from the function from_sphere_s_cartesian_to_j_spherical_2d of
         the module biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Two dimensional array of floats with the coseno of the spherical
+        Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the quadrature points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
         Comes from the function from_sphere_s_cartesian_to_j_spherical_2d of
