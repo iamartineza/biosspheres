@@ -524,3 +524,125 @@ def a_j_linear_operator(
         rmatmat=operator_j_conjugate_transpose_times_vector)
     
     return linear_operator
+
+
+def a_0_a_n_sparse_matrices(
+        n: int,
+        big_l: int,
+        radii: np.ndarray,
+        kii: np.ndarray,
+        azimuthal: bool = False
+) -> tuple[sparse.bsr_array, sparse.bsr_array]:
+    if not azimuthal:
+        num = (big_l + 1)**2
+    else:
+        num = big_l + 1
+    
+    big_a_0 = np.empty((4 * n * num), dtype=np.complex128)
+    big_a_n = np.empty((4 * n * num), dtype=np.complex128)
+    rows_big_a_sparse = np.empty((4 * n * num), dtype=int)
+    columns_big_a_sparse = np.empty((4 * n * num), dtype=int)
+    
+    rango = np.arange(0, num)
+    
+    eles = np.arange(0, big_l + 1)
+    l2_1 = 2 * eles + 1
+    
+    number = 0
+    if not azimuthal:
+        for s in np.arange(1, n + 1):
+            s_minus_1 = s - 1
+            s_minus_1_times_2 = s_minus_1 * 2
+            
+            big_a_0[number:(number + num)] = np.repeat(
+                v_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]), l2_1)
+            big_a_n[number:(number + num)] = np.repeat(
+                v_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s]), l2_1)
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * s_minus_1_times_2)
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * (1 + s_minus_1_times_2) + rango)
+            number += num
+            
+            big_a_n[number:(number + num)] = np.repeat(
+                -k_1_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s]),
+                l2_1)
+            big_a_0[number:(number + num)] = np.repeat(
+                -k_0_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]),
+                l2_1)
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * s_minus_1_times_2)
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * s_minus_1_times_2 + rango)
+            number += num
+            
+            big_a_0[number:(number + num)] = np.repeat(
+                k_0_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]),
+                l2_1)
+            big_a_n[number:(number + num)] = np.repeat(
+                k_1_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s]),
+                l2_1)
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * (s_minus_1_times_2 + 1))
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * (s_minus_1_times_2 + 1) + rango)
+            number += num
+            
+            big_a_0[number:(number + num)] = np.repeat(
+                w_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]), l2_1)
+            big_a_n[number:(number + num)] = np.repeat(
+                w_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s]), l2_1)
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * (s_minus_1_times_2 + 1))
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * s_minus_1_times_2 + rango)
+            number += num
+    else:
+        for s in np.arange(1, n + 1):
+            s_minus_1 = s - 1
+            s_minus_1_times_2 = s_minus_1 * 2
+            
+            big_a_0[number:(number + num)] = v_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[0])
+            big_a_n[number:(number + num)] = v_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[s])
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * s_minus_1_times_2)
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * (1 + s_minus_1_times_2) + rango)
+            number += num
+            
+            big_a_n[number:(number + num)] = -k_1_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[s])
+            big_a_0[number:(number + num)] = -k_0_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[0])
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * s_minus_1_times_2)
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * s_minus_1_times_2 + rango)
+            number += num
+            
+            big_a_0[number:(number + num)] = k_0_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[0])
+            big_a_n[number:(number + num)] = k_1_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[s])
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * (s_minus_1_times_2 + 1))
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * (s_minus_1_times_2 + 1) + rango)
+            number += num
+            
+            big_a_0[number:(number + num)] = w_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[0])
+            big_a_n[number:(number + num)] = w_jj_azimuthal_symmetry(
+                big_l, radii[s_minus_1], kii[s])
+            rows_big_a_sparse[number:(number + num)] = (
+                    rango + num * (s_minus_1_times_2 + 1))
+            columns_big_a_sparse[number:(number + num)] = (
+                    num * s_minus_1_times_2 + rango)
+            number += num
+    sparse_big_a_0 = sparse.bsr_array(
+        (big_a_0, (rows_big_a_sparse, columns_big_a_sparse)))
+    sparse_big_a_n = sparse.bsr_array(
+        (big_a_n, (rows_big_a_sparse, columns_big_a_sparse)))
+    return sparse_big_a_0, sparse_big_a_n
