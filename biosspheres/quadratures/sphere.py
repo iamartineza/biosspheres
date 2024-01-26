@@ -1,4 +1,17 @@
 """
+Summary
+-------
+This module has the implementation of functions that return
+- Points and weights for doing the Gauss-Legendre quadrature with a
+  composite trapezoidal quadrature rule.
+- Evaluation of real and complex spherical harmonics in the points of
+  the Gauss-Legendre and composite trapezoidal quadrature.
+- Arrays for implementing a slow spherical harmonic transform (real or
+  complex).
+- Translations from a coordinate system to another.
+
+Extended summary
+-------
 This module has the implementation of functions that return
 - Points and weights for doing the Gauss-Legendre quadrature with a
   composite trapezoidal quadrature rule. See
@@ -17,6 +30,20 @@ This module has the implementation of functions that return
     from_sphere_s_cartesian_to_j_spherical_1d,
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d,
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d.
+
+Routine listings
+----------------
+gauss_legendre_trapezoidal_2d
+gauss_legendre_trapezoidal_1d
+gauss_legendre_trapezoidal_real_sh_mapping_2d
+gauss_legendre_trapezoidal_complex_sh_mapping_2d
+real_spherical_harmonic_transform_1d
+complex_spherical_harmonic_transform_1d
+from_sphere_s_cartesian_to_j_spherical_2d
+from_sphere_s_cartesian_to_j_spherical_1d
+from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
+from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+
 """
 import numpy as np
 import pyshtools
