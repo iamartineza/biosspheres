@@ -10,8 +10,9 @@ def v_jj_azimuthal_symmetry(
         k: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator V_{j,j} with
-    Helmholtz kernel evaluated and tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator V_{j,j}
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0.
     
     Notes
     -----
@@ -39,8 +40,8 @@ def v_jj_azimuthal_symmetry(
     Returns
     -------
     v : np.ndarray
-        with complex values. Length (big_l+1). See the section notes for the
-        ordering of the array.
+        with complex values. Length (big_l+1). See the section notes for
+        the ordering of the array.
     
     """
     r_k = r * k
@@ -57,24 +58,26 @@ def k_0_jj_azimuthal_symmetry(
         k: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator K_{j,j}^0, with
-    normals from out to in of the sphere, with Helmholtz kernel evaluated and
-    tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator K_{j,j}^0,
+    with normals from out to in of the sphere, with Helmholtz kernel
+    evaluated and tested with spherical harmonics of order 0.
     
     Notes
     -----
-    k_0_jj[l] = < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
-    = -1j * k**2 * r**4 * 0.5 * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
+    k_0_jj[l] = <K_{j,j}^0 Y_l,0 ; Y_l,0>_L^2(surface sphere radius r).
+    = -1j * k**2 * r**4 * 0.5
+      * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
     for each l such that 0 <= l <= big_l, and with
     Y_l,0: spherical harmonic degree l, order 0.
     j_l: spherical Bessel function, and j_l_d its derivative.
-    h_l: spherical Hanckel function of first kind, and j_l_d its derivative.
+    h_l: spherical Hanckel function of first kind, and j_l_d its
+         derivative.
 
     Notice that in this specific case
     < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
     = < K_{j,j}^{*0} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    where K_{j,j}^{*0} has normals from out to in of the sphere, and with
-    Helmholtz kernel.
+    where K_{j,j}^{*0} has normals from out to in of the sphere, and
+    with Helmholtz kernel.
 
     Parameters
     ----------
@@ -88,8 +91,8 @@ def k_0_jj_azimuthal_symmetry(
     Returns
     -------
     k_0 : np.ndarray
-        with complex values. Length (big_l+1). See the section notes for the
-        ordering of the array.
+        with complex values. Length (big_l+1). See the section notes for
+        the ordering of the array.
     
     """
     r_k = r * k
@@ -108,18 +111,20 @@ def k_1_jj_azimuthal_symmetry(
         k: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator K_{j,j}, with
-    normals from in to out of the sphere, with Helmholtz kernel evaluated and
-    tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator K_{j,j},
+    with normals from in to out of the sphere, with Helmholtz kernel
+    evaluated and tested with spherical harmonics of order 0.
     
     Notes
     -----
     k_jj[l] = < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
-    = 1j * k**2 * r**4 * 0.5 * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
+    = 1j * k**2 * r**4 * 0.5
+      * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
     for each l such that 0 <= l <= big_l, and with
     Y_l,0: spherical harmonic degree l, order 0.
     j_l: spherical Bessel function, and j_l_d its derivative.
-    h_l: spherical Hanckel function of first kind, and j_l_d its derivative.
+    h_l: spherical Hanckel function of first kind, and j_l_d its
+         derivative.
 
     Notice that in this specific case
     < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
@@ -139,8 +144,8 @@ def k_1_jj_azimuthal_symmetry(
     Returns
     -------
     k_jj : np.ndarray
-        with complex values, length (big_l+1). See the section notes for the
-        ordering of the array.
+        with complex values, length (big_l+1). See the section notes for
+        the ordering of the array.
     
     """
     k_jj = - k_0_jj_azimuthal_symmetry(big_l, r, k)
@@ -153,8 +158,9 @@ def w_jj_azimuthal_symmetry(
         k: float
 ) -> np.ndarray:
     """
-    Returns a numpy array with the boundary integral operator W_{j,j} with
-    Helmholtz kernel evaluated and tested with spherical harmonics of order 0.
+    Returns a numpy array with the boundary integral operator W_{j,j}
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0.
     
     Notes
     -----
@@ -177,8 +183,8 @@ def w_jj_azimuthal_symmetry(
     Returns
     -------
     w: np.ndarray
-        with complex values, length (big_l+1). See the section notes for the
-        ordering of the array.
+        with complex values, length (big_l+1). See the section notes for
+        the ordering of the array.
     
     """
     r_k = r * k
@@ -196,17 +202,18 @@ def bio_jj(
         bio_azimuthal: Callable[[int, float, float], np.ndarray]
 ) -> np.ndarray:
     """
-    Returns a numpy array with the corresponding boundary integral operator
-    from the function bio_azimuthal with Helmholtz kernel evaluated and tested
-    with spherical harmonics of all orders.
+    Returns a numpy array with the corresponding boundary integral
+    operator from the function bio_azimuthal with Helmholtz kernel
+    evaluated and tested with spherical harmonics of all orders.
     
     Notes
     -----
-    D[l*(2l+1) + m] = < D_{j,j} Y_l,m ; Y_l,m >_L^2(surface sphere radius r).
+    D[l*(2l+1) + m] = <D_{j,j}Y_l,m;Y_l,m>_L^2(surface sphere radius r).
     which in this case is equal to
     = D[l*(2l+1)]
     for each l such that 0 <= l <= big_l, and with
-    D: boundary integral operator corresponding to the function bio_azimuthal
+    D: boundary integral operator corresponding to the function
+       bio_azimuthal
     Y_l,m: spherical harmonic degree l, order m.
     
     Parameters
@@ -218,14 +225,14 @@ def bio_jj(
     k : float
         wave number.
     bio_azimuthal : Callable[[int, float, float]
-        python function for computing the operator for m = 0. Must be one of
-        the functions written before this one.
+        python function for computing the operator for m = 0. Must be
+        one of the functions written before this one.
 
     Returns
     -------
     np.ndarray
-        with complex values, length (big_l+1)**2. See the section notes for the
-        ordering of the array.
+        with complex values, length (big_l+1)**2. See the section notes
+        for the ordering of the array.
     
     """
     op = bio_azimuthal(big_l, r, k)
@@ -244,8 +251,8 @@ def a_0j_matrix(
     integral operator
     A_{j,j}^0 = [ -K_{j,j}^0 , V_{j,j}^0  ]
                 [  W_{j,j}^0 , K*_{j,j}^0 ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics of
-    order 0 if azimuthal = True, or all orders if azimuthal = False.
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0 if azimuthal = True, or all orders if azimuthal = False.
     
     Each block is a diagonal matrix.
 
@@ -319,8 +326,8 @@ def a_j_matrix(
     integral operator
     A_{j,j}^0 = [ -K_{j,j} , V_{j,j}  ]
                 [  W_{j,j} , K*_{j,j} ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics of
-    order 0 if azimuthal = True, or all orders if azimuthal = False.
+    with Helmholtz kernel evaluated and tested with spherical harmonics
+    of order 0 if azimuthal = True, or all orders if azimuthal = False.
     
     Each block is a diagonal matrix.
 
@@ -391,7 +398,8 @@ def a_0j_linear_operator(
         azimuthal: bool = True
 ) -> sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_0j_matrix.
+    Returns a scipy linear operator equivalent to the given by
+    a_0j_matrix.
 
     Parameters
     ----------
@@ -457,7 +465,8 @@ def a_j_linear_operator(
         azimuthal: bool = True
 ) -> sparse.linalg.LinearOperator:
     """
-    Returns a scipy linear operator equivalent to the given by a_j_matrix.
+    Returns a scipy linear operator equivalent to the given by
+    a_j_matrix.
 
     Parameters
     ----------
