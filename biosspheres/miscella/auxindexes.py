@@ -121,3 +121,19 @@ def diagonal_l_dense(big_l: int) -> np.ndarray:
     eles_times_two_plus_one = eles * 2 + 1
     diagonal = np.repeat(eles, eles_times_two_plus_one)
     return diagonal
+
+
+def giro_sign(big_l: int) -> np.ndarray:
+    num = (big_l + 1)**2
+    sign_array = np.diag(
+        (-np.ones(num)**(np.arange(0, num))))
+    giro_array = np.eye(num)
+    eles = np.arange(0, big_l + 1)
+    l_square_plus_l = eles * (eles + 1)
+    for el in np.arange(1, len(eles)):
+        giro_array[l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+                   l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1] = (
+            np.fliplr(giro_array[
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
+                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
+    return giro_array@sign_array
