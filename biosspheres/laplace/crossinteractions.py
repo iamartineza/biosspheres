@@ -1246,10 +1246,12 @@ def ka_0_sj_from_k_js(
 ) -> np.ndarray:
     """
     Returns a numpy array that represents a numerical approximation of
-    the matrix formed by the boundary integral operator K_{s,j}^{*0} with
-    Laplace kernel evaluated and tested with real spherical harmonics.
-    This routine needs the numpy array corresponding to K_{j,s}^0 (notice the
-    change of the order of the indexes indicating the spheres).
+    the matrix formed by the boundary integral operator K_{s,j}^{*0}
+    with Laplace kernel evaluated and tested with real spherical
+    harmonics.
+    This routine needs the numpy array corresponding to K_{j,s}^0
+    (notice the change of the order of the indexes indicating the
+    spheres).
     
     Notes
     -----
@@ -1267,8 +1269,8 @@ def ka_0_sj_from_k_js(
     ----------
     data_kjs : numpy array.
         represents a numerical approximation of the matrix formed by the
-        boundary integral operator V_{s,j}^0 with Laplace kernel evaluated and
-        tested with spherical harmonics.
+        boundary integral operator V_{s,j}^0 with Laplace kernel
+        evaluated and tested with spherical harmonics.
 
     Returns
     -------
@@ -1358,20 +1360,23 @@ def w_0_sj_from_v_sj(
 
     This computation uses the following result for this specific case:
     ( W_{s,j}^0 Y_{l,m,j} ; Y_{p,q,s} )_{L^2(S_s)}
-        = -\frac{l p}{r_j r_s} ( V_{s,j}^0 Y_{l,m,j} ; Y_{p,q,s} )_{L^2(S_s)}
+        = -\frac{l p}{r_j r_s}
+          * ( V_{s,j}^0 Y_{l,m,j} ; Y_{p,q,s} )_{L^2(S_s)}
 
     Parameters
     ----------
     data_v_sj : np.ndarray
         represents a numerical approximation of the matrix formed by the
-        boundary integral operator V_{s,j}^0 with Laplace kernel evaluated and
+        boundary integral operator V_{s,j}^0 with Laplace kernel
+        evaluated and
         tested with spherical harmonics.
     r_j : float
         > 0, radius of the sphere j.
     r_s : float
         > 0, radius of the sphere s.
     el_diagonal : scipy.sparse.dia_array
-        that comes from biosspheres.miscella.auxindexes.diagonal_l_sparse
+        that comes from
+        biosspheres.miscella.auxindexes.diagonal_l_sparse
 
     Returns
     -------
