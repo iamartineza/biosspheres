@@ -1,3 +1,6 @@
+"""
+Routines implemented in the jupyter notebook quadrature_overview.ipynb
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm, colors
