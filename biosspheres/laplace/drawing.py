@@ -16,7 +16,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         1, 2 or 3. Indicates if the drawing is a parallel cut of the
         plane: xy if = 1, xz if = 2, yz = 3 if other.
     center : np.ndarray
-        array of floats of length 2. Coordinates of the center of the drawing.
+        array of floats of length 2. Coordinates of the center of the
+        drawing.
     horizontal : float
         horizontal length of the rectangle that is going to be drawn.
     vertical : float
@@ -30,8 +31,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
     radius : float
         radius of the sphere.
     big_l : int
-        > 0, maximum order of the spherical harmonics used to discretize the
-        traces.
+        > 0, maximum order of the spherical harmonics used to discretize
+        the traces.
     exterior : Callable[[np.ndarray], float]
         exterior function, to be evaluated in each point.
 
@@ -249,7 +250,8 @@ def draw_cut_representation_formula_n_sphere(
         1, 2 or 3. Indicates if the drawing is a parallel cut of the
         plane: xy if = 1, xz if = 2, yz = 3 if other.
     center : np.ndarray
-        array of floats of length 2. Coordinates of the center of the drawing.
+        array of floats of length 2. Coordinates of the center of the
+        drawing.
     horizontal : float
         horizontal length of the rectangle that is going to be drawn.
     vertical : float
@@ -263,11 +265,11 @@ def draw_cut_representation_formula_n_sphere(
     radii : np.ndarray
         numpy array of floats with the radii of the spheres.
     positions : list
-        with numpy arrays that represents the position vector of the center of
-        the spheres.
+        with numpy arrays that represents the position vector of the
+        center of the spheres.
     big_l : int
-        > 0, maximum order of the spherical harmonics used to discretize the
-        traces.
+        > 0, maximum order of the spherical harmonics used to discretize
+        the traces.
     exterior : Callable[[np.ndarray], float]
         exterior function, to be evaluated in each point.
 
