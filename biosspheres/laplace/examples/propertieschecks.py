@@ -53,10 +53,8 @@ def k_with_v_check() -> None:
     big_l = 2
     big_l_c = 25
     
-    eles = np.arange(0, big_l + 1)
-    
     final_length, pre_vector_t, transform = \
-        quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
+        quadratures.real_spherical_harmonic_transform_1d(big_l, big_l_c)
     r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf = (
         quadratures.
         from_sphere_s_cartesian_to_j_spherical_1d(
@@ -70,6 +68,7 @@ def k_with_v_check() -> None:
         big_l, radio_1, radio_2, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
     
+    eles = np.arange(0, big_l + 1)
     el_diagonal_array = np.diag(np.repeat(eles / -radio_1, 2 * eles + 1))
     
     aux = data_v21 @ el_diagonal_array
@@ -181,8 +180,7 @@ def calderon_build_check() -> None:
     
     final_length, pre_vector_t, transform = \
         quadratures.real_spherical_harmonic_transform_1d(big_l, big_l_c)
-    (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf, er_times_n_1tf,
-     etheta_times_n_1tf, ephi_times_n_1tf) = (
+    (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf) = (
         quadratures.
         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
@@ -207,9 +205,9 @@ def calderon_build_check() -> None:
         np.concatenate((-data_k21, data_v21), axis=1),
         np.concatenate((data_w21, data_ka21), axis=1)),
         axis=0)
-    aux_w = np.abs(a_21 - a_21_prev)
+    aux = np.abs(a_21 - a_21_prev)
     plt.figure()
-    plt.imshow(aux_w, cmap='RdBu',
+    plt.imshow(aux, cmap='RdBu',
                norm=colors.SymLogNorm(linthresh=10**(-8)))
     plt.colorbar()
     plt.title('Checking routine A_sj.')
