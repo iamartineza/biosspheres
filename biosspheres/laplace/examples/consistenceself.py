@@ -4,30 +4,25 @@ import biosspheres.laplace.selfinteractions as selfinteractions
 import biosspheres.miscella.extensions as extensions
 
 
-def testing_big_a_linear_operators_and_matrices(
-        big_l: int = 5, r: float = 2.5) -> None:
+def testing_big_a_linear_operators_and_matrices() -> None:
     """
     Testing that the A linear operators and the A matrix for one sphere
     represent the same.
     
     Notes
     -----
-    A linear system with a random right hand side is solved with the linear
-    operators and the matrices, thus the solution must be almost the same.
-    
-    Parameters
-    ----------
-    big_l : int
-        >= 0, max degree. Default 5
-    r : float
-        > 0, radius. Default 2.5
+    A linear system with a random right hand side is solved with the
+    linear operators and the matrices, thus the solution must be almost
+    the same.
     
     Returns
     -------
     None
     
     """
-    num = (big_l + 1)
+    big_l = 5
+    r = 2.5
+    num = big_l + 1
     b = np.random.random((2 * num))
     
     linear_operator = selfinteractions.a_0j_linear_operator(big_l, r)
@@ -108,26 +103,23 @@ def testing_big_a_linear_operators_and_matrices(
     pass
 
 
-def testing_big_a_azimuthal_and_no_azimuthal(
-        big_l: int = 5, r: float = 2.3) -> None:
+def testing_big_a_azimuthal_and_no_azimuthal() -> None:
     """
     Notes
     -----
-    For a right hand with azimuthal symmetry when extended by 0 to explicitly
-    compute the result without considering the symmetry, the result should be
-    the same with the azimuthal and the not azimuthal versions.
-
-    Parameters
-    ----------
-    big_l : int
-        >= 0, max degree. Default 5
-    r : float
-        > 0, radius. Default 2.3
+    For a right hand with azimuthal symmetry when extended by 0 to
+    explicitly compute the result without considering the symmetry, the
+    result should be the same with the azimuthal and the not azimuthal
+    versions.
+    
     Returns
     -------
     None
 
     """
+    big_l = 5
+    r = 2.3
+    
     num = (big_l + 1)
     b = np.random.random((2 * num))
     b_2_1 = extensions.azimuthal_trace_to_general_with_zeros(
@@ -147,7 +139,7 @@ def testing_big_a_azimuthal_and_no_azimuthal(
     num = (big_l + 1)**2
     solution, info = scipy.sparse.linalg.gmres(linear_operator, b2,
                                                tol=10**(-13),
-                                               restart=2 * num**3,
+                                               restart=(2 * num)**3,
                                                callback=callback_function,
                                                callback_type='pr_norm')
     num = (big_l + 1)
@@ -158,14 +150,12 @@ def testing_big_a_azimuthal_and_no_azimuthal(
     
     solution2, info = scipy.sparse.linalg.gmres(linear_operator, b,
                                                 tol=10**(-13),
-                                                restart=2 * num**3,
+                                                restart=(2 * num)**3,
                                                 callback=callback_function,
                                                 callback_type='pr_norm')
-    solution2_1 = \
-        extensions.azimuthal_trace_to_general_with_zeros(
+    solution2_1 = extensions.azimuthal_trace_to_general_with_zeros(
             big_l, solution2[0:num])
-    solution2_2 = \
-        extensions.azimuthal_trace_to_general_with_zeros(
+    solution2_2 = extensions.azimuthal_trace_to_general_with_zeros(
             big_l, solution2[num:2 * num])
     solution2 = np.concatenate((solution2_1, solution2_2))
     print('\nRunning function testing_big_a_azimuthal_and_no_azimuthal')
