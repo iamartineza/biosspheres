@@ -5,7 +5,8 @@ from biosspheres.helmholtz.selfinteractions import v_jj_azimuthal_symmetry
 
 def observing_v() -> None:
     """
-    Plots the real and imaginary parts of the V operator. It shows the plot.
+    Plots the real and imaginary parts of the V operator. It shows the
+    plot.
     
     Returns
     -------
