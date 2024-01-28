@@ -109,7 +109,7 @@ def k_1d_vs_2d() -> None:
         quadratures.
         from_sphere_s_cartesian_to_j_spherical_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
-    data_k21 = crossinteractions.v_0_sj_semi_analytic_v1d(
+    data_k21 = crossinteractions.k_0_sj_semi_analytic_v1d(
         big_l, radio_1, radio_2, r_coord_1tf, phi_coord_1tf,
         cos_theta_coord_1tf, final_length, transform)
     
@@ -120,7 +120,7 @@ def k_1d_vs_2d() -> None:
             radio_2, p_1, p_2, quantity_theta_points, quantity_phi_points,
             pre_vector_t_2d))
     pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
-    data_k21_2d = crossinteractions.v_0_sj_semi_analytic_v2d(
+    data_k21_2d = crossinteractions.k_0_sj_semi_analytic_v2d(
         big_l, radio_1, radio_2, r_coord_1tf_2d, phi_coord_1tf_2d,
         cos_theta_coord_1tf_2d, weights, pre_vector_t_2d[2, :, 0],
         quantity_theta_points, quantity_phi_points, pesykus, p2_plus_p_plus_q,
@@ -296,10 +296,9 @@ def calderon_1d_vs_2d() -> None:
     
     quantity_theta_points, quantity_phi_points, weights, pre_vector_t_2d = \
         quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
-    (r_coord_1tf_2d, phi_coord_1tf_2d, cos_theta_coord_1tf_2d,
-     er_times_n_1tf_2d, etheta_times_n_1tf_2d, ephi_times_n_1tf_2d) = \
+    r_coord_1tf_2d, phi_coord_1tf_2d, cos_theta_coord_1tf_2d = \
         (quadratures.
-         from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
+         from_sphere_s_cartesian_to_j_spherical_2d(
             radio_2, p_1, p_2, quantity_theta_points, quantity_phi_points,
             pre_vector_t_2d))
     pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
@@ -314,10 +313,9 @@ def calderon_1d_vs_2d() -> None:
     
     final_length, pre_vector_t, transform = \
         quadratures.real_spherical_harmonic_transform_1d(big_l, big_l_c)
-    (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf, er_times_n_1tf,
-     etheta_times_n_1tf, ephi_times_n_1tf) = (
+    r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf = (
         quadratures.
-        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
+        from_sphere_s_cartesian_to_j_spherical_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
     
     a_21, a_12 = crossinteractions.a_0_sj_and_js_v1d(
@@ -330,12 +328,6 @@ def calderon_1d_vs_2d() -> None:
                norm=colors.SymLogNorm(linthresh=10**(-8)))
     plt.colorbar()
     plt.title('Checking routine A_sj.')
-    
-    plt.figure()
-    plt.imshow(aux, cmap='RdBu',
-               norm=colors.SymLogNorm(linthresh=10**(-8)))
-    plt.colorbar()
-    plt.title('Checking routine A_js.')
     plt.show()
     pass
 
