@@ -35,11 +35,6 @@ def v_0_sj_semi_analytic_v1d(
     The expression V_{s,j}^0 Y_{l,m,j} is analytic. A quadrature scheme
     is used to compute the surface integral corresponding to the inner
     product.
-    
-    In this routine the quadrature points NEED to be ordered in an array
-    of one dimension.
-    It is a SLOW routine, because it does not use any symmetry or
-    properties of the spherical harmonics.
 
     Parameters
     ----------
@@ -72,8 +67,7 @@ def v_0_sj_semi_analytic_v1d(
         Can come from the function spherical_harmonic_transform_1d of
         the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats, for doing the real spherical harmonic
-        transform.
+        of floats, for doing the real spherical harmonic transform.
         Can come from the function real_spherical_harmonic_transform_1d
         of the module biosspheres.quadratures.spheres.
 
@@ -250,8 +244,6 @@ def v_0_sj_semi_analytic_v2d(
     See Also
     --------
     v_0_sj_semi_analytic_v1d
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_2d
-    gauss_legendre_trapezoidal_shtools_2d
     biosspheres.miscella.auxindexes.pes_y_kus
     
     """
@@ -404,11 +396,6 @@ def k_0_sj_semi_analytic_v1d(
     The expression K_{s,j}^0 Y_l,m,j can be obtained analytically. A
     quadrature scheme is used to compute the surface integral
     corresponding to the inner product.
-    
-    In this routine the quadrature points NEED to be ordered in an array
-    of one dimension.
-    It is a SLOW routine, because it does not use any symmetry or
-    properties of the spherical harmonics.
             
     Parameters
     ----------
@@ -441,8 +428,7 @@ def k_0_sj_semi_analytic_v1d(
         Can come from the function spherical_harmonic_transform_1d of
         the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats, for doing the real spherical harmonic
-        transform.
+        of floats, for doing the real spherical harmonic transform.
         Can come from the function real_spherical_harmonic_transform_1d
         of the module biosspheres.quadratures.spheres.
 
