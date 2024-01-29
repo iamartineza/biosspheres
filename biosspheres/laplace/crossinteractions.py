@@ -168,7 +168,8 @@ def v_0_sj_semi_analytic_v2d(
     product.
     
     It uses functions from the package pyshtools to compute the
-    spherical harmonic transforms.
+    spherical harmonic transforms. These functions have performance
+    improvements.
     
     Parameters
     ----------
@@ -244,7 +245,6 @@ def v_0_sj_semi_analytic_v2d(
     See Also
     --------
     v_0_sj_semi_analytic_v1d
-    biosspheres.miscella.auxindexes.pes_y_kus
     
     """
     ratio = r_j / r_coord
@@ -604,8 +604,6 @@ def k_0_sj_semi_analytic_v2d(
     --------
     k_0_sj_semi_analytic_v1d
     k_0_sj_from_v_0_sj
-    gauss_legendre_trapezoidal_shtools_2d
-    biosspheres.miscella.auxindexes.pes_y_kus
 
     """
     ratio = r_j / r_coord
@@ -703,7 +701,7 @@ def k_0_sj_from_v_0_sj(
     S_s : surface of the sphere s.
     
     This computation uses the following result for this specific case:
-    K_{s,j}^0 Y_{l,m} = -\frac{l}{r_j} V_{s,j}^0 Y_{l,m}.
+    K_{s,j}^0 Y_{l,m} = - l / r_j V_{s,j}^0 Y_{l,m}.
     
     Parameters
     ----------
@@ -725,7 +723,6 @@ def k_0_sj_from_v_0_sj(
     --------
     k_0_sj_semi_analytic_v1d
     k_0_sj_semi_analytic_v2d
-    biosspheres.miscella.auxindexes.diagonal_l_sparse
     
     """
     data_k = np.matmul(data_v, (el_diagonal/-r_j).toarray())
