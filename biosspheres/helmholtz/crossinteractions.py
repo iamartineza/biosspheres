@@ -21,7 +21,8 @@ def v_0_sj_semi_analytic_v1d(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator V_{s,j}^0 with
-    Helmholtz kernel evaluated and tested with complex spherical harmonics.
+    Helmholtz kernel evaluated and tested with complex spherical
+    harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of one dimension.
     It is a SLOW routine, because it does not use any symmetry or
@@ -166,7 +167,8 @@ def v_0_sj_semi_analytic_v2d(
     """
     Returns a numpy array that represents a numerical approximation of
     the matrix formed by the boundary integral operator V_{s,j}^0 with
-    Helmholtz kernel evaluated and tested with complex spherical harmonics.
+    Helmholtz kernel evaluated and tested with complex spherical
+    harmonics.
     In this routine the quadrature points NEED to be ordered in an array
     of two dimensions, given by the function
     from_sphere_s_cartesian_to_j_spherical_2d of the module
@@ -483,7 +485,8 @@ def k_0_sj_semi_analytic_v1d(
     transform : np.ndarray
         of complex numbers for doing the complex spherical harmonic
         transform.
-        Can come from the function complex_spherical_harmonic_transform_1d
+        Can come from the function
+        complex_spherical_harmonic_transform_1d
         of the module biosspheres.quadratures.spheres.
 
     Returns
@@ -756,6 +759,17 @@ def k_0_sj_semi_analytic_v2d(
     return data_k
 
 
+def jey_array(
+        big_l: int,
+        k0: float,
+        r_j: float) -> np.ndarray:
+    eles = np.arange(0, big_l + 1)
+    j_l_j = scipy.special.spherical_jn(eles, r_j * k0)
+    j_lp_j = scipy.special.spherical_jn(eles, r_j * k0, derivative=True)
+    jeys_array = np.diag(np.repeat(-k0 * (j_lp_j / j_l_j), 2 * eles + 1))
+    return jeys_array
+
+
 def k_0_sj_from_v_0_sj(
         data_v: np.ndarray,
         k0: float,
@@ -809,10 +823,7 @@ def k_0_sj_from_v_0_sj(
 
     """
     big_l = int(np.sqrt(len(data_v))) - 1
-    eles = np.arange(0, big_l + 1)
-    j_l_j = scipy.special.spherical_jn(eles, r_j * k0)
-    j_lp_j = scipy.special.spherical_jn(eles, r_j * k0, derivative=True)
-    jeys_array = np.diag(np.repeat(-k0 * (j_lp_j / j_l_j), 2 * eles + 1))
+    jeys_array = jey_array(big_l, k0, r_j)
     data_k = data_v@jeys_array
     return data_k
 
@@ -1404,3 +1415,86 @@ def w_0_sj_from_k_sj(
     """
     data_w = -k_0_sj_from_v_0_sj(data_ka_sj, k0, r_j)
     return data_w
+
+
+def a_0_sj_and_js_v1d(
+        big_l: int,
+        k0: float,
+        r_j: float,
+        r_s: float,
+        j_l_j: np.ndarray,
+        r_coord: np.ndarray,
+        phi_coord: np.ndarray,
+        cos_theta_coord: np.ndarray,
+        final_length: int,
+        transform: np.ndarray,
+        giro_sign: np.ndarray
+):
+    argument = k0 * r_coord
+    eles = np.arange(0, big_l + 1)
+    
+    legendre_functions = np.empty(
+        ((big_l + 1) * (big_l + 2) // 2, final_length))
+    h_l = np.empty((final_length, big_l + 1), dtype=np.complex128)
+    for i in np.arange(0, final_length):
+        h_l[i, :] = (scipy.special.spherical_jn(eles, argument[i])
+                     + 1j * scipy.special.spherical_yn(eles, argument[i]))
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+    
+    exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+    
+    el_plus_1_square = (big_l + 1)**2
+    data_v_sj = np.empty(
+        (el_plus_1_square, el_plus_1_square), dtype=np.complex128)
+    
+    eles_plus_1 = eles + 1
+    l_square_plus_l = eles_plus_1 * eles
+    l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
+    
+    temp_l = np.empty_like(transform)
+    temp_l_m = np.empty_like(temp_l)
+    
+    for el in eles:
+        temp_l[:] = h_l[:, el] * transform
+        temp_l_m[:] = (
+                temp_l
+                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
+        np.sum(temp_l_m, axis=1, out=data_v_sj[:, l_square_plus_l[el]])
+        data_v_sj[:, l_square_plus_l[el]] = (
+                j_l_j[el] * data_v_sj[:, l_square_plus_l[el]])
+        for m in np.arange(1, el + 1):
+            temp_l_m[:] = (
+                    temp_l
+                    * legendre_functions[
+                      l_times_l_plus_l_divided_by_2[el] + m, :])
+            np.sum(temp_l_m * exp_pos[m - 1, :],
+                   axis=1, out=data_v_sj[:, l_square_plus_l[el] + m])
+            data_v_sj[:, l_square_plus_l[el] + m] = (
+                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] + m])
+            np.sum(temp_l_m * (-1)**m / exp_pos[m - 1, :],
+                   axis=1, out=data_v_sj[:, l_square_plus_l[el] - m])
+            data_v_sj[:, l_square_plus_l[el] - m] = (
+                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] - m])
+    
+    data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
+    
+    data_k_sj_minus = np.empty((el_plus_1_square, el_plus_1_square))
+    data_ka_sj = np.empty((el_plus_1_square, el_plus_1_square))
+    data_w_sj = np.empty((el_plus_1_square, el_plus_1_square))
+    data_v_js = np.empty((el_plus_1_square, el_plus_1_square))
+    data_k_js_minus = np.empty((el_plus_1_square, el_plus_1_square))
+    data_ka_js = np.empty((el_plus_1_square, el_plus_1_square))
+    data_w_js = np.empty((el_plus_1_square, el_plus_1_square))
+    
+    a_js = np.concatenate((
+        np.concatenate((data_k_js_minus, data_v_js), axis=1),
+        np.concatenate((data_w_js, data_ka_js), axis=1)),
+        axis=0)
+    a_sj = np.concatenate((
+        np.concatenate((data_k_sj_minus, data_v_sj), axis=1),
+        np.concatenate((data_w_sj, data_ka_sj), axis=1)),
+        axis=0)
+    return a_sj, a_js
