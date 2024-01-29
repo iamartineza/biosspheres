@@ -1,3 +1,9 @@
+# Python requirement
+
+python>=3.9
+
+It has been tested with python=3.9
+
 # Installing instructions
 
 An example installation using conda:
