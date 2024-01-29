@@ -1427,8 +1427,7 @@ def a_0_sj_and_js_v1d(
         phi_coord: np.ndarray,
         cos_theta_coord: np.ndarray,
         final_length: int,
-        transform: np.ndarray,
-        giro_sign: np.ndarray
+        transform: np.ndarray
 ):
     argument = k0 * r_coord
     eles = np.arange(0, big_l + 1)
@@ -1481,20 +1480,23 @@ def a_0_sj_and_js_v1d(
     
     data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
     
-    data_k_sj_minus = np.empty((el_plus_1_square, el_plus_1_square))
-    data_ka_sj = np.empty((el_plus_1_square, el_plus_1_square))
-    data_w_sj = np.empty((el_plus_1_square, el_plus_1_square))
-    data_v_js = np.empty((el_plus_1_square, el_plus_1_square))
-    data_k_js_minus = np.empty((el_plus_1_square, el_plus_1_square))
-    data_ka_js = np.empty((el_plus_1_square, el_plus_1_square))
-    data_w_js = np.empty((el_plus_1_square, el_plus_1_square))
+    data_v_js = v_0_js_from_v_0_sj(data_v_sj)
+    
+    data_k_sj = k_0_sj_from_v_0_sj(data_v_sj)
+    data_k_js = k_0_sj_from_v_0_sj(data_v_js)
+    
+    data_ka_sj = ka_0_sj_from_k_js(data_k_js)
+    data_ka_js = ka_0_sj_from_k_js(data_k_sj)
+    
+    data_w_sj = w_0_sj_from_k_sj(data_k_sj)
+    data_w_js = w_0_sj_from_k_sj(data_k_js)
     
     a_js = np.concatenate((
-        np.concatenate((data_k_js_minus, data_v_js), axis=1),
+        np.concatenate((-data_k_js, data_v_js), axis=1),
         np.concatenate((data_w_js, data_ka_js), axis=1)),
         axis=0)
     a_sj = np.concatenate((
-        np.concatenate((data_k_sj_minus, data_v_sj), axis=1),
+        np.concatenate((-data_k_sj, data_v_sj), axis=1),
         np.concatenate((data_w_sj, data_ka_sj), axis=1)),
         axis=0)
     return a_sj, a_js
