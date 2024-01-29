@@ -1382,7 +1382,7 @@ def a_0_sj_and_js_v1d(
         final_length: int,
         transform: np.ndarray,
         diagonal: np.ndarray
-):
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Returns two numpy arrays that represents a numerical approximation of two
     matrices formed by the following boundary integral operators:
@@ -1620,7 +1620,7 @@ def a_0_sj_and_js_v2d(
         p2_plus_p_plus_q: np.ndarray,
         p2_plus_p_minus_q: np.ndarray,
         diagonal: np.ndarray
-):
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Returns two numpy arrays that represents a numerical approximation of two
     matrices formed by the following boundary integral operators:
