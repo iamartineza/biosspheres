@@ -377,7 +377,7 @@ def v_0_js_from_v_0_sj(
 
     Parameters
     ----------
-    data_v_sj: np.ndarray
+    data_v_sj : np.ndarray
         represents a numerical approximation of the matrix formed by the
         boundary integral operator V_{s,j}^0 with Helmholtz kernel
         evaluated and tested with spherical harmonics.
@@ -1903,71 +1903,70 @@ def w_0_sj_semi_analytic_recurrence_v2d(
     return data_w
 
 
-def a_0_sj_and_js_v1d_from_v_sj(
+def a_0_sj_and_js_from_v_sj(
         big_l: int,
-        k0: float,
-        r_j: float,
-        r_s: float,
-        j_l_j: np.ndarray,
+        data_v_sj: np.ndarray,
         k0_ratio_j_l_j: np.ndarray,
         k0_ratio_j_l_s: np.ndarray,
-        r_coord: np.ndarray,
-        phi_coord: np.ndarray,
-        cos_theta_coord: np.ndarray,
-        final_length: int,
-        transform: np.ndarray,
         giro_sign: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray]:
-    argument = k0 * r_coord
+    """
+    Returns two numpy arrays that represents a numerical approximation
+    of two matrices formed by the following boundary integral operators:
+    a_sj = [-K_{s,j}^0 , V_{s,j}^0 ]
+           [ W_{s,j}^0 , K_{s,j}^{*0}]
+    a_js = [-K_{j,s}^0 , V_{j,s}^0 ]
+           [ W_{j,s}^0 , K_{j,s}^{*0}]
+    with Helmholtz kernel evaluated and tested with complex spherical
+    harmonics.
+
+    Notes
+    -----
+    The only operator computed directly with the numerical quadrature is
+    V_{s,j}^0, which is an input.
+    The others are computed with the same properties used in:
+    v_0_js_from_v_0_sj
+    k_0_sj_from_v_0_sj
+    ka_0_sj_from_k_js
+    w_0_sj_from_ka_sj
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0, max degree.
+    data_v_sj : np.ndarray
+        represents a numerical approximation of the matrix formed by the
+        boundary integral operator V_{s,j}^0 with Helmholtz kernel
+        evaluated and tested with spherical harmonics.
+    k0_ratio_j_l_j : np.ndarray
+        of floats. = k0 * j_lp_j / j_l_j. With j_lp_j the derivative
+        of the spherical Bessel function evaluated in k0 * r_j.
+    k0_ratio_j_l_s : np.ndarray
+        of floats. = k0 * j_lp_s / j_l_s. With j_lp_j the derivative
+        of the spherical Bessel function evaluated in k0 * r_s.
+    giro_sign : np.ndarray
+        of floats and with only zeros, ones or minus ones. Come from the
+        function giro_sign from the module
+        biosspheres.miscella.auxindexes.
+
+    Returns
+    -------
+    a_sj : numpy array
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+    a_js : numpy array
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+
+    See Also
+    --------
+    v_0_sj_semi_analytic_v1d
+    v_0_sj_semi_analytic_v2d
+    v_0_js_from_v_0_sj
+    k_0_sj_from_v_0_sj
+    ka_0_sj_from_k_js
+    w_0_sj_from_ka_sj
+
+    """
     eles = np.arange(0, big_l + 1)
-    
-    legendre_functions = np.empty(
-        ((big_l + 1) * (big_l + 2) // 2, final_length))
-    h_l = np.empty((final_length, big_l + 1), dtype=np.complex128)
-    for i in np.arange(0, final_length):
-        h_l[i, :] = (scipy.special.spherical_jn(eles, argument[i])
-                     + 1j * scipy.special.spherical_yn(eles, argument[i]))
-        legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
-    
-    exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
-    for m in np.arange(1, big_l + 1):
-        np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
-    
-    el_plus_1_square = (big_l + 1)**2
-    data_v_sj = np.empty(
-        (el_plus_1_square, el_plus_1_square), dtype=np.complex128)
-    
-    eles_plus_1 = eles + 1
-    l_square_plus_l = eles_plus_1 * eles
-    l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
-    
-    temp_l = np.empty_like(transform)
-    temp_l_m = np.empty_like(temp_l)
-    
-    for el in eles:
-        temp_l[:] = h_l[:, el] * transform
-        temp_l_m[:] = (
-                temp_l
-                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
-        np.sum(temp_l_m, axis=1, out=data_v_sj[:, l_square_plus_l[el]])
-        data_v_sj[:, l_square_plus_l[el]] = (
-                j_l_j[el] * data_v_sj[:, l_square_plus_l[el]])
-        for m in np.arange(1, el + 1):
-            temp_l_m[:] = (
-                    temp_l
-                    * legendre_functions[
-                      l_times_l_plus_l_divided_by_2[el] + m, :])
-            np.sum(temp_l_m * exp_pos[m - 1, :],
-                   axis=1, out=data_v_sj[:, l_square_plus_l[el] + m])
-            data_v_sj[:, l_square_plus_l[el] + m] = (
-                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] + m])
-            np.sum(temp_l_m * (-1)**m / exp_pos[m - 1, :],
-                   axis=1, out=data_v_sj[:, l_square_plus_l[el] - m])
-            data_v_sj[:, l_square_plus_l[el] - m] = (
-                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] - m])
-    
-    data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
     
     data_v_js = giro_sign @ data_v_sj.T @ giro_sign
     
@@ -1992,3 +1991,4 @@ def a_0_sj_and_js_v1d_from_v_sj(
         np.concatenate((data_w_sj, data_ka_sj), axis=1)),
         axis=0)
     return a_sj, a_js
+
