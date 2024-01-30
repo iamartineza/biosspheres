@@ -258,10 +258,8 @@ def calderon_build_check() -> None:
     data_w21 = crossinteractions.w_0_sj_from_ka_sj(data_ka21, k0, radio_1)
     
     gs = auxindexes.giro_sign(big_l)
-    a_21, a_12 = crossinteractions.a_0_sj_and_js_v1d_from_v_sj(
-        big_l, k0, radio_1, radio_2, j_l_1, k0_ratio_j_l_1, k0_ratio_j_l_2,
-        r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf, final_length,
-        transform, gs)
+    a_21, a_12 = crossinteractions.a_0_sj_and_js_from_v_sj(
+        big_l, data_v21, k0_ratio_j_l_1, k0_ratio_j_l_2, gs)
     a_21_prev = np.concatenate((
         np.concatenate((-data_k21, data_v21), axis=1),
         np.concatenate((data_w21, data_ka21), axis=1)),
