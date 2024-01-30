@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.special
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import biosspheres.helmholtz.crossinteractions as crossinteractions
 import biosspheres.quadratures.sphere as quadratures
 import biosspheres.miscella.auxindexes as auxindexes
@@ -394,6 +395,64 @@ def w_js_from_the_other() -> None:
     pass
 
 
+def calderon_versions() -> None:
+    radio_1 = 3.
+    radio_2 = 2.
+    
+    p_1 = np.asarray([2., 3., 4.])
+    p_2 = -p_1
+    
+    k0 = 7.
+    
+    big_l = 5
+    big_l_c = 25
+    
+    j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
+    j_lp_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0,
+                                        derivative=True)
+    j_l_2 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_2 * k0)
+    j_lp_2 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_2 * k0,
+                                        derivative=True)
+    k0_ratio_j_l_1 = k0 * j_lp_1 / j_l_1
+    k0_ratio_j_l_2 = k0 * j_lp_2 / j_l_2
+    
+    final_length, pre_vector_t, transform = \
+        quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
+    (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf,
+     er_1tf, eth_1tf, ephi_1tf) = (
+        quadratures.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
+            radio_2, p_1, p_2, final_length, pre_vector_t))
+    data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
+        big_l, k0, radio_1, radio_2, j_l_1, r_coord_1tf, phi_coord_1tf,
+        cos_theta_coord_1tf, final_length, transform)
+    
+    gs = auxindexes.giro_sign(big_l)
+    
+    a_21, a_12 = crossinteractions.a_0_sj_and_js_from_v_sj(
+        big_l, data_v21, k0_ratio_j_l_1, k0_ratio_j_l_2, gs)
+    
+    a_21_1d, a_12_1d = crossinteractions.a_0_sj_and_js_from_quadratures_1d(
+        big_l, k0, radio_1, radio_2, j_l_1, j_lp_1, r_coord_1tf, phi_coord_1tf,
+        cos_theta_coord_1tf, er_1tf, eth_1tf, ephi_1tf, final_length,
+        transform, gs)
+    
+    aux = np.abs(a_21 - a_21_1d)
+    plt.figure()
+    plt.imshow(aux, cmap='RdBu',
+               norm=colors.SymLogNorm(linthresh=10**(-8)))
+    plt.colorbar()
+    plt.title('Checking routine A_sj indirect vs 1d.')
+    aux = np.abs(a_12 - a_12_1d)
+    plt.figure()
+    plt.imshow(aux, cmap='RdBu',
+               norm=colors.SymLogNorm(linthresh=10**(-8)))
+    plt.colorbar()
+    plt.title('Checking routine A_js indirect vs 1d.')
+    plt.show()
+    pass
+
+
 if __name__ == '__main__':
     v_1d_vs_2d()
     v_js_from_the_other()
@@ -403,3 +462,4 @@ if __name__ == '__main__':
     ka_js_from_the_other()
     w_1d_vs_2d()
     w_js_from_the_other()
+    calderon_versions()

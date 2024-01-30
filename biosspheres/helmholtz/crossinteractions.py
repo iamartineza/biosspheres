@@ -40,11 +40,6 @@ def v_0_sj_semi_analytic_v1d(
     is used to compute the surface integral corresponding to the inner
     product.
 
-    In this routine the quadrature points NEED to be ordered in an array
-    of one dimension.
-    It is a SLOW routine, because it does not use any symmetry or
-    properties of the spherical harmonics.
-
     Parameters
     ----------
     big_l : int
@@ -1992,3 +1987,273 @@ def a_0_sj_and_js_from_v_sj(
         axis=0)
     return a_sj, a_js
 
+
+def a_0_sj_and_js_from_quadratures_1d(
+        big_l: int,
+        k0: float,
+        r_j: float,
+        r_s: float,
+        j_l_j: np.ndarray,
+        j_lp_j: np.ndarray,
+        r_coord: np.ndarray,
+        phi_coord: np.ndarray,
+        cos_theta_coord: np.ndarray,
+        er_times_n: np.ndarray,
+        etheta_times_n: np.ndarray,
+        ephi_times_n: np.ndarray,
+        final_length: int,
+        transform: np.ndarray,
+        giro_sign: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Returns two numpy arrays that represents a numerical approximation
+    of two matrices formed by the following boundary integral operators:
+    a_sj = [-K_{s,j}^0 , V_{s,j}^0 ]
+           [ W_{s,j}^0 , K_{s,j}^{*0}]
+    a_js = [-K_{j,s}^0 , V_{j,s}^0 ]
+           [ W_{j,s}^0 , K_{j,s}^{*0}]
+    with Helmholtz kernel evaluated and tested with complex spherical
+    harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
+    It is a SLOW routine, because it does not use any symmetry or
+    properties of the spherical harmonics.
+
+    Notes
+    -----
+    
+    Parameters
+    ----------
+    big_l : int
+        >= 0, max degree.
+    k0 : float
+        > 0
+    r_j : float
+        > 0, radius of the sphere j.
+    r_s : float
+        > 0, radius of the sphere s.
+    j_l_j : np.ndarray
+        of floats. Spherical Bessel function evaluated in k0 * r_j.
+    j_lp_j : np.ndarray
+        of floats. Derivative of the spherical Bessel function evaluated
+        in k0 * r_j.
+    r_coord : np.ndarray
+        One dimensional array of floats with the spherical coordinate r
+        of the quadrature points in the coordinate system s. Length
+        equals to final_length. Can come from
+        biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    phi_coord : np.ndarray
+        One dimensional array of floats with the phi coordinate r of the
+        quadrature points in the coordinate system s. Length equals to
+        final_length. Can come from biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    cos_theta_coord : np.ndarray
+        One dimensional array of floats with the cosine of the spherical
+        coordinate theta of the quadrature points in the coordinate
+        system s. Lenght equals to final_length.
+        Can come from biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    er_times_n : np.ndarray
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate r in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    etheta_times_n : np.ndarray
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate theta in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    ephi_times_n : np.ndarray
+        One dimensional array of floats with the dot product of the
+        canonical vector of the spherical coordinate phi in the points
+        in the coordinate system s and the normal of a sphere.
+        Length final_length. Can come from
+        biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
+    final_length : int
+        how many points for the surface integral,
+        (big_l_c + 1) * (2 * big_l_c + 1).
+    transform : np.ndarray
+        of complex numbers for doing the complex spherical harmonic
+        transform. Shape ((big_l+1)**2, final_length)
+    giro_sign : np.ndarray
+        of floats and with only zeros, ones or minus ones. Come from the
+        function giro_sign from the module
+        biosspheres.miscella.auxindexes.
+    
+    Returns
+    -------
+    a_sj : numpy array
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+    a_js : numpy array
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+
+    See Also
+    --------
+    v_0_sj_semi_analytic_v1d
+    k_0_sj_semi_analytic_v1d
+    ka_0_sj_semi_analytic_recurrence_v1d
+    w_0_sj_semi_analytic_recurrence_v1d
+    v_0_js_from_v_0_sj
+    ka_0_sj_from_k_js
+
+    """
+    argument = k0 * r_coord
+    eles = np.arange(0, big_l + 1)
+    
+    legendre_functions = np.empty(
+        ((big_l + 1) * (big_l + 2) // 2, final_length))
+    h_l = np.empty((final_length, big_l + 1), dtype=np.complex128)
+    h_l_r = np.empty((final_length, big_l + 1), dtype=np.complex128)
+    h_lp_k = np.empty((final_length, big_l + 1), dtype=np.complex128)
+    for i in np.arange(0, final_length):
+        h_l[i, :] = (scipy.special.spherical_jn(eles, argument[i])
+                     + 1j * scipy.special.spherical_yn(eles, argument[i]))
+        h_lp_k[i, :] = (scipy.special.spherical_jn(
+            eles, argument[i], derivative=True)
+                        + 1j * scipy.special.spherical_yn(
+                    eles, argument[i], derivative=True))
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+    h_l_r[:] = h_l[:] / r_coord[:, np.newaxis]
+    h_lp_k[:] = k0 * h_lp_k[:]
+    sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
+    
+    exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+    
+    el_plus_1_square = (big_l + 1)**2
+    data_v_sj = np.empty(
+        (el_plus_1_square, el_plus_1_square), dtype=np.complex128)
+    data_k_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                         dtype=np.complex128)
+    data_ka_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                          dtype=np.complex128)
+    data_w_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                         dtype=np.complex128)
+    
+    eles_plus_1 = eles + 1
+    l_square_plus_l = eles_plus_1 * eles
+    l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
+    
+    leg_aux = np.zeros_like(sin_theta_coord)
+    index = (sin_theta_coord > 0)
+    
+    d_legendre_functions = np.zeros_like(argument)
+    phi_part = np.zeros_like(h_lp_k[:, 0])
+    r_part = np.zeros_like(phi_part)
+    theta_part = np.zeros_like(argument)
+    
+    temp_l = np.empty_like(transform)
+    temp_l_m = np.empty_like(temp_l)
+    temp_l_m_n = np.empty_like(temp_l)
+    for el in eles:
+        temp_l[:] = h_l[:, el] * transform
+        temp_l_m[:] = (
+                temp_l
+                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
+        np.sum(temp_l_m, axis=1, out=data_v_sj[:, l_square_plus_l[el]])
+        data_k_sj[:, l_square_plus_l[el]] = (
+                j_lp_j[el] * data_v_sj[:, l_square_plus_l[el]])
+        data_v_sj[:, l_square_plus_l[el]] = (
+                j_l_j[el] * data_v_sj[:, l_square_plus_l[el]])
+        if el > 0:
+            d_legendre_functions[:] = (
+                    np.sqrt((el + 1) * el) *
+                    legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
+                                       :])
+        temp_l_m_n[:] = transform * (h_lp_k[:, el] * (
+                er_times_n
+                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
+                                     + h_l_r[:, el] * (d_legendre_functions
+                                                       * etheta_times_n))
+        np.sum(temp_l_m_n, axis=1,
+               out=data_ka_sj[:, l_square_plus_l[el]])
+        data_w_sj[:, l_square_plus_l[el]] = (
+                j_lp_j[el] * data_ka_sj[:, l_square_plus_l[el]])
+        data_ka_sj[:, l_square_plus_l[el]] = (
+                j_l_j[el] * data_ka_sj[:, l_square_plus_l[el]])
+        
+        for m in np.arange(1, el + 1):
+            temp_l_m[:] = (
+                    temp_l
+                    * legendre_functions[
+                      l_times_l_plus_l_divided_by_2[el] + m, :])
+            np.sum(temp_l_m * exp_pos[m - 1, :],
+                   axis=1, out=data_v_sj[:, l_square_plus_l[el] + m])
+            data_k_sj[:, l_square_plus_l[el] + m] = (
+                    j_lp_j[el] * data_v_sj[:, l_square_plus_l[el] + m])
+            data_v_sj[:, l_square_plus_l[el] + m] = (
+                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] + m])
+            np.sum(temp_l_m * (-1)**m / exp_pos[m - 1, :],
+                   axis=1, out=data_v_sj[:, l_square_plus_l[el] - m])
+            data_k_sj[:, l_square_plus_l[el] - m] = (
+                    j_lp_j[el] * data_v_sj[:, l_square_plus_l[el] - m])
+            data_v_sj[:, l_square_plus_l[el] - m] = (
+                    j_l_j[el] * data_v_sj[:, l_square_plus_l[el] - m])
+            if m < el:
+                d_legendre_functions[:] = \
+                    (legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                        + m - 1, :]
+                     * -np.sqrt((el - m + 1) * (el + m))
+                     + legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                          + m + 1, :]
+                     * np.sqrt((el - m) * (el + m + 1))) * 0.5
+            else:  # el = m
+                d_legendre_functions[:] = (
+                        legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                           + m - 1, :] * -np.sqrt(el / 2.))
+            leg_aux[index] = (
+                    m
+                    * legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
+            index]
+                    / sin_theta_coord[index])
+            phi_part[:] = 1j * (leg_aux * ephi_times_n)
+            r_part[:] = h_lp_k[:, el] * (
+                    legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
+                    :]
+                    * er_times_n)
+            theta_part[:] = d_legendre_functions * etheta_times_n
+            
+            temp_l_m_n[:] = transform * exp_pos[m - 1, :] * (
+                    r_part + (theta_part + phi_part) * h_l_r[:, el])
+            np.sum(temp_l_m_n,
+                   axis=1, out=data_ka_sj[:, l_square_plus_l[el] + m])
+            data_w_sj[:, l_square_plus_l[el] + m] = (
+                    j_lp_j[el] * data_ka_sj[:, l_square_plus_l[el] + m])
+            data_ka_sj[:, l_square_plus_l[el] + m] = (
+                    j_l_j[el] * data_ka_sj[:, l_square_plus_l[el] + m])
+            
+            temp_l_m_n[:] = (-1)**m * (transform / exp_pos[m - 1, :]) * (
+                    r_part + (theta_part - phi_part) * h_l_r[:, el])
+            np.sum(temp_l_m_n,
+                   axis=1, out=data_ka_sj[:, l_square_plus_l[el] - m])
+            data_w_sj[:, l_square_plus_l[el] - m] = (
+                    j_lp_j[el] * data_ka_sj[:, l_square_plus_l[el] - m])
+            data_ka_sj[:, l_square_plus_l[el] - m] = (
+                    j_l_j[el] * data_ka_sj[:, l_square_plus_l[el] - m])
+    data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
+    data_k_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_k_sj[:]
+    data_ka_sj[:] = -1j * k0 * (r_j * r_s)**2 * data_ka_sj[:]
+    data_w_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_w_sj[:]
+    
+    data_v_js = giro_sign @ data_v_sj.T @ giro_sign
+    data_k_js = giro_sign @ data_ka_sj.T @ giro_sign
+    data_ka_js = giro_sign @ data_k_sj.T @ giro_sign
+    data_w_js = giro_sign @ data_w_sj.T @ giro_sign
+    
+    a_js = np.concatenate((
+        np.concatenate((-data_k_js, data_v_js), axis=1),
+        np.concatenate((data_w_js, data_ka_js), axis=1)),
+        axis=0)
+    a_sj = np.concatenate((
+        np.concatenate((-data_k_sj, data_v_sj), axis=1),
+        np.concatenate((data_w_sj, data_ka_sj), axis=1)),
+        axis=0)
+    return a_sj, a_js
