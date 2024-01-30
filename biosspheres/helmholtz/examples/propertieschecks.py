@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.special
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import biosspheres.helmholtz.crossinteractions as crossinteractions
 import biosspheres.quadratures.sphere as quadratures
 import biosspheres.miscella.auxindexes as auxindexes
@@ -218,7 +219,65 @@ def w_transpose_check() -> None:
     pass
 
 
+def calderon_build_check() -> None:
+    radio_1 = 3.
+    radio_2 = 2.
+    
+    p_1 = np.asarray([2., 3., 4.])
+    p_2 = -p_1
+    
+    k0 = 7.
+    
+    big_l = 3
+    big_l_c = 50
+    
+    j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
+    j_lp_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0,
+                                        derivative=True)
+    j_l_2 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_2 * k0)
+    j_lp_2 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_2 * k0,
+                                        derivative=True)
+    k0_ratio_j_l_1 = k0 * j_lp_1 / j_l_1
+    k0_ratio_j_l_2 = k0 * j_lp_2 / j_l_2
+    
+    final_length, pre_vector_t, transform = \
+        quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
+    (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf) = (
+        quadratures.
+        from_sphere_s_cartesian_to_j_spherical_1d(
+            radio_2, p_1, p_2, final_length, pre_vector_t))
+    
+    data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
+        big_l, k0, radio_1, radio_2, j_l_1, r_coord_1tf, phi_coord_1tf,
+        cos_theta_coord_1tf, final_length, transform)
+    data_k21 = crossinteractions.k_0_sj_from_v_0_sj(data_v21, k0, radio_1)
+    
+    data_v12 = crossinteractions.v_0_js_from_v_0_sj(data_v21)
+    data_k12 = crossinteractions.k_0_sj_from_v_0_sj(data_v12, k0, radio_2)
+    data_ka21 = crossinteractions.ka_0_sj_from_k_js(data_k12)
+    data_w21 = crossinteractions.w_0_sj_from_ka_sj(data_ka21, k0, radio_1)
+    
+    gs = auxindexes.giro_sign(big_l)
+    a_21, a_12 = crossinteractions.a_0_sj_and_js_v1d_from_v_sj(
+        big_l, k0, radio_1, radio_2, j_l_1, k0_ratio_j_l_1, k0_ratio_j_l_2,
+        r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf, final_length,
+        transform, gs)
+    a_21_prev = np.concatenate((
+        np.concatenate((-data_k21, data_v21), axis=1),
+        np.concatenate((data_w21, data_ka21), axis=1)),
+        axis=0)
+    aux = np.abs(a_21 - a_21_prev)
+    plt.figure()
+    plt.imshow(aux, cmap='RdBu',
+               norm=colors.SymLogNorm(linthresh=10**(-8)))
+    plt.colorbar()
+    plt.title('Checking routine A_sj.')
+    plt.show()
+    pass
+
+
 if __name__ == '__main__':
+    calderon_build_check()
     v_transpose_check()
     k_with_v_check()
     k_ka_check()
