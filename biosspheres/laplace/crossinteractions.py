@@ -1384,17 +1384,18 @@ def a_0_sj_and_js_v1d(
         diagonal: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Returns two numpy arrays that represents a numerical approximation of two
-    matrices formed by the following boundary integral operators:
+    Returns two numpy arrays that represents a numerical approximation
+    of two matrices formed by the following boundary integral operators:
     a_sj = [-K_{s,j}^0 , V_{s,j}^0 ]
            [ W_{s,j}^0 , K_{s,j}^{*0}]
     a_js = [-K_{j,s}^0 , V_{j,s}^0 ]
            [ W_{j,s}^0 , K_{j,s}^{*0}]
-    with Laplace kernel evaluated and tested with real spherical harmonics.
-    In this routine the quadrature points NEED to be ordered in an array of one
-    dimension.
-    It is a SLOW routine, because it does not use any symmetry or properties
-    of the spherical harmonics.
+    with Laplace kernel evaluated and tested with real spherical
+    harmonics.
+    In this routine the quadrature points NEED to be ordered in an array
+    of one dimension.
+    It is a SLOW routine, because it does not use any symmetry or
+    properties of the spherical harmonics.
     
     Notes
     -----
@@ -1415,30 +1416,31 @@ def a_0_sj_and_js_v1d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        Array of floats with the spherical coordinate r of the quadrature
-        points in the coordinate system s. Length equals to final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the spherical coordinate r of the
+        quadrature points in the coordinate system s. Length equals to
+        final_length. Can come from the
+        function from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     phi_coord : np.ndarray
-        Array of floats with the phi coordinate r of the quadrature points in
-        the coordinate system s. Length equals to final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the phi coordinate r of the quadrature
+        points in the coordinate system s. Length equals to
+        final_length. Can come from the function
+        from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     cos_theta_coord : np.ndarray
-        Array of floats with the cosine of the spherical coordinate theta of
-        the quadrature points in the coordinate system s. Lengths equal to
-        final_length.
-        Can come from the function from_sphere_s_cartesian_to_j_spherical_1d of
-        the module biosspheres.quadratures.spheres.
+        Array of floats with the cosine of the spherical coordinate
+        theta of the quadrature points in the coordinate system s.
+        Lengths equal to final_length. Can come from the function
+        from_sphere_s_cartesian_to_j_spherical_1d of the module
+        biosspheres.quadratures.spheres.
     final_length : int
         How many points for the surface integral.
-        Can come from the function spherical_harmonic_transform_1d of the
-        module biosspheres.quadratures.spheres.
+        Can come from the function spherical_harmonic_transform_1d of
+        the module biosspheres.quadratures.spheres.
     transform : np.ndarray
-        of floats, for doing the real spherical harmonic
-        transform.
-        Can come from the function real_spherical_harmonic_transform_1d of the
-        module biosspheres.quadratures.spheres.
+        of floats, for doing the real spherical harmonic transform.
+        Can come from the function real_spherical_harmonic_transform_1d
+        of the module biosspheres.quadratures.spheres.
     diagonal : np.ndarray
         from diagonal_l_dense
 
@@ -1457,9 +1459,6 @@ def a_0_sj_and_js_v1d(
     k_0_sj_from_v_0_sj
     ka_0_sj_from_v_sj
     w_0_sj_from_v_sj
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_1d
-    biosspheres.quadratures.spheres.real_spherical_harmonic_transform_1d
-    biosspheres.miscella.auxindexes.diagonal_l_dense
     
     """
     ratio = r_j / r_coord
