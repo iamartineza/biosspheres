@@ -2,7 +2,7 @@
 
 python==3.9
 
-It has been tested only with python=3.9
+It has been tested only with python 3.9
 
 # Installing instructions
 
