@@ -182,7 +182,7 @@ def calderon_build_check() -> None:
         quadratures.real_spherical_harmonic_transform_1d(big_l, big_l_c)
     (r_coord_1tf, phi_coord_1tf, cos_theta_coord_1tf) = (
         quadratures.
-        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
+        from_sphere_s_cartesian_to_j_spherical_1d(
             radio_2, p_1, p_2, final_length, pre_vector_t))
     
     data_v21 = crossinteractions.v_0_sj_semi_analytic_v1d(
