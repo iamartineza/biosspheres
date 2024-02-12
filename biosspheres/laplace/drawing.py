@@ -4,9 +4,16 @@ import pyshtools
 
 
 def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
-        cut: int, center: np.ndarray, horizontal: float, vertical: float,
-        inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
-        radius: float, big_l: int, exterior: Callable[[np.ndarray], float]
+    cut: int,
+    center: np.ndarray,
+    horizontal: float,
+    vertical: float,
+    inter_horizontal: int,
+    inter_vertical: int,
+    coefficients: np.ndarray,
+    radius: float,
+    big_l: int,
+    exterior: Callable[[np.ndarray], float],
 ) -> np.ndarray:
     """
 
@@ -42,7 +49,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
         2D of floats for plotting.
     """
     n = 1
-    ps = [np.asarray([0., 0., 0.])]
+    ps = [np.asarray([0.0, 0.0, 0.0])]
     rs = np.asarray([radius])
 
     x1 = np.linspace(-horizontal / 2, horizontal / 2, inter_horizontal)
@@ -53,7 +60,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
     ele_plus_1 = eles + 1
     eles_times_2_plus_1 = 2 * eles + 1
     if cut == 3:
-        z = 0. + center[2]
+        z = 0.0 + center[2]
         for ii in np.arange(0, len(x1)):
             x = x1[ii] + center[0]
             for jj in np.arange(0, len(y1)):
@@ -75,7 +82,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - ps[num]
                         r = np.linalg.norm(aux)
@@ -84,14 +91,22 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                         cos_theta = z / r
 
                         legendre_function = pyshtools.legendre.PlON(
-                            big_l, cos_theta)
+                            big_l, cos_theta
+                        )
                         ratio = rs[num] / r
                         u_temp = np.sum(
-                            ratio ** ele_plus_1 *
-                            (eles * coefficients[eles + 2 * (big_l + 1) * num]
-                             + rs[num] * coefficients[eles + (big_l + 1)
-                                                      * (2 * num + 1)])
-                            * legendre_function / eles_times_2_plus_1)
+                            ratio**ele_plus_1
+                            * (
+                                eles
+                                * coefficients[eles + 2 * (big_l + 1) * num]
+                                + rs[num]
+                                * coefficients[
+                                    eles + (big_l + 1) * (2 * num + 1)
+                                ]
+                            )
+                            * legendre_function
+                            / eles_times_2_plus_1
+                        )
                         u = u + u_temp
                         pass
                     data_for_plotting[jj, ii] = u + ex
@@ -103,17 +118,24 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                     cos_theta = z / r
 
                     legendre_function = pyshtools.legendre.PlON(
-                            big_l, cos_theta)
+                        big_l, cos_theta
+                    )
                     ratio = r / rs[sphere - 1]
                     u = np.sum(
-                        ratio ** eles * (ele_plus_1 *
-                                         coefficients[eles + 2 * (big_l + 1) *
-                                                      (sphere - 1 + n)] +
-                                         rs[sphere - 1] *
-                                         coefficients[eles + (big_l + 1) *
-                                                      (2 * (sphere - 1 + n)
-                                                       + 1)])
-                        * legendre_function / eles_times_2_plus_1)
+                        ratio**eles
+                        * (
+                            ele_plus_1
+                            * coefficients[
+                                eles + 2 * (big_l + 1) * (sphere - 1 + n)
+                            ]
+                            + rs[sphere - 1]
+                            * coefficients[
+                                eles + (big_l + 1) * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        * legendre_function
+                        / eles_times_2_plus_1
+                    )
                     data_for_plotting[jj, ii] = u
                 pass
             pass
@@ -140,7 +162,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - ps[num]
                         r = np.linalg.norm(aux)
@@ -149,14 +171,22 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                         cos_theta = z / r
 
                         legendre_function = pyshtools.legendre.PlON(
-                            big_l, cos_theta)
+                            big_l, cos_theta
+                        )
                         ratio = rs[num] / r
                         u_temp = np.sum(
-                            ratio ** ele_plus_1 *
-                            (eles * coefficients[eles + 2 * (big_l + 1) * num]
-                             + rs[num] * coefficients[eles + (big_l + 1)
-                                                      * (2 * num + 1)])
-                            * legendre_function / eles_times_2_plus_1)
+                            ratio**ele_plus_1
+                            * (
+                                eles
+                                * coefficients[eles + 2 * (big_l + 1) * num]
+                                + rs[num]
+                                * coefficients[
+                                    eles + (big_l + 1) * (2 * num + 1)
+                                ]
+                            )
+                            * legendre_function
+                            / eles_times_2_plus_1
+                        )
                         u = u + u_temp
                         pass
                     data_for_plotting[jj, ii] = u + ex
@@ -168,17 +198,24 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                     cos_theta = z / r
 
                     legendre_function = pyshtools.legendre.PlON(
-                        big_l, cos_theta)
+                        big_l, cos_theta
+                    )
                     ratio = r / rs[sphere - 1]
                     u = np.sum(
-                        ratio ** eles * (ele_plus_1 *
-                                         coefficients[eles + 2 * (big_l + 1) *
-                                                      (sphere - 1 + n)] +
-                                         rs[sphere - 1] *
-                                         coefficients[eles + (big_l + 1) *
-                                                      (2 * (sphere - 1 + n)
-                                                       + 1)])
-                        * legendre_function / eles_times_2_plus_1)
+                        ratio**eles
+                        * (
+                            ele_plus_1
+                            * coefficients[
+                                eles + 2 * (big_l + 1) * (sphere - 1 + n)
+                            ]
+                            + rs[sphere - 1]
+                            * coefficients[
+                                eles + (big_l + 1) * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        * legendre_function
+                        / eles_times_2_plus_1
+                    )
                     data_for_plotting[jj, ii] = u
                 pass
             pass
@@ -205,7 +242,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - ps[num]
                         r = np.linalg.norm(aux)
@@ -213,18 +250,25 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
                         cos_theta = z / r
                         legendre_function = pyshtools.legendre.PlON(
-                            big_l, cos_theta)
+                            big_l, cos_theta
+                        )
                         ratio = rs[num] / r
                         u_temp = np.sum(
-                            ratio ** ele_plus_1 *
-                            (eles * coefficients[eles + 2 * (big_l + 1) * num]
-                             + rs[num] * coefficients[eles + (big_l + 1)
-                                                      * (2 * num + 1)])
-                            * legendre_function / eles_times_2_plus_1)
+                            ratio**ele_plus_1
+                            * (
+                                eles
+                                * coefficients[eles + 2 * (big_l + 1) * num]
+                                + rs[num]
+                                * coefficients[
+                                    eles + (big_l + 1) * (2 * num + 1)
+                                ]
+                            )
+                            * legendre_function
+                            / eles_times_2_plus_1
+                        )
                         u += u_temp
                         pass
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - ps[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -232,17 +276,24 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
                     cos_theta = z / r
                     legendre_function = pyshtools.legendre.PlON(
-                        big_l, cos_theta)
-                    ratio = r / rs[sphere-1]
+                        big_l, cos_theta
+                    )
+                    ratio = r / rs[sphere - 1]
                     u = np.sum(
-                        ratio**eles * (ele_plus_1 *
-                                       coefficients[eles + 2 * (big_l+1) *
-                                                    (sphere - 1 + n)] +
-                                       rs[sphere-1] *
-                                       coefficients[eles + (big_l+1) *
-                                                    (2 * (sphere - 1 + n)
-                                                     + 1)])
-                        * legendre_function / eles_times_2_plus_1)
+                        ratio**eles
+                        * (
+                            ele_plus_1
+                            * coefficients[
+                                eles + 2 * (big_l + 1) * (sphere - 1 + n)
+                            ]
+                            + rs[sphere - 1]
+                            * coefficients[
+                                eles + (big_l + 1) * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        * legendre_function
+                        / eles_times_2_plus_1
+                    )
                     data_for_plotting[jj, ii] = u
                 pass
             pass
@@ -250,10 +301,18 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
 
 
 def draw_cut_representation_formula_n_sphere(
-        cut: int, center: np.ndarray, horizontal: float, vertical: float,
-        inter_horizontal: int, inter_vertical: int, coefficients: np.ndarray,
-        radii: np.ndarray, positions: list[np.ndarray], big_l: int,
-        exterior: Callable[[np.ndarray], float]) -> np.ndarray:
+    cut: int,
+    center: np.ndarray,
+    horizontal: float,
+    vertical: float,
+    inter_horizontal: int,
+    inter_vertical: int,
+    coefficients: np.ndarray,
+    radii: np.ndarray,
+    positions: list[np.ndarray],
+    big_l: int,
+    exterior: Callable[[np.ndarray], float],
+) -> np.ndarray:
     """
 
     Parameters
@@ -303,7 +362,7 @@ def draw_cut_representation_formula_n_sphere(
     l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
     big_el_plus_1_square = (big_l + 1) ** 2
     if cut == 3:
-        z = 0. + center[2]
+        z = 0.0 + center[2]
         for ii in np.arange(0, len(x1)):
             x = x1[ii] + center[0]
             for jj in np.arange(0, len(y1)):
@@ -322,10 +381,10 @@ def draw_cut_representation_formula_n_sphere(
                     pass
                     num += 1
                     pass
-                
+
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - positions[num]
                         r = np.linalg.norm(aux)
@@ -337,46 +396,70 @@ def draw_cut_representation_formula_n_sphere(
                         phi = np.arctan2(yy, xx)
 
                         legendre_function = pyshtools.legendre.PlmON(
-                            big_l, cos_theta, csphase=-1, cnorm=0)
-                        cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                        sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                            big_l, cos_theta, csphase=-1, cnorm=0
+                        )
+                        cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                        sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                         ratio = radii[num] / r
-                        u_temp = 0.
-                        for el in np.arange(0, big_l+1):
-                            temp = el * \
-                                coefficients[l_square_plus_l[el] + 2 *
-                                             big_el_plus_1_square * num] \
-                                + radii[num] * \
-                                coefficients[l_square_plus_l[el] +
-                                             big_el_plus_1_square *
-                                             (2 * num + 1)]
-                            temp *= \
-                                legendre_function[
-                                    l_times_l_plus_l_divided_by_2[el]]
-                            for m in np.arange(1, el+1):
-                                temp_plus_m = el * \
-                                    coefficients[l_square_plus_l[el] + m + 2 *
-                                                 big_el_plus_1_square * num] \
-                                    + radii[num] * \
-                                    coefficients[l_square_plus_l[el] + m +
-                                                 big_el_plus_1_square *
-                                                 (2 * num + 1)]
-                                temp_plus_m *= cos_m_phi[m-1]
-                                temp_minus_m = el * \
-                                    coefficients[l_square_plus_l[el] - m + 2 *
-                                                 big_el_plus_1_square * num] \
-                                    + radii[num] * \
-                                    coefficients[l_square_plus_l[el] - m +
-                                                 big_el_plus_1_square *
-                                                 (2 * num + 1)]
+                        u_temp = 0.0
+                        for el in np.arange(0, big_l + 1):
+                            temp = (
+                                el
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + 2 * big_el_plus_1_square * num
+                                ]
+                                + radii[num]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + big_el_plus_1_square * (2 * num + 1)
+                                ]
+                            )
+                            temp *= legendre_function[
+                                l_times_l_plus_l_divided_by_2[el]
+                            ]
+                            for m in np.arange(1, el + 1):
+                                temp_plus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
+                                temp_plus_m *= cos_m_phi[m - 1]
+                                temp_minus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
                                 temp_minus_m *= sin_m_phi[m - 1]
-                                temp += (temp_minus_m + temp_plus_m) * \
-                                    legendre_function[
-                                        l_times_l_plus_l_divided_by_2[el] + m]
+                                temp += (
+                                    temp_minus_m + temp_plus_m
+                                ) * legendre_function[
+                                    l_times_l_plus_l_divided_by_2[el] + m
+                                ]
                                 pass
-                            temp *= ratio ** ele_plus_1[el] \
+                            temp *= (
+                                ratio ** ele_plus_1[el]
                                 / eles_times_2_plus_1[el]
+                            )
                             u_temp += temp
                             pass
                         u += u_temp
@@ -393,48 +476,74 @@ def draw_cut_representation_formula_n_sphere(
                     phi = np.arctan2(yy, xx)
 
                     legendre_function = pyshtools.legendre.PlmON(
-                        big_l, cos_theta, csphase=-1, cnorm=0)
-                    cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                    sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                        big_l, cos_theta, csphase=-1, cnorm=0
+                    )
+                    cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                    sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                     ratio = r / radii[sphere - 1]
-                    u_temp = 0.
+                    u_temp = 0.0
                     for el in np.arange(0, big_l + 1):
-                        temp = ele_plus_1[el] * \
-                            coefficients[l_square_plus_l[el] + 2 *
-                                         big_el_plus_1_square *
-                                         (sphere - 1 + n)] \
-                            + radii[sphere - 1] * \
-                            coefficients[l_square_plus_l[el] +
-                                         big_el_plus_1_square *
-                                         (2 * (sphere - 1 + n) + 1)]
-                        temp *= \
-                            legendre_function[
-                                l_times_l_plus_l_divided_by_2[el]]
-                        for m in np.arange(1, el+1):
-                            temp_plus_m = ele_plus_1[el] * \
-                                coefficients[l_square_plus_l[el] + m + 2 *
-                                             big_el_plus_1_square *
-                                             (sphere - 1 + n)] \
-                                + radii[sphere - 1] * \
-                                coefficients[l_square_plus_l[el] + m +
-                                             big_el_plus_1_square *
-                                             (2 * (sphere - 1 + n) + 1)]
-                            temp_minus_m = ele_plus_1[el] * \
-                                coefficients[l_square_plus_l[el] - m + 2 *
-                                             big_el_plus_1_square *
-                                             (sphere - 1 + n)] \
-                                + radii[sphere - 1] * \
-                                coefficients[l_square_plus_l[el] - m +
-                                             big_el_plus_1_square *
-                                             (2 * (sphere - 1 + n) + 1)]
+                        temp = (
+                            ele_plus_1[el]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + 2 * big_el_plus_1_square * (sphere - 1 + n)
+                            ]
+                            + radii[sphere - 1]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + big_el_plus_1_square
+                                * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        temp *= legendre_function[
+                            l_times_l_plus_l_divided_by_2[el]
+                        ]
+                        for m in np.arange(1, el + 1):
+                            temp_plus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
+                            temp_minus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
                             temp_plus_m *= cos_m_phi[m - 1]
                             temp_minus_m *= sin_m_phi[m - 1]
-                            temp += (temp_minus_m + temp_plus_m) * \
-                                legendre_function[
-                                    l_times_l_plus_l_divided_by_2[el] + m]
+                            temp += (
+                                temp_minus_m + temp_plus_m
+                            ) * legendre_function[
+                                l_times_l_plus_l_divided_by_2[el] + m
+                            ]
                             pass
-                        temp *= ratio ** el / eles_times_2_plus_1[el]
+                        temp *= ratio**el / eles_times_2_plus_1[el]
                         u_temp += temp
                         pass
                     data_for_plotting[jj, ii] = u_temp
@@ -463,7 +572,7 @@ def draw_cut_representation_formula_n_sphere(
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - positions[num]
                         r = np.linalg.norm(aux)
@@ -475,48 +584,70 @@ def draw_cut_representation_formula_n_sphere(
                         phi = np.arctan2(yy, xx)
 
                         legendre_function = pyshtools.legendre.PlmON(
-                            big_l, cos_theta, csphase=-1, cnorm=0)
-                        cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                        sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                            big_l, cos_theta, csphase=-1, cnorm=0
+                        )
+                        cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                        sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                         ratio = radii[num] / r
-                        u_temp = 0.
+                        u_temp = 0.0
                         for el in np.arange(0, big_l + 1):
-                            temp = el * \
-                                   coefficients[l_square_plus_l[el] + 2 *
-                                                big_el_plus_1_square * num] \
-                                   + radii[num] * \
-                                   coefficients[l_square_plus_l[el] +
-                                                big_el_plus_1_square *
-                                                (2 * num + 1)]
-                            temp *= \
-                                legendre_function[
-                                    l_times_l_plus_l_divided_by_2[el]]
-                            for m in np.arange(1, el+1):
-                                temp_plus_m = el * \
-                                              coefficients[
-                                                  l_square_plus_l[el] + m + 2 *
-                                                  big_el_plus_1_square * num] \
-                                              + radii[num] * \
-                                              coefficients[
-                                                  l_square_plus_l[el] + m +
-                                                  big_el_plus_1_square *
-                                                  (2 * num + 1)]
+                            temp = (
+                                el
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + 2 * big_el_plus_1_square * num
+                                ]
+                                + radii[num]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + big_el_plus_1_square * (2 * num + 1)
+                                ]
+                            )
+                            temp *= legendre_function[
+                                l_times_l_plus_l_divided_by_2[el]
+                            ]
+                            for m in np.arange(1, el + 1):
+                                temp_plus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
                                 temp_plus_m *= cos_m_phi[m - 1]
-                                temp_minus_m = el * \
-                                   coefficients[l_square_plus_l[el] - m + 2 *
-                                                big_el_plus_1_square * num] \
-                                   + radii[num] * \
-                                   coefficients[l_square_plus_l[el] - m +
-                                       big_el_plus_1_square * (2 * num + 1)]
+                                temp_minus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
                                 temp_minus_m *= sin_m_phi[m - 1]
-                                temp += (temp_minus_m + temp_plus_m) * \
-                                   legendre_function[
-                                       l_times_l_plus_l_divided_by_2[
-                                           el] + m]
+                                temp += (
+                                    temp_minus_m + temp_plus_m
+                                ) * legendre_function[
+                                    l_times_l_plus_l_divided_by_2[el] + m
+                                ]
                                 pass
-                            temp *= ratio ** ele_plus_1[el] \
+                            temp *= (
+                                ratio ** ele_plus_1[el]
                                 / eles_times_2_plus_1[el]
+                            )
                             u_temp += temp
                             pass
                         u += u_temp
@@ -534,52 +665,74 @@ def draw_cut_representation_formula_n_sphere(
                     phi = np.arctan2(yy, xx)
 
                     legendre_function = pyshtools.legendre.PlmON(
-                        big_l, cos_theta, csphase=-1, cnorm=0)
-                    cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                    sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                        big_l, cos_theta, csphase=-1, cnorm=0
+                    )
+                    cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                    sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                     ratio = r / radii[sphere - 1]
-                    u_temp = 0.
+                    u_temp = 0.0
                     for el in np.arange(0, big_l + 1):
-                        temp = ele_plus_1[el] * \
-                               coefficients[l_square_plus_l[el] + 2 *
-                                            big_el_plus_1_square *
-                                            (sphere - 1 + n)] \
-                               + radii[sphere - 1] * \
-                               coefficients[l_square_plus_l[el] +
-                                            big_el_plus_1_square *
-                                            (2 * (sphere - 1 + n) + 1)]
-                        temp *= \
-                            legendre_function[
-                                l_times_l_plus_l_divided_by_2[el]]
-                        for m in np.arange(1, el+1):
-                            temp_plus_m = ele_plus_1[el] * \
-                                          coefficients[
-                                              l_square_plus_l[el] + m + 2 *
-                                              big_el_plus_1_square *
-                                              (sphere - 1 + n)] \
-                                          + radii[sphere - 1] * \
-                                          coefficients[
-                                              l_square_plus_l[el] + m +
-                                              big_el_plus_1_square *
-                                              (2 * (sphere - 1 + n) + 1)]
-                            temp_minus_m = ele_plus_1[el] * \
-                                           coefficients[
-                                               l_square_plus_l[el] - m + 2 *
-                                               big_el_plus_1_square *
-                                               (sphere - 1 + n)] \
-                                           + radii[sphere - 1] * \
-                                           coefficients[
-                                               l_square_plus_l[el] - m +
-                                               big_el_plus_1_square *
-                                               (2 * (sphere - 1 + n) + 1)]
+                        temp = (
+                            ele_plus_1[el]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + 2 * big_el_plus_1_square * (sphere - 1 + n)
+                            ]
+                            + radii[sphere - 1]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + big_el_plus_1_square
+                                * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        temp *= legendre_function[
+                            l_times_l_plus_l_divided_by_2[el]
+                        ]
+                        for m in np.arange(1, el + 1):
+                            temp_plus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
+                            temp_minus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
                             temp_plus_m *= cos_m_phi[m - 1]
                             temp_minus_m *= sin_m_phi[m - 1]
-                            temp += (temp_minus_m + temp_plus_m) * \
-                                   legendre_function[
-                                       l_times_l_plus_l_divided_by_2[el] + m]
+                            temp += (
+                                temp_minus_m + temp_plus_m
+                            ) * legendre_function[
+                                l_times_l_plus_l_divided_by_2[el] + m
+                            ]
                             pass
-                        temp *= ratio ** el / eles_times_2_plus_1[el]
+                        temp *= ratio**el / eles_times_2_plus_1[el]
                         u_temp += temp
                         pass
                     data_for_plotting[jj, ii] = u_temp
@@ -608,7 +761,7 @@ def draw_cut_representation_formula_n_sphere(
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
-                    u = 0.
+                    u = 0.0
                     for num in np.arange(0, n):
                         aux = cart_vector - positions[num]
                         r = np.linalg.norm(aux)
@@ -620,51 +773,70 @@ def draw_cut_representation_formula_n_sphere(
                         phi = np.arctan2(yy, xx)
 
                         legendre_function = pyshtools.legendre.PlmON(
-                            big_l, cos_theta, csphase=-1, cnorm=0)
-                        cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                        sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                            big_l, cos_theta, csphase=-1, cnorm=0
+                        )
+                        cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                        sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                         ratio = radii[num] / r
-                        u_temp = 0.
+                        u_temp = 0.0
                         for el in np.arange(0, big_l + 1):
-                            temp = el * \
-                                   coefficients[l_square_plus_l[el] + 2 *
-                                                big_el_plus_1_square * num] \
-                                   + radii[num] * \
-                                   coefficients[l_square_plus_l[el] +
-                                                big_el_plus_1_square *
-                                                (2 * num + 1)]
-                            temp *= \
-                                legendre_function[
-                                    l_times_l_plus_l_divided_by_2[el]]
+                            temp = (
+                                el
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + 2 * big_el_plus_1_square * num
+                                ]
+                                + radii[num]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + big_el_plus_1_square * (2 * num + 1)
+                                ]
+                            )
+                            temp *= legendre_function[
+                                l_times_l_plus_l_divided_by_2[el]
+                            ]
                             for m in np.arange(1, el + 1):
-                                temp_plus_m = el * \
-                                              coefficients[
-                                                  l_square_plus_l[el] + m + 2 *
-                                                  big_el_plus_1_square * num] \
-                                              + radii[num] * \
-                                              coefficients[
-                                                  l_square_plus_l[el] + m +
-                                                  big_el_plus_1_square *
-                                                  (2 * num + 1)]
+                                temp_plus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        + m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
                                 temp_plus_m *= cos_m_phi[m - 1]
-                                temp_minus_m = el * \
-                                               coefficients[l_square_plus_l[
-                                                                el] - m + 2 *
-                                                            big_el_plus_1_square * num] \
-                                               + radii[num] * \
-                                               coefficients[
-                                                   l_square_plus_l[el] - m +
-                                                   big_el_plus_1_square *
-                                                   (2 * num + 1)]
+                                temp_minus_m = (
+                                    el
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + 2 * big_el_plus_1_square * num
+                                    ]
+                                    + radii[num]
+                                    * coefficients[
+                                        l_square_plus_l[el]
+                                        - m
+                                        + big_el_plus_1_square * (2 * num + 1)
+                                    ]
+                                )
                                 temp_minus_m *= sin_m_phi[m - 1]
-                                temp += (temp_minus_m + temp_plus_m) * \
-                                       legendre_function[
-                                           l_times_l_plus_l_divided_by_2[
-                                               el] + m]
+                                temp += (
+                                    temp_minus_m + temp_plus_m
+                                ) * legendre_function[
+                                    l_times_l_plus_l_divided_by_2[el] + m
+                                ]
                                 pass
-                            temp *= ratio ** ele_plus_1[el] \
+                            temp *= (
+                                ratio ** ele_plus_1[el]
                                 / eles_times_2_plus_1[el]
+                            )
                             u_temp += temp
                             pass
                         u += u_temp
@@ -680,52 +852,74 @@ def draw_cut_representation_formula_n_sphere(
                     phi = np.arctan2(yy, xx)
 
                     legendre_function = pyshtools.legendre.PlmON(
-                        big_l, cos_theta, csphase=-1, cnorm=0)
-                    cos_m_phi = np.cos(eles[1:len(eles)] * phi)
-                    sin_m_phi = np.sin(eles[1:len(eles)] * phi)
+                        big_l, cos_theta, csphase=-1, cnorm=0
+                    )
+                    cos_m_phi = np.cos(eles[1 : len(eles)] * phi)
+                    sin_m_phi = np.sin(eles[1 : len(eles)] * phi)
 
                     ratio = r / radii[sphere - 1]
-                    u_temp = 0.
+                    u_temp = 0.0
                     for el in np.arange(0, big_l + 1):
-                        temp = ele_plus_1[el] * \
-                               coefficients[l_square_plus_l[el] + 2 *
-                                            big_el_plus_1_square *
-                                            (sphere - 1 + n)] \
-                               + radii[sphere - 1] * \
-                               coefficients[l_square_plus_l[el] +
-                                            big_el_plus_1_square *
-                                            (2 * (sphere - 1 + n) + 1)]
-                        temp *= \
-                            legendre_function[
-                                l_times_l_plus_l_divided_by_2[el]]
+                        temp = (
+                            ele_plus_1[el]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + 2 * big_el_plus_1_square * (sphere - 1 + n)
+                            ]
+                            + radii[sphere - 1]
+                            * coefficients[
+                                l_square_plus_l[el]
+                                + big_el_plus_1_square
+                                * (2 * (sphere - 1 + n) + 1)
+                            ]
+                        )
+                        temp *= legendre_function[
+                            l_times_l_plus_l_divided_by_2[el]
+                        ]
                         for m in np.arange(1, el + 1):
-                            temp_plus_m = ele_plus_1[el] * \
-                                          coefficients[
-                                              l_square_plus_l[el] + m + 2 *
-                                              big_el_plus_1_square *
-                                              (sphere - 1 + n)] \
-                                          + radii[sphere - 1] * \
-                                          coefficients[
-                                              l_square_plus_l[el] + m +
-                                              big_el_plus_1_square *
-                                              (2 * (sphere - 1 + n) + 1)]
-                            temp_minus_m = ele_plus_1[el] * \
-                               coefficients[
-                                   l_square_plus_l[el] - m + 2 *
-                                   big_el_plus_1_square *
-                                   (sphere - 1 + n)] \
-                               + radii[sphere - 1] * \
-                               coefficients[
-                                   l_square_plus_l[el] - m +
-                                   big_el_plus_1_square *
-                                   (2 * (sphere - 1 + n) + 1)]
+                            temp_plus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    + m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
+                            temp_minus_m = (
+                                ele_plus_1[el]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + 2
+                                    * big_el_plus_1_square
+                                    * (sphere - 1 + n)
+                                ]
+                                + radii[sphere - 1]
+                                * coefficients[
+                                    l_square_plus_l[el]
+                                    - m
+                                    + big_el_plus_1_square
+                                    * (2 * (sphere - 1 + n) + 1)
+                                ]
+                            )
                             temp_plus_m *= cos_m_phi[m - 1]
                             temp_minus_m *= sin_m_phi[m - 1]
-                            temp += (temp_minus_m + temp_plus_m) * \
-                                legendre_function[
-                                       l_times_l_plus_l_divided_by_2[el] + m]
+                            temp += (
+                                temp_minus_m + temp_plus_m
+                            ) * legendre_function[
+                                l_times_l_plus_l_divided_by_2[el] + m
+                            ]
                             pass
-                        temp *= ratio ** el / eles_times_2_plus_1[el]
+                        temp *= ratio**el / eles_times_2_plus_1[el]
                         u_temp += temp
                         pass
                     data_for_plotting[jj, ii] = u_temp
