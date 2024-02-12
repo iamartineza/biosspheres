@@ -45,4 +45,7 @@ def cube_vertex_positions(
                 p[0] = 0.
                 ps.append(p + np.array([two_r_plus_d * zz, 0., 0.]))
                 p = p + np.array([two_r_plus_d * zz, 0., 0.])
+                pass
+            pass
+        pass
     return ps
