@@ -275,9 +275,9 @@ def calderon_build_check() -> None:
 
 
 if __name__ == '__main__':
-    calderon_build_check()
     v_transpose_check()
     k_with_v_check()
     k_ka_check()
     w_transpose_check()
+    calderon_build_check()
     
