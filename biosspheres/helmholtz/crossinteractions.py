@@ -31,12 +31,14 @@ def sj_pre_single_layer_semi_analytic_v1d(
                      + 1j * scipy.special.spherical_yn(eles, argument[i]))
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+        pass
     del argument
     del eles
     
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     return h_l, legendre_functions, exp_pos
 
 
@@ -136,10 +138,12 @@ def v_0_sj_semi_analytic_v1d(
                      + 1j * scipy.special.spherical_yn(eles, argument[i]))
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+        pass
     
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = (big_l + 1)**2
     data_v = np.empty(
@@ -172,6 +176,8 @@ def v_0_sj_semi_analytic_v1d(
                    axis=1, out=data_v[:, l_square_plus_l[el] - m])
             data_v[:, l_square_plus_l[el] - m] = (
                     j_l_j[el] * data_v[:, l_square_plus_l[el] - m])
+            pass
+        pass
     data_v[:] = 1j * k0 * (r_j * r_s)**2 * data_v[:]
     return data_v
 
@@ -318,11 +324,14 @@ def v_0_sj_semi_analytic_v2d(
             legendre_functions[:, i, j] = \
                 pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
                                          csphase=-1, cnorm=1)
+            pass
+        pass
     
     exp_pos = np.empty((big_l, quantity_theta_points, quantity_phi_points),
                        dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = num**2
     
@@ -373,6 +382,8 @@ def v_0_sj_semi_analytic_v2d(
                 coefficients[1, pesykus[:, 0], pesykus[:, 1]]
             data_v[l_square_plus_l, l_square_plus_l[el] - m] = \
                 coefficients[0, eles, 0]
+            pass
+        pass
     del coefficients
     del temp_l
     del temp_l_m
@@ -434,6 +445,7 @@ def v_0_js_from_v_0_sj(
             np.fliplr(giro_array[
                       l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
                       l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
+        pass
     data_v_js = giro_array @ sign_array @ data_v_sj.T @ sign_array @ giro_array
     return data_v_js
 
@@ -544,10 +556,12 @@ def k_0_sj_semi_analytic_v1d(
         legendre_functions[:, i] = \
             pyshtools.legendre.PlmON(big_l, cos_theta_coord[i],
                                      csphase=-1, cnorm=1)
+        pass
     
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = num**2
     data_k = np.empty((el_plus_1_square, el_plus_1_square),
@@ -580,6 +594,8 @@ def k_0_sj_semi_analytic_v1d(
                    out=data_k[:, l_square_plus_l[el] - m])
             data_k[:, l_square_plus_l[el] - m] = (
                     j_lp_j[el] * data_k[:, l_square_plus_l[el] - m])
+            pass
+        pass
     data_k[:] = -1j * (k0 * r_j * r_s)**2 * data_k[:]
     return data_k
 
@@ -726,11 +742,14 @@ def k_0_sj_semi_analytic_v2d(
             legendre_functions[:, i, j] = \
                 pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
                                          csphase=-1, cnorm=1)
+            pass
+        pass
     
     exp_pos = np.empty((big_l, quantity_theta_points, quantity_phi_points),
                        dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = num**2
     
@@ -784,6 +803,8 @@ def k_0_sj_semi_analytic_v2d(
                 coefficients[1, pesykus[:, 0], pesykus[:, 1]]
             data_k[l_square_plus_l, l_square_plus_l[el] - m] = \
                 coefficients[0, eles, 0]
+            pass
+        pass
     data_k[:] = -1j * (k0 * r_j * r_s)**2 * data_k[:]
     return data_k
 
@@ -992,6 +1013,7 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
         legendre_functions[:, i] = \
             pyshtools.legendre.PlmON(big_l, cos_theta_coord[i],
                                      csphase=-1, cnorm=1)
+        pass
     h_l_r[:] = h_l_r[:] / r_coord[:, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
@@ -999,6 +1021,7 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = (big_l + 1)**2
     data_ka = np.empty((el_plus_1_square, el_plus_1_square),
@@ -1018,6 +1041,7 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                                        :])
+        pass
         temp_l_m_n[:] = transform * (h_lp_k[:, el] * (
                 er_times_n
                 * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
@@ -1063,6 +1087,8 @@ def ka_0_sj_semi_analytic_recurrence_v1d(
             np.sum(temp_l_m_n, axis=1, out=data_ka[:, l_square_plus_l[el] - m])
             data_ka[:, l_square_plus_l[el] - m] = (
                     j_l_j[el] * data_ka[:, l_square_plus_l[el] - m])
+            pass
+        pass
     data_ka[:] = -1j * k0 * (r_j * r_s)**2 * data_ka[:]
     return data_ka
 
@@ -1243,6 +1269,8 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
             legendre_functions[:, i, j] = \
                 pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
                                          csphase=-1, cnorm=1)
+            pass
+        pass
     h_l_r[:] = h_l_r[:] / r_coord[:, :, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     
@@ -1250,6 +1278,7 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
                        dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = num**2
     eles_plus_1 = eles + 1
@@ -1276,6 +1305,7 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                                        :, :])
+        pass
         temp_l_m_n[:] = (
                 h_lp_k[:, :, el] *
                 (legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :]
@@ -1338,7 +1368,8 @@ def ka_0_sj_semi_analytic_recurrence_v2d(
                 j_l_j[el] * int_ka[1, pesykus[:, 0], pesykus[:, 1]]
             data_ka[l_square_plus_l, l_square_plus_l[el] - m] = \
                 j_l_j[el] * int_ka[0, eles, 0]
-    
+            pass
+        pass
     data_ka[:] = -1j * k0 * (r_j * r_s)**2 * data_ka[:]
     return data_ka
 
@@ -1580,6 +1611,7 @@ def w_0_sj_semi_analytic_recurrence_v1d(
         legendre_functions[:, i] = \
             pyshtools.legendre.PlmON(big_l, cos_theta_coord[i],
                                      csphase=-1, cnorm=1)
+        pass
     h_l_r[:] = h_l_r[:] / r_coord[:, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
@@ -1587,6 +1619,7 @@ def w_0_sj_semi_analytic_recurrence_v1d(
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = (big_l + 1)**2
     data_w = np.empty((el_plus_1_square, el_plus_1_square),
@@ -1606,6 +1639,7 @@ def w_0_sj_semi_analytic_recurrence_v1d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                                        :])
+        pass
         temp_l_m_n[:] = transform * (h_lp_k[:, el] * (
                 er_times_n
                 * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
@@ -1628,6 +1662,7 @@ def w_0_sj_semi_analytic_recurrence_v1d(
                 d_legendre_functions[:] = (
                         legendre_functions[l_times_l_plus_l_divided_by_2[el]
                                            + m - 1, :] * -np.sqrt(el / 2.))
+            
             leg_aux[index] = (
                     m
                     * legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
@@ -1651,6 +1686,8 @@ def w_0_sj_semi_analytic_recurrence_v1d(
             np.sum(temp_l_m_n, axis=1, out=data_w[:, l_square_plus_l[el] - m])
             data_w[:, l_square_plus_l[el] - m] = (
                     j_lp_j[el] * data_w[:, l_square_plus_l[el] - m])
+            pass
+        pass
     data_w[:] = -1j * (k0 * r_j * r_s)**2 * data_w[:]
     return data_w
 
@@ -1832,6 +1869,8 @@ def w_0_sj_semi_analytic_recurrence_v2d(
             legendre_functions[:, i, j] = \
                 pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
                                          csphase=-1, cnorm=1)
+            pass
+        pass
     h_l_r[:] = h_l_r[:] / r_coord[:, :, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     
@@ -1839,6 +1878,7 @@ def w_0_sj_semi_analytic_recurrence_v2d(
                        dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = num**2
     eles_plus_1 = eles + 1
@@ -1865,6 +1905,7 @@ def w_0_sj_semi_analytic_recurrence_v2d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                     :, :])
+        pass
         temp_l_m_n[:] = (
                 h_lp_k[:, :, el] *
                 (legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :]
@@ -1891,6 +1932,7 @@ def w_0_sj_semi_analytic_recurrence_v2d(
                 d_legendre_functions[:] = \
                     legendre_functions[l_times_l_plus_l_divided_by_2[el]
                                        + m - 1, :, :] * -np.sqrt(el / 2.)
+            
             leg_aux[index] = (
                     m *
                     legendre_functions[
@@ -1927,7 +1969,8 @@ def w_0_sj_semi_analytic_recurrence_v2d(
                 j_lp_j[el] * int_ka[1, pesykus[:, 0], pesykus[:, 1]]
             data_w[l_square_plus_l, l_square_plus_l[el] - m] = \
                 j_lp_j[el] * int_ka[0, eles, 0]
-    
+            pass
+        pass
     data_w[:] = -1j * (k0 * r_j * r_s)**2 * data_w[:]
     return data_w
 
@@ -2143,6 +2186,7 @@ def v_k_w_0_sj_from_quadratures_1d(
                     eles, argument[i], derivative=True))
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+        pass
     h_l_r[:] = h_l[:] / r_coord[:, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
@@ -2150,6 +2194,7 @@ def v_k_w_0_sj_from_quadratures_1d(
     exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+        pass
     
     el_plus_1_square = (big_l + 1)**2
     data_v_sj = np.empty(
@@ -2191,6 +2236,7 @@ def v_k_w_0_sj_from_quadratures_1d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                                        :])
+        pass
         temp_l_m_n[:] = transform * (h_lp_k[:, el] * (
                 er_times_n
                 * legendre_functions[l_times_l_plus_l_divided_by_2[el], :])
@@ -2261,11 +2307,12 @@ def v_k_w_0_sj_from_quadratures_1d(
                     j_lp_j[el] * data_ka_sj[:, l_square_plus_l[el] - m])
             data_ka_sj[:, l_square_plus_l[el] - m] = (
                     j_l_j[el] * data_ka_sj[:, l_square_plus_l[el] - m])
+            pass
+        pass
     data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
     data_k_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_k_sj[:]
     data_ka_sj[:] = -1j * k0 * (r_j * r_s)**2 * data_ka_sj[:]
     data_w_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_w_sj[:]
-    
     return data_v_sj, data_k_sj, data_ka_sj, data_w_sj
 
 
@@ -2316,6 +2363,8 @@ def v_k_w_0_sj_from_quadratures_2d(
             legendre_functions[:, i, j] = \
                 pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
                                          csphase=-1, cnorm=1)
+            pass
+        pass
     h_l_r[:] = h_l[:] / r_coord[:, :, np.newaxis]
     h_lp_k[:] = k0 * h_lp_k[:]
     sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
@@ -2324,6 +2373,7 @@ def v_k_w_0_sj_from_quadratures_2d(
                        dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :, :])
+        pass
     
     el_plus_1_square = (big_l + 1)**2
     data_v_sj = np.empty(
@@ -2374,6 +2424,7 @@ def v_k_w_0_sj_from_quadratures_2d(
                     np.sqrt((el + 1) * el) *
                     legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
                     :, :])
+        pass
         temp_l_m_n[:] = (h_lp_k[:, :, el] * (
                 er_times_n
                 * legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :])
@@ -2490,6 +2541,8 @@ def v_k_w_0_sj_from_quadratures_2d(
                 j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
             data_w_sj[l_square_plus_l, l_square_plus_l[el] - m] = \
                 j_lp_j[el] * coeff[0, eles, 0]
+            pass
+        pass
     data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
     data_k_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_k_sj[:]
     data_ka_sj[:] = -1j * k0 * (r_j * r_s)**2 * data_ka_sj[:]
