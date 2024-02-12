@@ -1814,31 +1814,32 @@ def a_0_sj_and_js_v2d(
     r_s : float
         > 0, radius of the sphere s.
     r_coord : np.ndarray
-        Two dimensional array of floats with the spherical coordinate r of the
-        quadrature points in the coordinate system s. Shape equals to
-        (quantity_theta_points, quantity_phi_points).
-        Comes from the function from_sphere_s_cartesian_to_j_spherical_2d of
-        the module biosspheres.quadratures.spheres.
+        Two dimensional array of floats with the spherical coordinate r
+        of the quadrature points in the coordinate system s. Shape
+        equals to (quantity_theta_points, quantity_phi_points).
+        Comes from biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     phi_coord : np.ndarray
         Two dimensional array of floats with the phi coordinate r of the
         quadrature points in the coordinate system s. Shape equals to
         (quantity_theta_points, quantity_phi_points).
-        Comes from the function from_sphere_s_cartesian_to_j_spherical_2d of
-        the module biosspheres.quadratures.spheres.
+        Comes from biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     cos_theta_coord : np.ndarray
         Two dimensional array of floats with the cosine of the spherical
-        coordinate theta of the quadrature points in the coordinate system s.
-        Shape equals to (quantity_theta_points, quantity_phi_points).
-        Comes from the function from_sphere_s_cartesian_to_j_spherical_2d of
-        the module biosspheres.quadratures.spheres.
+        coordinate theta of the quadrature points in the coordinate
+        system s. Shape equals to
+        (quantity_theta_points, quantity_phi_points).
+        Comes from biosspheres.quadratures.spheres.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     weights : np.ndarray
-        of floats. Weights for the integral quadrature in the theta variable.
-        Comes from the function
+        of floats. Weights for the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     zeros : np.ndarray
-        of floats. Zeros of the integral quadrature in the theta variable.
-        Comes from the function
+        of floats. Zeros of the integral quadrature in the theta
+        variable. Comes from the function
         gauss_legendre_trapezoidal_shtools_2d
         from the module biosspheres.quadratures.spheres.
     quantity_theta_points : int
@@ -1884,10 +1885,6 @@ def a_0_sj_and_js_v2d(
     k_0_sj_from_v_0_sj
     ka_0_sj_from_v_sj
     w_0_sj_from_v_sj
-    biosspheres.quadratures.spheres.from_sphere_s_cartesian_to_j_spherical_2d
-    gauss_legendre_trapezoidal_shtools_2d
-    biosspheres.miscella.auxindexes.pes_y_kus
-    biosspheres.miscella.auxindexes.diagonal_l_dense
 
     """
     ratio = r_j / r_coord
@@ -2107,7 +2104,8 @@ def all_cross_interactions_n_spheres_v1d(
     n: int, big_l: int, big_l_c: int, radii: np.ndarray, center_positions
 ) -> np.ndarray:
     """
-    Returns an array with all the cross interactions for the given n spheres.
+    Returns an array with all the cross interactions for the given n
+    spheres.
     It is a SLOW routine.
 
     Notes
@@ -2125,7 +2123,8 @@ def all_cross_interactions_n_spheres_v1d(
     big_l : int
         >= 0, max degree.
     big_l_c : int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
     radii : np.ndarray
         Array with the radii of the spheres.
     center_positions :
@@ -2138,10 +2137,7 @@ def all_cross_interactions_n_spheres_v1d(
 
     See Also
     --------
-    quadratures.real_spherical_harmonic_transform_1d
-    auxindexes.diagonal_l_dense
-    quadratures.from_sphere_s_cartesian_to_j_spherical_1d
-    a_0_sj_and_js_v1d
+    all_cross_interactions_n_spheres_v2d
 
     """
     big_l_plus_1_square = (big_l + 1) ** 2
@@ -2206,7 +2202,8 @@ def all_cross_interactions_n_spheres_v2d(
     n: int, big_l: int, big_l_c: int, radii: np.ndarray, center_positions
 ) -> np.ndarray:
     """
-    Returns an array with all the cross interactions for the given n spheres.
+    Returns an array with all the cross interactions for the given n
+    spheres.
 
     Notes
     -----
@@ -2224,7 +2221,8 @@ def all_cross_interactions_n_spheres_v2d(
     big_l : int
         >= 0, max degree.
     big_l_c : int
-        >= 0. It's the parameter used to compute the points of the quadrature.
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
     radii : np.ndarray
         Array with the radii of the spheres.
     center_positions : array_like
@@ -2237,12 +2235,7 @@ def all_cross_interactions_n_spheres_v2d(
 
     See Also
     --------
-    Uses the following:
-    auxindexes.pes_y_kus
-    quadratures.quadrature_points_sphere_shtools_version_2d
-    auxindexes.diagonal_l_dense
-    quadratures.from_sphere_s_cartesian_to_j_spherical_2d
-    a_0_sj_and_js_v2d
+    all_cross_interactions_n_spheres_v1d
 
     """
     big_l_plus_1_square = (big_l + 1) ** 2
