@@ -2101,7 +2101,11 @@ def a_0_sj_and_js_v2d(
 
 
 def all_cross_interactions_n_spheres_v1d(
-    n: int, big_l: int, big_l_c: int, radii: np.ndarray, center_positions
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
 ) -> np.ndarray:
     """
     Returns an array with all the cross interactions for the given n
@@ -2199,7 +2203,11 @@ def all_cross_interactions_n_spheres_v1d(
 
 
 def all_cross_interactions_n_spheres_v2d(
-    n: int, big_l: int, big_l_c: int, radii: np.ndarray, center_positions
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
 ) -> np.ndarray:
     """
     Returns an array with all the cross interactions for the given n
