@@ -43,19 +43,20 @@ from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
 from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
 
 """
+
 import numpy as np
 import pyshtools
 
 
 def gauss_legendre_trapezoidal_2d(
-        big_l_c: int
+    big_l_c: int,
 ) -> tuple[int, int, np.ndarray, np.ndarray]:
     """
     This function is for obtaining the quadratures points to
     approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
     a composite trapezoidal quadrature rule.
-    
+
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
@@ -86,51 +87,48 @@ def gauss_legendre_trapezoidal_2d(
     pre_vector : np.ndarray
         of floats. Represents the vectors of the quadrature points.
         Shape (3, quantity_theta_points, quantity_phi_points).
-    
+
     See Also
     --------
     gauss_legendre_trapezoidal_1d
-    
+
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
-    
+
     cos_phi = np.cos(phi)
     sen_phi = np.sin(phi)
     del phi
-    
+
     cos_theta = zeros
-    sen_theta = np.sqrt(1. - np.square(cos_theta))
-    
+    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
+
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in np.arange(0, quantity_theta_points):
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
-    
+
     del sen_theta
     del cos_phi
     del sen_phi
     del cos_theta
-    
+
     return quantity_theta_points, quantity_phi_points, weights, pre_vector
 
 
 def gauss_legendre_trapezoidal_1d(
-        big_l_c: int
+    big_l_c: int,
 ) -> tuple[int, np.ndarray, np.ndarray]:
     """
     This function is for obtaining the quadratures points to
     approximate numerically the integral in a surface of a sphere.
     It returns the weights and vectors for the Gauss-Legendre and
     composite trapezoidal quadrature rule. See the shape of the returns.
-    
+
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
@@ -160,17 +158,14 @@ def gauss_legendre_trapezoidal_1d(
     pre_vector : np.ndarray
         of floats. Represents the vectors of the quadrature points.
         Shape (3, final_length).
-    
+
     See Also
     --------
     gauss_legendre_trapezoidal_2d
-    
+
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
 
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
@@ -180,11 +175,12 @@ def gauss_legendre_trapezoidal_1d(
     del phi
 
     cos_theta = zeros
-    sin_theta = np.sqrt(1. - np.square(cos_theta))
+    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
 
     # First is tile (theta integral) and then is repeat (phi integral)
-    total_weights = np.tile(weights, quantity_phi_points) \
-        * 2 * np.pi / quantity_phi_points
+    total_weights = (
+        np.tile(weights, quantity_phi_points) * 2 * np.pi / quantity_phi_points
+    )
 
     final_length = len(total_weights)
 
@@ -203,11 +199,11 @@ def gauss_legendre_trapezoidal_1d(
 
 
 def gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        big_l: int,
-        big_l_c: int,
-        pesykus: np.ndarray,
-        p2_plus_p_plus_q: np.ndarray,
-        p2_plus_p_minus_q: np.ndarray
+    big_l: int,
+    big_l_c: int,
+    pesykus: np.ndarray,
+    p2_plus_p_plus_q: np.ndarray,
+    p2_plus_p_minus_q: np.ndarray,
 ) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
     """
     This function is for obtaining the quadratures points to
@@ -218,7 +214,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     composite trapezoidal quadrature rule. The real spherical
     harmonics evaluated are of degree l and order m, with l <= big_l.
     See the shape of the returns.
-    
+
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
@@ -231,7 +227,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     polynomials of big_l_c degree times an exponential power to (m times
     i), with |m| <= big_l_c.
     Legendre's functions are computed used pyshtools.
-    
+
     Parameters
     ----------
     big_l : int
@@ -254,7 +250,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         Used for the vectorization of some computations.
         Comes from the function
         biosspheres.miscella.auxindexes.pes_y_kus(big_l)
-    
+
     Returns
     -------
     quantity_theta_points : int
@@ -271,19 +267,16 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         of floats, represent the real spherical harmonics of degree and
         order l and m evaluated in the points given by pre_vector. Shape
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
-    
+
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
-    
+
     cos_phi = np.cos(phi)
     sen_phi = np.sin(phi)
-    
+
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
     for m in np.arange(1, big_l + 1):
@@ -291,64 +284,75 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         np.sin(m * phi, out=sin_m_phi[m - 1, :])
         pass
     del phi
-    
+
     cos_theta = zeros
-    
-    legendre_functions = \
-        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+
+    legendre_functions = np.zeros(
+        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    )
     i_range = np.arange(0, quantity_theta_points)
     for i in i_range:
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta[i], csphase=-1, cnorm=0)
+            big_l, cos_theta[i], csphase=-1, cnorm=0
+        )
         pass
-    
-    spherical_harmonics = np.zeros((
-        (big_l + 1)**2, quantity_theta_points, quantity_phi_points))
+
+    spherical_harmonics = np.zeros(
+        ((big_l + 1) ** 2, quantity_theta_points, quantity_phi_points)
+    )
     eles = np.arange(0, big_l + 1)
     el_square_plus_el = eles * (eles + 1)
     el_square_plus_el_divided_by_two = el_square_plus_el // 2
-    spherical_harmonics[el_square_plus_el, :, :] = \
-        legendre_functions[el_square_plus_el_divided_by_two, :, np.newaxis]
+    spherical_harmonics[el_square_plus_el, :, :] = legendre_functions[
+        el_square_plus_el_divided_by_two, :, np.newaxis
+    ]
     index_temp = (pesykus[:, 0] * (pesykus[:, 0] + 1)) // 2 + pesykus[:, 1]
     index_temp_m = pesykus[:, 1] - 1
     j_range = np.arange(0, quantity_phi_points)
     for i in i_range:
         for j in j_range:
             spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j])
+                legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j]
+            )
             spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j])
+                legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j]
+            )
             pass
         pass
     del legendre_functions
     del cos_m_phi
     del sin_m_phi
     del j_range
-    
-    sen_theta = np.sqrt(1. - np.square(cos_theta))
-    
+
+    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
+
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in i_range:
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
-    
+
     del sen_theta
     del cos_phi
     del sen_phi
     del cos_theta
-    
-    return quantity_theta_points, quantity_phi_points, \
-        weights, pre_vector, spherical_harmonics
+
+    return (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        pre_vector,
+        spherical_harmonics,
+    )
 
 
 def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
-        big_l: int,
-        big_l_c: int,
-        pesykus: np.ndarray,
-        p2_plus_p_plus_q: np.ndarray,
-        p2_plus_p_minus_q: np.ndarray
+    big_l: int,
+    big_l_c: int,
+    pesykus: np.ndarray,
+    p2_plus_p_plus_q: np.ndarray,
+    p2_plus_p_minus_q: np.ndarray,
 ) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
     """
     This function is for obtaining the quadratures points to
@@ -416,78 +420,84 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
 
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
-    
+
     cos_phi = np.cos(phi)
     sen_phi = np.sin(phi)
-    
+
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
         pass
     del phi
-    exp_neg = (-1.)**np.arange(1, big_l + 1) / exp_pos
-    
+    exp_neg = (-1.0) ** np.arange(1, big_l + 1) / exp_pos
+
     cos_theta = zeros
-    
-    legendre_functions = \
-        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+
+    legendre_functions = np.zeros(
+        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    )
     i_range = np.arange(0, quantity_theta_points)
     for i in i_range:
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta[i], csphase=-1, cnorm=1)
+            big_l, cos_theta[i], csphase=-1, cnorm=1
+        )
         pass
-    
+
     spherical_harmonics = np.zeros(
-        ((big_l + 1)**2, quantity_theta_points, quantity_phi_points),
-        dtype=np.complex128
+        ((big_l + 1) ** 2, quantity_theta_points, quantity_phi_points),
+        dtype=np.complex128,
     )
     eles = np.arange(0, big_l + 1)
     el_square_plus_el = eles * (eles + 1)
     el_square_plus_el_divided_by_two = el_square_plus_el // 2
-    spherical_harmonics[el_square_plus_el, :, :] = \
-        legendre_functions[el_square_plus_el_divided_by_two, :, np.newaxis]
+    spherical_harmonics[el_square_plus_el, :, :] = legendre_functions[
+        el_square_plus_el_divided_by_two, :, np.newaxis
+    ]
     index_temp = (pesykus[:, 0] * (pesykus[:, 0] + 1)) // 2 + pesykus[:, 1]
     index_temp_m = pesykus[:, 1] - 1
     j_range = np.arange(0, quantity_phi_points)
     for i in i_range:
         for j in j_range:
             spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], exp_pos[index_temp_m, j])
+                legendre_functions[index_temp, i], exp_pos[index_temp_m, j]
+            )
             spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], exp_neg[index_temp_m, j])
+                legendre_functions[index_temp, i], exp_neg[index_temp_m, j]
+            )
             pass
         pass
     del legendre_functions
     del j_range
-    
-    sen_theta = np.sqrt(1. - np.square(cos_theta))
-    
+
+    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
+
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in i_range:
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
-    
+
     del i_range
     del sen_theta
     del cos_phi
     del sen_phi
     del cos_theta
-    
-    return quantity_theta_points, quantity_phi_points, \
-        weights, pre_vector, spherical_harmonics
+
+    return (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        pre_vector,
+        spherical_harmonics,
+    )
 
 
 def real_spherical_harmonic_transform_1d(
-        big_l: int,
-        big_l_c: int
+    big_l: int, big_l_c: int
 ) -> tuple[int, np.ndarray, np.ndarray]:
     """
     It returns the vectors for the Gauss-Legendre and trapezoidal
@@ -495,11 +505,11 @@ def real_spherical_harmonic_transform_1d(
     of a sphere. It also returns a vector that can be used to calculate
     the real spherical harmonic transform on the surface of a sphere of
     radius equal to one.
-    
+
     The use of the results of this routine is for SLOW routines, because
     the vector used for the spherical harmonic transform does not have
     any performance improvements.
-    
+
     Notes
     -----
     Gauss-legendre quadrature in theta. This one uses the package
@@ -507,7 +517,7 @@ def real_spherical_harmonic_transform_1d(
     Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
-    
+
     Parameters
     ----------
     big_l : int
@@ -527,59 +537,64 @@ def real_spherical_harmonic_transform_1d(
     transform : np.ndarray
         of floats. Vector that can be used to calculate the real
         spherical transform. Shape ((big_l+1)**2, final_length)
-    
+
     See Also
     --------
     gauss_legendre_trapezoidal_1d
-    
+
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0., 2. * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0.0, 2.0 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
 
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
     for m in np.arange(1, big_l + 1):
-        np.cos(m * phi, out=cos_m_phi[m-1, :])
-        np.sin(m * phi, out=sin_m_phi[m-1, :])
+        np.cos(m * phi, out=cos_m_phi[m - 1, :])
+        np.sin(m * phi, out=sin_m_phi[m - 1, :])
         pass
     del phi
 
-    legendre_functions = \
-        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+    legendre_functions = np.zeros(
+        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    )
     cos_theta = zeros
     for i in np.arange(0, quantity_theta_points):
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta[i], csphase=-1, cnorm=0)
+            big_l, cos_theta[i], csphase=-1, cnorm=0
+        )
         pass
 
-    sin_theta = np.sqrt(1. - np.square(cos_theta))
+    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
 
     # Help:
     # first is tile (theta integral) and then is repeat (phi integral)
-    total_weights = weights * 2.*np.pi / quantity_phi_points
+    total_weights = weights * 2.0 * np.pi / quantity_phi_points
 
     final_length = quantity_theta_points * quantity_phi_points
 
-    transform = np.zeros(((big_l+1)**2, final_length))
-    for el in np.arange(0, big_l+1):
+    transform = np.zeros(((big_l + 1) ** 2, final_length))
+    for el in np.arange(0, big_l + 1):
         el_square_plus_el = (el + 1) * el
         el_square_plus_el_divided_by_two = el_square_plus_el // 2
         transform[el_square_plus_el, :] = np.tile(
             legendre_functions[el_square_plus_el_divided_by_two, :]
-            * total_weights, quantity_phi_points)
-        for m in np.arange(1, el+1):
+            * total_weights,
+            quantity_phi_points,
+        )
+        for m in np.arange(1, el + 1):
             temp = np.tile(
                 legendre_functions[el_square_plus_el_divided_by_two + m, :]
-                * total_weights, quantity_phi_points)
-            transform[el_square_plus_el+m, :] = temp \
-                * np.repeat(cos_m_phi[m-1, :], quantity_theta_points)
-            transform[el_square_plus_el - m, :] = temp \
-                * np.repeat(sin_m_phi[m - 1, :], quantity_theta_points)
+                * total_weights,
+                quantity_phi_points,
+            )
+            transform[el_square_plus_el + m, :] = temp * np.repeat(
+                cos_m_phi[m - 1, :], quantity_theta_points
+            )
+            transform[el_square_plus_el - m, :] = temp * np.repeat(
+                sin_m_phi[m - 1, :], quantity_theta_points
+            )
             pass
         pass
 
@@ -598,8 +613,7 @@ def real_spherical_harmonic_transform_1d(
 
 
 def complex_spherical_harmonic_transform_1d(
-        big_l: int,
-        big_l_c: int
+    big_l: int, big_l_c: int
 ) -> tuple[int, np.ndarray, np.ndarray]:
     """
     It returns the vectors for the Gauss-Legendre and trapezoidal
@@ -607,7 +621,7 @@ def complex_spherical_harmonic_transform_1d(
     of a sphere. It also returns a vector that can be used to calculate
     the complex spherical harmonic transform on the surface of a sphere of
     radius equal to one.
-    
+
     The use of the results of this routine is for SLOW routines, because
     the vector used for the spherical harmonic transform does not have
     any performance improvements.
@@ -646,84 +660,88 @@ def complex_spherical_harmonic_transform_1d(
 
     """
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0., 2. * np.pi,
-                      num=(2 * big_l_c + 1),
-                      endpoint=False
-                      )
+    phi = np.linspace(0.0, 2.0 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
-    
+
     cos_phi = np.repeat(np.cos(phi), quantity_theta_points)
     sin_phi = np.repeat(np.sin(phi), quantity_theta_points)
-    
+
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
         pass
     del phi
-    exp_neg = (-1.)**np.arange(1, big_l + 1)[:, np.newaxis] / exp_pos
-    
-    legendre_functions = \
-        np.zeros(((big_l + 1) * (big_l + 2) // 2, quantity_theta_points))
+    exp_neg = (-1.0) ** np.arange(1, big_l + 1)[:, np.newaxis] / exp_pos
+
+    legendre_functions = np.zeros(
+        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    )
     cos_theta = zeros
     for i in np.arange(0, quantity_theta_points):
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta[i], csphase=-1, cnorm=1)
+            big_l, cos_theta[i], csphase=-1, cnorm=1
+        )
         pass
-    
-    sin_theta = np.sqrt(1. - np.square(cos_theta))
-    
+
+    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
+
     # Help:
     # first is tile (theta integral) and then is repeat (phi integral)
-    total_weights = weights * 2. * np.pi / quantity_phi_points
-    
+    total_weights = weights * 2.0 * np.pi / quantity_phi_points
+
     final_length = quantity_theta_points * quantity_phi_points
-    
-    transform = np.zeros(((big_l + 1)**2, final_length),
-                         dtype=np.complex128)
+
+    transform = np.zeros(((big_l + 1) ** 2, final_length), dtype=np.complex128)
     for el in np.arange(0, big_l + 1):
         el_square_plus_el = (el + 1) * el
         el_square_plus_el_divided_by_two = el_square_plus_el // 2
         transform[el_square_plus_el, :] = np.tile(
             legendre_functions[el_square_plus_el_divided_by_two, :]
-            * total_weights, quantity_phi_points)
+            * total_weights,
+            quantity_phi_points,
+        )
         for m in np.arange(1, el + 1):
             temp = np.tile(
                 legendre_functions[el_square_plus_el_divided_by_two + m, :]
-                * total_weights, quantity_phi_points)
+                * total_weights,
+                quantity_phi_points,
+            )
             transform[el_square_plus_el + m, :] = temp * np.repeat(
-                np.conjugate(exp_pos[m - 1, :]), quantity_theta_points)
+                np.conjugate(exp_pos[m - 1, :]), quantity_theta_points
+            )
             transform[el_square_plus_el - m, :] = temp * np.repeat(
-                np.conjugate(exp_neg[m - 1, :]), quantity_theta_points)
+                np.conjugate(exp_neg[m - 1, :]), quantity_theta_points
+            )
             pass
         pass
-    
+
     pre_vector = np.zeros((3, final_length))
-    
+
     sin_theta = np.tile(sin_theta, quantity_phi_points)
     cos_theta = np.tile(cos_theta, quantity_phi_points)
-    
+
     np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
     np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
     pre_vector[2, :] = cos_theta[:]
-    
+
     return final_length, pre_vector, transform
 
 
 def from_sphere_s_cartesian_to_j_spherical_2d(
-        r_s: float,
-        p_j: np.ndarray,
-        p_s: np.ndarray,
-        quantity_theta_points: int,
-        quantity_phi_points: int,
-        pre_vector: np.ndarray
+    r_s: float,
+    p_j: np.ndarray,
+    p_s: np.ndarray,
+    quantity_theta_points: int,
+    quantity_phi_points: int,
+    pre_vector: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j". The "j" has its
     center in a different point than the center of the coordinate system
     "s".
-    
+
     Notes
     -----
     Input:
@@ -771,12 +789,12 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
         Two dimensional array of floats with the cosine of the spherical
         coordinate theta of the points in the coordinate system s.
         Shape equals to (quantity_theta_points, quantity_phi_points).
-    
+
     See Also
     --------
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d
     from_sphere_s_cartesian_to_j_spherical_1d
-    
+
     """
     # temp is an array of
     # 3 x quantity_theta_points x quantity_phi_points
@@ -807,14 +825,14 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
 
 
 def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
-        r_s: float,
-        p_j: np.ndarray,
-        p_s: np.ndarray,
-        quantity_theta_points: int,
-        quantity_phi_points: int,
-        pre_vector: np.ndarray
+    r_s: float,
+    p_j: np.ndarray,
+    p_s: np.ndarray,
+    quantity_theta_points: int,
+    quantity_phi_points: int,
+    pre_vector: np.ndarray,
 ) -> tuple[
-        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
+    np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
 ]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
@@ -823,7 +841,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
     obtained times the normal of the unitary sphere.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
-    
+
     Notes
     -----
     Input:
@@ -896,12 +914,12 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
         canonical vector of the spherical coordinate phi in the points
         in the coordinate system s and the normal of a sphere. Shape
         equals to (quantity_theta_points, quantity_phi_points).
-    
+
     See Also
     --------
     from_sphere_s_cartesian_to_j_spherical_2d
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
-    
+
     """
     # temp is an array of
     # 3 x quantity_theta_points x quantity_phi_points
@@ -930,7 +948,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
 
     er_times_n = np.sum(np.multiply(erres / r_coord, pre_vector), axis=0)
 
-    sin_theta_coord = np.sqrt(1 - cos_theta_coord ** 2)
+    sin_theta_coord = np.sqrt(1 - cos_theta_coord**2)
 
     cos_phi_coord = np.cos(phi_coord)
     sin_phi_coord = np.sin(phi_coord)
@@ -952,25 +970,31 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
 
     ephi_times_n = np.sum(np.multiply(ephi_coord, pre_vector), axis=0)
 
-    return r_coord, phi_coord, cos_theta_coord, \
-        er_times_n, etheta_times_n, ephi_times_n
+    return (
+        r_coord,
+        phi_coord,
+        cos_theta_coord,
+        er_times_n,
+        etheta_times_n,
+        ephi_times_n,
+    )
 
 
 def from_sphere_s_cartesian_to_j_spherical_1d(
-        r_s: float,
-        p_j: np.ndarray,
-        p_s: np.ndarray,
-        final_length: int,
-        pre_vector: np.ndarray
+    r_s: float,
+    p_j: np.ndarray,
+    p_s: np.ndarray,
+    final_length: int,
+    pre_vector: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
     writes them in the spherical coordinate system "j". The "j" has its
     center in a different point than the center of the coordinate system
     "s".
-    
+
     This one is for a slow routine.
-    
+
     Notes
     -----
     Input:
@@ -1020,7 +1044,7 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
     --------
     from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
     from_sphere_s_cartesian_to_j_spherical_2d
-    
+
     """
     # temp is an array of
     # 3 x quantity_theta_points x quantity_phi_points
@@ -1050,13 +1074,13 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
 
 
 def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
-        r_s: float,
-        p_j: np.ndarray,
-        p_s: np.ndarray,
-        final_length: int,
-        pre_vector: np.ndarray
+    r_s: float,
+    p_j: np.ndarray,
+    p_s: np.ndarray,
+    final_length: int,
+    pre_vector: np.ndarray,
 ) -> tuple[
-        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
+    np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray
 ]:
     """
     Given points in the cartesian coordinate system "s", this algorithm
@@ -1065,7 +1089,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
     obtained times the normal of the unitary sphere.
     The "j" has its center in a different point than the center of the
     coordinate system "s".
-    
+
     Notes
     -----
     Input:
@@ -1135,7 +1159,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
         canonical vector of the spherical coordinate phi in the points
         in the coordinate system s and the normal of a sphere.
         Length final_length.
-        
+
     """
     # temp is an array of
     # 3 x quantity_theta_points x quantity_phi_points
@@ -1164,7 +1188,7 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
 
     er_times_n = np.sum(np.multiply(erres / r_coord, pre_vector), axis=0)
 
-    sin_theta_coord = np.sqrt(1 - cos_theta_coord ** 2)
+    sin_theta_coord = np.sqrt(1 - cos_theta_coord**2)
 
     cos_phi_coord = np.cos(phi_coord)
     sin_phi_coord = np.sin(phi_coord)
@@ -1186,5 +1210,11 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
 
     ephi_times_n = np.sum(np.multiply(ephi_coord, pre_vector), axis=0)
 
-    return r_coord, phi_coord, cos_theta_coord, \
-        er_times_n, etheta_times_n, ephi_times_n
+    return (
+        r_coord,
+        phi_coord,
+        cos_theta_coord,
+        er_times_n,
+        etheta_times_n,
+        ephi_times_n,
+    )
