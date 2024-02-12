@@ -16,10 +16,10 @@ def sh_expansion_convergence_point_source_different_distances(
     """
     Maximum degree for representing a point source function on the
     surface of a sphere (given the source).
-    We want to know how much spherical harmonics are needed to aproximate the
-    function phi_e.
-    We do this for a set of point source, assuming a sphere of constant radius
-    and centered in the origin.
+    We want to know how much spherical harmonics are needed to
+    aproximate the function phi_e.
+    We do this for a set of point source, assuming a sphere of constant
+    radius and centered in the origin.
 
     Parameters
     ----------
@@ -32,8 +32,8 @@ def sh_expansion_convergence_point_source_different_distances(
     intensity : float
         > 0, parameter.
     distances : np.ndarray
-        of floats, distance of the center of the sphere to the point source,
-        1 dimension, each entry >= 0, max degree.
+        of floats, distance of the center of the sphere to the point
+        source, 1 dimension, each entry >= 0, max degree.
 
     Returns
     -------
