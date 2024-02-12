@@ -1,1 +1,2 @@
-notebook==7.0.6 # and its dependencies
+matplotlib-inline==0.1.6
+notebook==7.0.6
