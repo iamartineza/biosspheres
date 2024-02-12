@@ -354,7 +354,6 @@ def all_cross_1d_vs_2d() -> None:
 
 
 if __name__ == '__main__':
-    all_cross_1d_vs_2d()
     v_1d_vs_2d()
     v_js_from_the_other()
     k_1d_vs_2d()
@@ -362,3 +361,4 @@ if __name__ == '__main__':
     ka_1d_vs_2d()
     ka_js_from_the_others()
     calderon_1d_vs_2d()
+    all_cross_1d_vs_2d()
