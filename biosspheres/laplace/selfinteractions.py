@@ -440,6 +440,7 @@ def a_j_linear_operator(
         eles_1_eles = np.repeat(eles_1_eles, l2_1)
         l2_1 = np.repeat(l2_1, l2_1)
         num = num**2
+    pass
     
     def operator_j_times_vector(v) -> np.ndarray:
         x = np.empty(np.shape(v))
@@ -530,6 +531,7 @@ def a_0_a_n_sparse_matrices(
             columns_big_a_sparse[number:(number + num)] = (
                     num * s_minus_1_times_2 + rango)
             number += num
+            pass
     else:
         for s in np.arange(1, n + 1):
             s_minus_1 = s - 1
@@ -567,6 +569,7 @@ def a_0_a_n_sparse_matrices(
             columns_big_a_sparse[number:(number + num)] = (
                     num * s_minus_1_times_2 + rango)
             number += num
+            pass
     sparse_big_a_0 = sparse.bsr_array(
         (big_a_0, (rows_big_a_sparse, columns_big_a_sparse)))
     sparse_big_a_n = sparse.bsr_array(
@@ -634,6 +637,7 @@ def reduced_a_sparse_matrix(
             columns_big_a_sparse[number:(number + num)] = (
                     num * s_minus_1_times_2 + rango)
             number += num
+            pass
     else:
         for s in np.arange(1, n + 1):
             s_minus_1 = s - 1
@@ -671,6 +675,7 @@ def reduced_a_sparse_matrix(
             columns_big_a_sparse[number:(number + num)] = (
                     num * s_minus_1_times_2 + rango)
             number += num
+            pass
     sparse_reduced_big_a = sparse.bsr_array(
         (reduced_big_a, (rows_big_a_sparse, columns_big_a_sparse)))
     return sparse_reduced_big_a
