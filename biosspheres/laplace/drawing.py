@@ -69,7 +69,9 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                     if r_aux < rs[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num = num + 1
+                    pass
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
@@ -91,8 +93,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                       * (2 * num + 1)])
                             * legendre_function / eles_times_2_plus_1)
                         u = u + u_temp
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                        pass
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - ps[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -113,6 +115,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                        + 1)])
                         * legendre_function / eles_times_2_plus_1)
                     data_for_plotting[jj, ii] = u
+                pass
+            pass
         return x1, y1, data_for_plotting
     elif cut == 2:
         y = center[1]
@@ -130,7 +134,9 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                     if r_aux < rs[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num = num + 1
+                    pass
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
@@ -152,9 +158,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                       * (2 * num + 1)])
                             * legendre_function / eles_times_2_plus_1)
                         u = u + u_temp
-
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                        pass
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - ps[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -175,6 +180,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                        + 1)])
                         * legendre_function / eles_times_2_plus_1)
                     data_for_plotting[jj, ii] = u
+                pass
+            pass
         return x1, y1, data_for_plotting
     else:
         x = center[0]
@@ -192,7 +199,9 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                     if r_aux < rs[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num = num + 1
+                    pass
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
@@ -213,6 +222,7 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                       * (2 * num + 1)])
                             * legendre_function / eles_times_2_plus_1)
                         u += u_temp
+                        pass
                     data_for_plotting[jj, ii] = \
                         u + ex
                 else:
@@ -234,6 +244,8 @@ def draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
                                                      + 1)])
                         * legendre_function / eles_times_2_plus_1)
                     data_for_plotting[jj, ii] = u
+                pass
+            pass
         return x1, y1, data_for_plotting
 
 
@@ -307,7 +319,10 @@ def draw_cut_representation_formula_n_sphere(
                     if r_aux < radii[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num += 1
+                    pass
+                
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
                     u = 0.
@@ -359,12 +374,14 @@ def draw_cut_representation_formula_n_sphere(
                                 temp += (temp_minus_m + temp_plus_m) * \
                                     legendre_function[
                                         l_times_l_plus_l_divided_by_2[el] + m]
+                                pass
                             temp *= ratio ** ele_plus_1[el] \
                                 / eles_times_2_plus_1[el]
                             u_temp += temp
+                            pass
                         u += u_temp
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                        pass
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - positions[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -416,9 +433,13 @@ def draw_cut_representation_formula_n_sphere(
                             temp += (temp_minus_m + temp_plus_m) * \
                                 legendre_function[
                                     l_times_l_plus_l_divided_by_2[el] + m]
+                            pass
                         temp *= ratio ** el / eles_times_2_plus_1[el]
                         u_temp += temp
+                        pass
                     data_for_plotting[jj, ii] = u_temp
+                pass
+            pass
         return x1, y1, data_for_plotting
     elif cut == 2:
         y = center[1]
@@ -436,7 +457,9 @@ def draw_cut_representation_formula_n_sphere(
                     if r_aux < radii[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num += 1
+                    pass
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
@@ -491,12 +514,14 @@ def draw_cut_representation_formula_n_sphere(
                                    legendre_function[
                                        l_times_l_plus_l_divided_by_2[
                                            el] + m]
+                                pass
                             temp *= ratio ** ele_plus_1[el] \
                                 / eles_times_2_plus_1[el]
                             u_temp += temp
+                            pass
                         u += u_temp
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                        pass
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - positions[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -553,9 +578,13 @@ def draw_cut_representation_formula_n_sphere(
                             temp += (temp_minus_m + temp_plus_m) * \
                                    legendre_function[
                                        l_times_l_plus_l_divided_by_2[el] + m]
+                            pass
                         temp *= ratio ** el / eles_times_2_plus_1[el]
                         u_temp += temp
+                        pass
                     data_for_plotting[jj, ii] = u_temp
+                pass
+            pass
         return x1, y1, data_for_plotting
     elif cut == 1:
         x = center[0]
@@ -573,7 +602,9 @@ def draw_cut_representation_formula_n_sphere(
                     if r_aux < radii[num]:
                         sphere = num + 1
                         num = n
+                    pass
                     num += 1
+                    pass
 
                 if sphere == 0:
                     ex = exterior(np.asarray([x, y, z]))
@@ -631,12 +662,13 @@ def draw_cut_representation_formula_n_sphere(
                                        legendre_function[
                                            l_times_l_plus_l_divided_by_2[
                                                el] + m]
+                                pass
                             temp *= ratio ** ele_plus_1[el] \
                                 / eles_times_2_plus_1[el]
                             u_temp += temp
+                            pass
                         u += u_temp
-                    data_for_plotting[jj, ii] = \
-                        u + ex
+                    data_for_plotting[jj, ii] = u + ex
                 else:
                     aux = cart_vector - positions[sphere - 1]
                     r = np.linalg.norm(aux)
@@ -692,8 +724,11 @@ def draw_cut_representation_formula_n_sphere(
                             temp += (temp_minus_m + temp_plus_m) * \
                                 legendre_function[
                                        l_times_l_plus_l_divided_by_2[el] + m]
+                            pass
                         temp *= ratio ** el / eles_times_2_plus_1[el]
                         u_temp += temp
+                        pass
                     data_for_plotting[jj, ii] = u_temp
-
+                pass
+            pass
         return x1, y1, data_for_plotting
