@@ -28,6 +28,8 @@ def pes_y_kus(big_l: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
             pesykus[contador, 0] = el
             pesykus[contador, 1] = m
             contador = contador + 1
+            pass
+        pass
     # el * (el+1), without el = 0.
     p2_plus_p = pesykus[:, 0] * (pesykus[:, 0] + 1)
     p2_plus_p_plus_q = p2_plus_p + pesykus[:, 1]
@@ -136,4 +138,5 @@ def giro_sign(big_l: int) -> np.ndarray:
             np.fliplr(giro[
                       l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
                       l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
+        pass
     return giro@sign
