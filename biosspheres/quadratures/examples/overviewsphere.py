@@ -333,6 +333,8 @@ def overview_from_sphere_s_cartesian_to_j_spherical_2d() -> None:
                 cos_theta_coord[i, j],
                 pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
                 alpha=0.325)
+            pass
+        pass
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
@@ -375,6 +377,7 @@ def overview_from_sphere_s_cartesian_to_j_spherical_1d() -> None:
             cos_theta_coord[i],
             pivot='tail', length=r_coord[i], arrow_length_ratio=0.0625,
             alpha=0.325)
+        pass
     ax_1.set_xlabel('$x$')
     ax_1.set_ylabel('$y$')
     ax_1.set_zlabel('$z$')
@@ -388,7 +391,6 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
     radio_2 = 1.7
     p_1 = np.asarray([2., 1., 2.5])
     p_2 = -p_1
-    big_l = 1
     big_l_c = 10
     quantity_theta_points, quantity_phi_points, weights, pre_vector = (
         quadratures.gauss_legendre_trapezoidal_2d(big_l_c))
@@ -421,6 +423,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
                 cos_theta_coord[i, j],
                 pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
                 alpha=0.005)
+            pass
+        pass
     ax_1.plot_surface(
         r_coord * sin_theta * np.cos(phi_coord),
         r_coord * sin_theta * np.sin(phi_coord),
@@ -457,6 +461,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
                 cos_theta_coord[i, j],
                 pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
                 alpha=0.005)
+            pass
+        pass
     ax_1.plot_surface(
         r_coord * sin_theta * np.cos(phi_coord),
         r_coord * sin_theta * np.sin(phi_coord),
@@ -492,6 +498,8 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d() -> None:
                 cos_theta_coord[i, j],
                 pivot='tail', length=r_coord[i, j], arrow_length_ratio=0.0625,
                 alpha=0.005)
+            pass
+        pass
     ax_1.plot_surface(
         r_coord * sin_theta * np.cos(phi_coord),
         r_coord * sin_theta * np.sin(phi_coord),
