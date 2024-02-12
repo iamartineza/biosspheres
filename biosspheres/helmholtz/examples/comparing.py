@@ -404,7 +404,7 @@ def calderon_versions() -> None:
     
     k0 = 7.
     
-    big_l = 5
+    big_l = 2
     big_l_c = 25
     
     j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
@@ -432,11 +432,19 @@ def calderon_versions() -> None:
     a_21, a_12 = crossinteractions.a_0_sj_and_js_from_v_sj(
         big_l, data_v21, k0_ratio_j_l_1, k0_ratio_j_l_2, gs)
     
-    a_21_1d, a_12_1d = crossinteractions.a_0_sj_and_js_from_quadratures_1d(
-        big_l, k0, radio_1, radio_2, j_l_1, j_lp_1, r_coord_1tf, phi_coord_1tf,
-        cos_theta_coord_1tf, er_1tf, eth_1tf, ephi_1tf, final_length,
-        transform, gs)
+    data_v_sj, data_k_sj, data_ka_sj, data_w_sj = (
+        crossinteractions.v_k_w_0_sj_from_quadratures_1d(big_l, k0, radio_1,
+                                                         radio_2, j_l_1,
+                                                         j_lp_1, r_coord_1tf,
+                                                         phi_coord_1tf,
+                                                         cos_theta_coord_1tf,
+                                                         er_1tf, eth_1tf,
+                                                         ephi_1tf,
+                                                         final_length,
+                                                         transform))
     
+    a_21_1d, a_12_1d = crossinteractions.a_0_sj_and_js_from_v_k_w(
+        data_v_sj, data_k_sj, data_ka_sj, data_w_sj, gs)
     aux = np.abs(a_21 - a_21_1d)
     plt.figure()
     plt.imshow(aux, cmap='RdBu',
@@ -449,6 +457,42 @@ def calderon_versions() -> None:
                norm=colors.SymLogNorm(linthresh=10**(-8)))
     plt.colorbar()
     plt.title('Checking routine A_js indirect vs 1d.')
+    
+    quantity_theta_points, quantity_phi_points, weights, pre_vector_t_2d = \
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
+    (r_coord_1tf_2d, phi_coord_1tf_2d, cos_theta_coord_1tf_2d,
+     er_1tf_2d, eth_1tf_2d, ephi_1tf_2d) = (
+        quadratures.
+        from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
+            radio_2, p_1, p_2, quantity_theta_points, quantity_phi_points,
+            pre_vector_t_2d))
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
+    
+    data_v_sj, data_k_sj, data_ka_sj, data_w_sj = (
+        crossinteractions.v_k_w_0_sj_from_quadratures_2d(
+            big_l, k0, radio_1,
+            radio_2, j_l_1,
+            j_lp_1, r_coord_1tf_2d, phi_coord_1tf_2d, cos_theta_coord_1tf_2d,
+            er_1tf_2d, eth_1tf_2d, ephi_1tf_2d, weights,
+            pre_vector_t_2d[2, :, 0], quantity_theta_points,
+            quantity_phi_points, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q))
+    
+    a_21_2d, a_12_2d = crossinteractions.a_0_sj_and_js_from_v_k_w(
+        data_v_sj, data_k_sj, data_ka_sj, data_w_sj, gs)
+    aux = np.abs(a_21 - a_21_2d)
+    plt.figure()
+    plt.imshow(
+        aux, cmap='RdBu',
+        norm=colors.SymLogNorm(linthresh=10**(-8)))
+    plt.colorbar()
+    plt.title('Checking routine A_sj indirect vs 2d.')
+    aux = np.abs(a_12 - a_12_2d)
+    plt.figure()
+    plt.imshow(
+        aux, cmap='RdBu',
+        norm=colors.SymLogNorm(linthresh=10**(-8)))
+    plt.colorbar()
+    plt.title('Checking routine A_js indirect vs 2d.')
     plt.show()
     pass
 
