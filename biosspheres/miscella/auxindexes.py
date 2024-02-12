@@ -21,10 +21,10 @@ def pes_y_kus(big_l: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         dtype int, length (big_l+1) * big_l // 2.
 
     """
-    pesykus = np.zeros(((big_l+1) * big_l // 2, 2), dtype=int)
+    pesykus = np.zeros(((big_l + 1) * big_l // 2, 2), dtype=int)
     contador = 0
-    for el in np.arange(1, big_l+1):
-        for m in np.arange(1, el+1):
+    for el in np.arange(1, big_l + 1):
+        for m in np.arange(1, el + 1):
             pesykus[contador, 0] = el
             pesykus[contador, 1] = m
             contador = contador + 1
@@ -39,7 +39,7 @@ def pes_y_kus(big_l: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
 
 
 def rows_columns_big_a_sparse_1_sphere(
-        big_l: int, azimuthal: bool = False
+    big_l: int, azimuthal: bool = False
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Returns two helping arrays
@@ -69,7 +69,7 @@ def rows_columns_big_a_sparse_1_sphere(
     if azimuthal:
         num = big_l + 1
     else:
-        num = (big_l+1) ** 2
+        num = (big_l + 1) ** 2
     num_big_a = 4 * num
 
     rows_big_a_sparse = np.empty(num_big_a, dtype=int)
@@ -80,63 +80,75 @@ def rows_columns_big_a_sparse_1_sphere(
     number = 0
 
     s = 1
-    s_minus_1_times_2 = (s-1) * 2
+    s_minus_1_times_2 = (s - 1) * 2
 
     # V
-    rows_big_a_sparse[number:(number+num)] = rango + num * s_minus_1_times_2
-    columns_big_a_sparse[number:(number+num)] = \
+    rows_big_a_sparse[number : (number + num)] = rango + num * s_minus_1_times_2
+    columns_big_a_sparse[number : (number + num)] = (
         num * (1 + s_minus_1_times_2) + rango
+    )
     number = number + num
 
     # K
-    rows_big_a_sparse[number:(number+num)] = rango + num * s_minus_1_times_2
-    columns_big_a_sparse[number:(number+num)] = num * s_minus_1_times_2 + rango
+    rows_big_a_sparse[number : (number + num)] = rango + num * s_minus_1_times_2
+    columns_big_a_sparse[number : (number + num)] = (
+        num * s_minus_1_times_2 + rango
+    )
     number = number + num
 
     # Kast
-    rows_big_a_sparse[number:(number+num)] = \
-        rango + num * (s_minus_1_times_2+1)
-    columns_big_a_sparse[number:(number+num)] = \
-        num * (s_minus_1_times_2+1) + rango
+    rows_big_a_sparse[number : (number + num)] = rango + num * (
+        s_minus_1_times_2 + 1
+    )
+    columns_big_a_sparse[number : (number + num)] = (
+        num * (s_minus_1_times_2 + 1) + rango
+    )
     number = number + num
 
     # W
-    rows_big_a_sparse[number:(number+num)] = \
-        rango + num * (s_minus_1_times_2+1)
-    columns_big_a_sparse[number:(number+num)] = num * s_minus_1_times_2 + rango
+    rows_big_a_sparse[number : (number + num)] = rango + num * (
+        s_minus_1_times_2 + 1
+    )
+    columns_big_a_sparse[number : (number + num)] = (
+        num * s_minus_1_times_2 + rango
+    )
 
     return rows_big_a_sparse, columns_big_a_sparse
 
 
 def diagonal_l_sparse(big_l: int) -> scipy.sparse.dia_array:
-    eles = np.arange(0, big_l+1)
+    eles = np.arange(0, big_l + 1)
     eles_times_two_plus_one = eles * 2 + 1
     diagonal = np.repeat(eles, eles_times_two_plus_one)
-    num = (big_l + 1)**2
-    el_diagonal = \
-        scipy.sparse.dia_array((diagonal, np.array([0])), shape=(num, num))
+    num = (big_l + 1) ** 2
+    el_diagonal = scipy.sparse.dia_array(
+        (diagonal, np.array([0])), shape=(num, num)
+    )
     return el_diagonal
 
 
 def diagonal_l_dense(big_l: int) -> np.ndarray:
-    eles = np.arange(0, big_l+1)
+    eles = np.arange(0, big_l + 1)
     eles_times_two_plus_one = eles * 2 + 1
     diagonal = np.repeat(eles, eles_times_two_plus_one)
     return diagonal
 
 
 def giro_sign(big_l: int) -> np.ndarray:
-    num = (big_l + 1)**2
-    sign = np.diag(
-        (-np.ones(num))**(np.arange(0, num)))
+    num = (big_l + 1) ** 2
+    sign = np.diag((-np.ones(num)) ** (np.arange(0, num)))
     giro = np.eye(num)
     eles = np.arange(0, big_l + 1)
     l_square_plus_l = eles * (eles + 1)
     for el in np.arange(1, len(eles)):
-        giro[l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
-             l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1] = (
-            np.fliplr(giro[
-                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1,
-                      l_square_plus_l[el] - el:l_square_plus_l[el] + el + 1]))
+        giro[
+            l_square_plus_l[el] - el : l_square_plus_l[el] + el + 1,
+            l_square_plus_l[el] - el : l_square_plus_l[el] + el + 1,
+        ] = np.fliplr(
+            giro[
+                l_square_plus_l[el] - el : l_square_plus_l[el] + el + 1,
+                l_square_plus_l[el] - el : l_square_plus_l[el] + el + 1,
+            ]
+        )
         pass
-    return giro@sign
+    return giro @ sign
