@@ -112,6 +112,7 @@ def gauss_legendre_trapezoidal_2d(
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
+        pass
     
     del sen_theta
     del cos_phi
@@ -288,6 +289,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     for m in np.arange(1, big_l + 1):
         np.cos(m * phi, out=cos_m_phi[m - 1, :])
         np.sin(m * phi, out=sin_m_phi[m - 1, :])
+        pass
     del phi
     
     cos_theta = zeros
@@ -298,6 +300,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     for i in i_range:
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta[i], csphase=-1, cnorm=0)
+        pass
     
     spherical_harmonics = np.zeros((
         (big_l + 1)**2, quantity_theta_points, quantity_phi_points))
@@ -315,6 +318,8 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
                 legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j])
             spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
                 legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j])
+            pass
+        pass
     del legendre_functions
     del cos_m_phi
     del sin_m_phi
@@ -327,6 +332,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
+        pass
     
     del sen_theta
     del cos_phi
@@ -423,6 +429,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
+        pass
     del phi
     exp_neg = (-1.)**np.arange(1, big_l + 1) / exp_pos
     
@@ -434,6 +441,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     for i in i_range:
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta[i], csphase=-1, cnorm=1)
+        pass
     
     spherical_harmonics = np.zeros(
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points),
@@ -453,6 +461,8 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
                 legendre_functions[index_temp, i], exp_pos[index_temp_m, j])
             spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
                 legendre_functions[index_temp, i], exp_neg[index_temp_m, j])
+            pass
+        pass
     del legendre_functions
     del j_range
     
@@ -463,6 +473,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
         np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
         np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
+        pass
     
     del i_range
     del sen_theta
@@ -535,6 +546,7 @@ def real_spherical_harmonic_transform_1d(
     for m in np.arange(1, big_l + 1):
         np.cos(m * phi, out=cos_m_phi[m-1, :])
         np.sin(m * phi, out=sin_m_phi[m-1, :])
+        pass
     del phi
 
     legendre_functions = \
@@ -543,6 +555,7 @@ def real_spherical_harmonic_transform_1d(
     for i in np.arange(0, quantity_theta_points):
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta[i], csphase=-1, cnorm=0)
+        pass
 
     sin_theta = np.sqrt(1. - np.square(cos_theta))
 
@@ -567,6 +580,8 @@ def real_spherical_harmonic_transform_1d(
                 * np.repeat(cos_m_phi[m-1, :], quantity_theta_points)
             transform[el_square_plus_el - m, :] = temp \
                 * np.repeat(sin_m_phi[m - 1, :], quantity_theta_points)
+            pass
+        pass
 
     pre_vector = np.zeros((3, final_length))
 
@@ -644,6 +659,7 @@ def complex_spherical_harmonic_transform_1d(
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
+        pass
     del phi
     exp_neg = (-1.)**np.arange(1, big_l + 1)[:, np.newaxis] / exp_pos
     
@@ -653,6 +669,7 @@ def complex_spherical_harmonic_transform_1d(
     for i in np.arange(0, quantity_theta_points):
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta[i], csphase=-1, cnorm=1)
+        pass
     
     sin_theta = np.sqrt(1. - np.square(cos_theta))
     
@@ -678,6 +695,8 @@ def complex_spherical_harmonic_transform_1d(
                 np.conjugate(exp_pos[m - 1, :]), quantity_theta_points)
             transform[el_square_plus_el - m, :] = temp * np.repeat(
                 np.conjugate(exp_neg[m - 1, :]), quantity_theta_points)
+            pass
+        pass
     
     pre_vector = np.zeros((3, final_length))
     
