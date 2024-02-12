@@ -62,16 +62,19 @@ def sh_expansion_convergence_point_source_different_distances(
                 point_source(radius * pre_vector[:, ii], p_0, sigma_e)
             legendre_functions[:, ii] = \
                 pyshtools.legendre.PlON(max_eles[counter], pre_vector[2, ii])
+            pass
         for el in np.arange(0, max_eles[counter], 2):
             grid_expansion = np.sum(
                 legendre_functions[0:el + 1, :] * full_expansion[0:el + 1],
                 axis=0)
             l2_norm[el // 2 + np.mod(el, 2)] = np.sqrt(
                 np.sum((grid_analytic - grid_expansion)**2 * total_weights))
+            pass
         phi_norm = np.sqrt(np.sum(grid_analytic**2 * total_weights))
         plt.semilogy(np.arange(0, max_eles[counter], 2), l2_norm / phi_norm,
                      marker=markers[counter],
                      label='$d =$ ' + str(distances[counter]))
+        pass
     y_label = '$RE2(\\phi_{e_3},\\phi_{e_3}^L)_1$'
     plt.ylabel(y_label)
     plt.legend(edgecolor='white')
