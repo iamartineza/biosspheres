@@ -7,11 +7,11 @@ import biosspheres.miscella.mathfunctions as mathfunctions
 
 
 def sh_expansion_convergence_point_source_different_distances(
-        max_eles: np.ndarray = np.asarray([20, 46, 80, 172], dtype=int),
-        radius: float = 10.,
-        sigma_e: float = 5.,
-        intensity: float = 1.,
-        distances: np.ndarray = np.asarray([50., 20., 15, 12])
+    max_eles: np.ndarray = np.asarray([20, 46, 80, 172], dtype=int),
+    radius: float = 10.0,
+    sigma_e: float = 5.0,
+    intensity: float = 1.0,
+    distances: np.ndarray = np.asarray([50.0, 20.0, 15, 12]),
 ):
     """
     Maximum degree for representing a point source function on the
@@ -41,45 +41,58 @@ def sh_expansion_convergence_point_source_different_distances(
 
     """
     eles_c = 2 * max_eles
-    markers = ['p', '*', 'x', '.']
+    markers = ["p", "*", "x", "."]
     plt.figure()
-    plt.xlabel('$L$')
+    plt.xlabel("$L$")
     for counter in np.arange(0, len(max_eles)):
         num = max_eles[counter] + 1
-        p_0 = np.asarray([0., 0., distances[counter]])
+        p_0 = np.asarray([0.0, 0.0, distances[counter]])
         l2_norm = np.zeros(max_eles[counter] // 2)
-        final_length, total_weights, pre_vector = quadratures. \
-            gauss_legendre_trapezoidal_1d(eles_c[counter])
+        final_length, total_weights, pre_vector = (
+            quadratures.gauss_legendre_trapezoidal_1d(eles_c[counter])
+        )
         grid_analytic = np.zeros(final_length)
         legendre_functions = np.zeros((num, final_length))
         full_expansion = np.zeros((num, 1))
-        full_expansion[:, 0] = harmonicex. \
-            point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
-            max_eles[counter], radius, distances[counter], sigma_e,
-            intensity)
+        full_expansion[:, 0] = (
+            harmonicex.point_source_coefficients_dirichlet_expansion_azimuthal_symmetry(
+                max_eles[counter],
+                radius,
+                distances[counter],
+                sigma_e,
+                intensity,
+            )
+        )
         for ii in np.arange(0, final_length):
-            grid_analytic[ii] = mathfunctions. \
-                point_source(radius * pre_vector[:, ii], p_0, sigma_e)
-            legendre_functions[:, ii] = \
-                pyshtools.legendre.PlON(max_eles[counter], pre_vector[2, ii])
+            grid_analytic[ii] = mathfunctions.point_source(
+                radius * pre_vector[:, ii], p_0, sigma_e
+            )
+            legendre_functions[:, ii] = pyshtools.legendre.PlON(
+                max_eles[counter], pre_vector[2, ii]
+            )
             pass
         for el in np.arange(0, max_eles[counter], 2):
             grid_expansion = np.sum(
-                legendre_functions[0:el + 1, :] * full_expansion[0:el + 1],
-                axis=0)
+                legendre_functions[0 : el + 1, :] * full_expansion[0 : el + 1],
+                axis=0,
+            )
             l2_norm[el // 2 + np.mod(el, 2)] = np.sqrt(
-                np.sum((grid_analytic - grid_expansion)**2 * total_weights))
+                np.sum((grid_analytic - grid_expansion) ** 2 * total_weights)
+            )
             pass
         phi_norm = np.sqrt(np.sum(grid_analytic**2 * total_weights))
-        plt.semilogy(np.arange(0, max_eles[counter], 2), l2_norm / phi_norm,
-                     marker=markers[counter],
-                     label='$d =$ ' + str(distances[counter]))
+        plt.semilogy(
+            np.arange(0, max_eles[counter], 2),
+            l2_norm / phi_norm,
+            marker=markers[counter],
+            label="$d =$ " + str(distances[counter]),
+        )
         pass
-    y_label = '$RE2(\\phi_{e_3},\\phi_{e_3}^L)_1$'
+    y_label = "$RE2(\\phi_{e_3},\\phi_{e_3}^L)_1$"
     plt.ylabel(y_label)
-    plt.legend(edgecolor='white')
+    plt.legend(edgecolor="white")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sh_expansion_convergence_point_source_different_distances()
     plt.show()
