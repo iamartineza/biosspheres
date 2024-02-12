@@ -6,6 +6,40 @@ import biosspheres.quadratures.sphere as quadratures
 import biosspheres.miscella.auxindexes as auxindexes
 
 
+def sj_pre_single_layer_semi_analytic_v1d(
+        big_l: int,
+        k0: float,
+        r_s: float,
+        p_j: np.ndarray,
+        p_s: np.ndarray,
+        pre_vector: np.ndarray,
+        final_length: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    r_coord, phi_coord, cos_theta_coord = (
+        quadratures.from_sphere_s_cartesian_to_j_spherical_1d(
+            r_s, p_j, p_s, final_length, pre_vector))
+    
+    legendre_functions = np.empty(
+        ((big_l + 1) * (big_l + 2) // 2, final_length))
+    h_l = np.empty((final_length, big_l + 1), dtype=np.complex128)
+    
+    argument = k0 * r_coord
+    eles = np.arange(0, big_l + 1)
+    
+    for i in np.arange(0, final_length):
+        h_l[i, :] = (scipy.special.spherical_jn(eles, argument[i])
+                     + 1j * scipy.special.spherical_yn(eles, argument[i]))
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta_coord[i], csphase=-1, cnorm=1)
+    del argument
+    del eles
+    
+    exp_pos = np.empty((big_l, final_length), dtype=np.complex128)
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :])
+    return h_l, legendre_functions, exp_pos
+
+
 def v_0_sj_semi_analytic_v1d(
         big_l: int,
         k0: float,
@@ -1988,7 +2022,7 @@ def a_0_sj_and_js_from_v_sj(
     return a_sj, a_js
 
 
-def a_0_sj_and_js_from_quadratures_1d(
+def v_k_w_0_sj_from_quadratures_1d(
         big_l: int,
         k0: float,
         r_j: float,
@@ -2002,25 +2036,16 @@ def a_0_sj_and_js_from_quadratures_1d(
         etheta_times_n: np.ndarray,
         ephi_times_n: np.ndarray,
         final_length: int,
-        transform: np.ndarray,
-        giro_sign: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+        transform: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
-    Returns two numpy arrays that represents a numerical approximation
-    of two matrices formed by the following boundary integral operators:
-    a_sj = [-K_{s,j}^0 , V_{s,j}^0 ]
-           [ W_{s,j}^0 , K_{s,j}^{*0}]
-    a_js = [-K_{j,s}^0 , V_{j,s}^0 ]
-           [ W_{j,s}^0 , K_{j,s}^{*0}]
-    with Helmholtz kernel evaluated and tested with complex spherical
-    harmonics.
+
+    Notes
+    -----
     In this routine the quadrature points NEED to be ordered in an array
     of one dimension.
     It is a SLOW routine, because it does not use any symmetry or
     properties of the spherical harmonics.
-
-    Notes
-    -----
     
     Parameters
     ----------
@@ -2081,17 +2106,17 @@ def a_0_sj_and_js_from_quadratures_1d(
     transform : np.ndarray
         of complex numbers for doing the complex spherical harmonic
         transform. Shape ((big_l+1)**2, final_length)
-    giro_sign : np.ndarray
-        of floats and with only zeros, ones or minus ones. Come from the
-        function giro_sign from the module
-        biosspheres.miscella.auxindexes.
     
     Returns
     -------
-    a_sj : numpy array
-        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
-    a_js : numpy array
-        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+    data_v_sj : numpy array
+        Shape ((big_l+1)**2, (big_l+1)**2).
+    data_k_sj : numpy array
+        Shape ((big_l+1)**2, (big_l+1)**2).
+    data_ka_sj : numpy array
+        Shape ((big_l+1)**2, (big_l+1)**2).
+    data_w_sj : numpy array
+        Shape ((big_l+1)**2, (big_l+1)**2).
 
     See Also
     --------
@@ -2099,8 +2124,6 @@ def a_0_sj_and_js_from_quadratures_1d(
     k_0_sj_semi_analytic_v1d
     ka_0_sj_semi_analytic_recurrence_v1d
     w_0_sj_semi_analytic_recurrence_v1d
-    v_0_js_from_v_0_sj
-    ka_0_sj_from_k_js
 
     """
     argument = k0 * r_coord
@@ -2243,6 +2266,280 @@ def a_0_sj_and_js_from_quadratures_1d(
     data_ka_sj[:] = -1j * k0 * (r_j * r_s)**2 * data_ka_sj[:]
     data_w_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_w_sj[:]
     
+    return data_v_sj, data_k_sj, data_ka_sj, data_w_sj
+
+
+def v_k_w_0_sj_from_quadratures_2d(
+        big_l: int,
+        k0: float,
+        r_j: float,
+        r_s: float,
+        j_l_j: np.ndarray,
+        j_lp_j: np.ndarray,
+        r_coord: np.ndarray,
+        phi_coord: np.ndarray,
+        cos_theta_coord: np.ndarray,
+        er_times_n: np.ndarray,
+        etheta_times_n: np.ndarray,
+        ephi_times_n: np.ndarray,
+        weights: np.ndarray,
+        zeros: np.ndarray,
+        quantity_theta_points: int,
+        quantity_phi_points: float,
+        pesykus: np.ndarray,
+        p2_plus_p_plus_q: np.ndarray,
+        p2_plus_p_minus_q: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    argument = k0 * r_coord
+    
+    num = big_l + 1
+    eles = np.arange(0, num)
+    
+    legendre_functions = np.empty((num * (big_l + 2) // 2,
+                                   quantity_theta_points, quantity_phi_points))
+    h_l = np.empty((quantity_theta_points, quantity_phi_points, num),
+                   dtype=np.complex128)
+    h_l_r = np.empty((quantity_theta_points, quantity_phi_points, num),
+                     dtype=np.complex128)
+    h_lp_k = np.empty((quantity_theta_points, quantity_phi_points, num),
+                      dtype=np.complex128)
+    j_range = np.arange(0, quantity_phi_points)
+    for i in np.arange(0, quantity_theta_points):
+        for j in j_range:
+            h_l[i, j, :] = (scipy.special.spherical_jn(eles, argument[i, j])
+                            + 1j * scipy.special.spherical_yn(eles,
+                                                              argument[i, j]))
+            h_lp_k[i, j, :] = (scipy.special.spherical_jn(
+                eles, argument[i, j], derivative=True)
+                               + 1j * scipy.special.spherical_yn(
+                        eles, argument[i, j], derivative=True))
+            legendre_functions[:, i, j] = \
+                pyshtools.legendre.PlmON(big_l, cos_theta_coord[i, j],
+                                         csphase=-1, cnorm=1)
+    h_l_r[:] = h_l[:] / r_coord[:, :, np.newaxis]
+    h_lp_k[:] = k0 * h_lp_k[:]
+    sin_theta_coord = np.sqrt(1. - cos_theta_coord**2)
+    
+    exp_pos = np.empty((big_l, quantity_theta_points, quantity_phi_points),
+                       dtype=np.complex128)
+    for m in np.arange(1, big_l + 1):
+        np.exp(1j * m * phi_coord, out=exp_pos[m - 1, :, :])
+    
+    el_plus_1_square = (big_l + 1)**2
+    data_v_sj = np.empty(
+        (el_plus_1_square, el_plus_1_square), dtype=np.complex128)
+    data_k_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                         dtype=np.complex128)
+    data_ka_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                          dtype=np.complex128)
+    data_w_sj = np.empty((el_plus_1_square, el_plus_1_square),
+                         dtype=np.complex128)
+    
+    eles_plus_1 = eles + 1
+    l_square_plus_l = eles_plus_1 * eles
+    l_times_l_plus_l_divided_by_2 = l_square_plus_l // 2
+    
+    leg_aux = np.zeros_like(sin_theta_coord)
+    index = (sin_theta_coord > 0)
+    
+    coeff = np.empty((2, big_l + 1, big_l + 1), dtype=np.complex128)
+    
+    d_legendre_functions = np.zeros_like(r_coord)
+    phi_part = np.zeros_like(h_l[:, :, 0])
+    r_part = np.zeros_like(phi_part)
+    theta_part = np.zeros_like(d_legendre_functions)
+    
+    temp_l_m = np.empty_like(h_l_r[:, :, 0])
+    temp_l_m_n = np.empty_like(temp_l_m)
+    for el in eles:
+        temp_l_m[:] = (
+                h_l[:, :, el]
+                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :])
+        coeff[:] = pyshtools.expand.SHExpandGLQC(
+            temp_l_m, weights, zeros, norm=4, csphase=-1, lmax_calc=big_l)
+        data_v_sj[p2_plus_p_plus_q, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+        data_v_sj[p2_plus_p_minus_q, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+        data_v_sj[l_square_plus_l, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[0, eles, 0]
+        data_k_sj[p2_plus_p_plus_q, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+        data_k_sj[p2_plus_p_minus_q, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+        data_k_sj[l_square_plus_l, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[0, eles, 0]
+        if el > 0:
+            d_legendre_functions[:] = (
+                    np.sqrt((el + 1) * el) *
+                    legendre_functions[l_times_l_plus_l_divided_by_2[el] + 1,
+                    :, :])
+        temp_l_m_n[:] = (h_lp_k[:, :, el] * (
+                er_times_n
+                * legendre_functions[l_times_l_plus_l_divided_by_2[el], :, :])
+                         + h_l_r[:, :, el] * (d_legendre_functions
+                                              * etheta_times_n))
+        coeff[:] = pyshtools.expand.SHExpandGLQC(
+            temp_l_m_n, weights, zeros, norm=4, csphase=-1, lmax_calc=big_l)
+        data_ka_sj[p2_plus_p_plus_q, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+        data_ka_sj[p2_plus_p_minus_q, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+        data_ka_sj[l_square_plus_l, l_square_plus_l[el]] = \
+            j_l_j[el] * coeff[0, eles, 0]
+        data_w_sj[p2_plus_p_plus_q, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+        data_w_sj[p2_plus_p_minus_q, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+        data_w_sj[l_square_plus_l, l_square_plus_l[el]] = \
+            j_lp_j[el] * coeff[0, eles, 0]
+        
+        for m in np.arange(1, el + 1):
+            temp_l_m[:] = (
+                    h_l[:, :, el]
+                    * legendre_functions[
+                      l_times_l_plus_l_divided_by_2[el] + m, :, :])
+            coeff[:] = pyshtools.expand.SHExpandGLQC(
+                temp_l_m * exp_pos[m - 1, :, :], weights, zeros, norm=4,
+                csphase=-1, lmax_calc=big_l)
+            data_v_sj[p2_plus_p_plus_q, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_v_sj[p2_plus_p_minus_q, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_v_sj[l_square_plus_l, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[0, eles, 0]
+            data_k_sj[p2_plus_p_plus_q, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_k_sj[p2_plus_p_minus_q, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_k_sj[l_square_plus_l, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[0, eles, 0]
+            
+            coeff[:] = pyshtools.expand.SHExpandGLQC(
+                (-1)**m * (temp_l_m / exp_pos[m - 1, :, :]), weights, zeros,
+                norm=4, csphase=-1, lmax_calc=big_l)
+            data_v_sj[p2_plus_p_plus_q, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_v_sj[p2_plus_p_minus_q, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_v_sj[l_square_plus_l, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[0, eles, 0]
+            data_k_sj[p2_plus_p_plus_q, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_k_sj[p2_plus_p_minus_q, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_k_sj[l_square_plus_l, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[0, eles, 0]
+            if m < el:
+                d_legendre_functions[:] = \
+                    (legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                        + m - 1, :, :]
+                     * -np.sqrt((el - m + 1) * (el + m))
+                     + legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                          + m + 1, :, :]
+                     * np.sqrt((el - m) * (el + m + 1))) * 0.5
+            else:  # el = m
+                d_legendre_functions[:] = (
+                        legendre_functions[l_times_l_plus_l_divided_by_2[el]
+                                           + m - 1, :, :] * -np.sqrt(el / 2.))
+            leg_aux[index] = (
+                    m
+                    * legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
+            index]
+                    / sin_theta_coord[index])
+            phi_part[:] = 1j * (leg_aux * ephi_times_n)
+            r_part[:] = h_lp_k[:, :, el] * (
+                    legendre_functions[l_times_l_plus_l_divided_by_2[el] + m,
+                    :, :]
+                    * er_times_n)
+            theta_part[:] = d_legendre_functions * etheta_times_n
+            
+            temp_l_m_n[:] = exp_pos[m - 1, :, :] * (
+                    r_part + (theta_part + phi_part) * h_l_r[:, :, el])
+            coeff[:] = pyshtools.expand.SHExpandGLQC(
+                temp_l_m_n, weights, zeros, norm=4, csphase=-1,
+                lmax_calc=big_l)
+            data_ka_sj[p2_plus_p_plus_q, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_ka_sj[p2_plus_p_minus_q, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_ka_sj[l_square_plus_l, l_square_plus_l[el] + m] = \
+                j_l_j[el] * coeff[0, eles, 0]
+            data_w_sj[p2_plus_p_plus_q, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_w_sj[p2_plus_p_minus_q, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_w_sj[l_square_plus_l, l_square_plus_l[el] + m] = \
+                j_lp_j[el] * coeff[0, eles, 0]
+            
+            temp_l_m_n[:] = (-1)**m * ((r_part + (theta_part - phi_part)
+                                        * h_l_r[:, :, el])
+                                       / exp_pos[m - 1, :, :])
+            coeff[:] = pyshtools.expand.SHExpandGLQC(
+                temp_l_m_n, weights, zeros, norm=4, csphase=-1,
+                lmax_calc=big_l)
+            data_ka_sj[p2_plus_p_plus_q, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_ka_sj[p2_plus_p_minus_q, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_ka_sj[l_square_plus_l, l_square_plus_l[el] - m] = \
+                j_l_j[el] * coeff[0, eles, 0]
+            data_w_sj[p2_plus_p_plus_q, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[0, pesykus[:, 0], pesykus[:, 1]]
+            data_w_sj[p2_plus_p_minus_q, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[1, pesykus[:, 0], pesykus[:, 1]]
+            data_w_sj[l_square_plus_l, l_square_plus_l[el] - m] = \
+                j_lp_j[el] * coeff[0, eles, 0]
+    data_v_sj[:] = 1j * k0 * (r_j * r_s)**2 * data_v_sj[:]
+    data_k_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_k_sj[:]
+    data_ka_sj[:] = -1j * k0 * (r_j * r_s)**2 * data_ka_sj[:]
+    data_w_sj[:] = -1j * (k0 * r_j * r_s)**2 * data_w_sj[:]
+    return data_v_sj, data_k_sj, data_ka_sj, data_w_sj
+
+
+def a_0_sj_and_js_from_v_k_w(
+        data_v_sj: np.ndarray,
+        data_k_sj: np.ndarray,
+        data_ka_sj: np.ndarray,
+        data_w_sj: np.ndarray,
+        giro_sign: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Returns two numpy arrays that represents a numerical approximation
+    of two matrices formed by the following boundary integral operators:
+    a_sj = [-K_{s,j}^0 , V_{s,j}^0 ]
+           [ W_{s,j}^0 , K_{s,j}^{*0}]
+    a_js = [-K_{j,s}^0 , V_{j,s}^0 ]
+           [ W_{j,s}^0 , K_{j,s}^{*0}]
+    with Helmholtz kernel evaluated and tested with complex spherical
+    harmonics.
+    These are the Calderon operators for the spheres s and j.
+    
+    Notes
+    -----
+
+    Parameters
+    ----------
+    data_v_sj : numpy array
+        of complex values.
+    data_k_sj : numpy array
+        of complex values.
+    data_ka_sj : numpy array
+        of complex values.
+    data_w_sj : numpy array
+        of complex values.
+    giro_sign: np.ndarray
+        of floats.
+
+    Returns
+    -------
+    a_sj : numpy array
+        Calderon operator s j.
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+    a_js : numpy array
+        Calderon operator j s.
+        Shape (2 * (big_l+1)**2, 2 * (big_l+1)**2).
+    """
     data_v_js = giro_sign @ data_v_sj.T @ giro_sign
     data_k_js = giro_sign @ data_ka_sj.T @ giro_sign
     data_ka_js = giro_sign @ data_k_sj.T @ giro_sign
