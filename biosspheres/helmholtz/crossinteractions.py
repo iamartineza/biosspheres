@@ -2891,3 +2891,390 @@ def a_0_sj_and_js_from_v_k_w(
         axis=0,
     )
     return a_sj, a_js
+
+
+def all_cross_interactions_n_spheres_from_v_1d(
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    k0: float,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
+    j_l: np.ndarray,
+    j_lp: np.ndarray,
+) -> np.ndarray:
+    big_l_plus_1_square = (big_l + 1) ** 2
+    num = 2 * n * big_l_plus_1_square
+    almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
+
+    final_length, pre_vector_t, transform = (
+        quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
+    )
+    giro_sign = auxindexes.giro_sign(big_l)
+
+    r_coord = np.empty(final_length)
+    phi_coord = np.empty_like(r_coord)
+    cos_theta_coord = np.empty_like(r_coord)
+
+    k0_ratio_j_l_j = np.empty_like(j_l[0, :])
+    k0_ratio_j_l_s = np.empty_like(k0_ratio_j_l_j)
+
+    v_sj = np.empty(
+        (big_l_plus_1_square, big_l_plus_1_square), dtype=np.complex128
+    )
+
+    a_sj = np.empty(
+        (2 * big_l_plus_1_square, 2 * big_l_plus_1_square), dtype=np.complex128
+    )
+    a_js = np.empty_like(a_sj)
+    for j in np.arange(1, n + 1):
+        j_minus_1 = j - 1
+        k0_ratio_j_l_j[:] = k0 * (j_lp[j_minus_1, :] / j_l[j_minus_1, :])
+        for s in np.arange(j + 1, n + 1):
+            s_minus_1 = s - 1
+            k0_ratio_j_l_s[:] = k0 * (j_lp[s_minus_1, :] / j_l[s_minus_1, :])
+            r_coord[:], phi_coord[:], cos_theta_coord[:] = (
+                quadratures.from_sphere_s_cartesian_to_j_spherical_1d(
+                    radii[s_minus_1],
+                    center_positions[j_minus_1],
+                    center_positions[s_minus_1],
+                    final_length,
+                    pre_vector_t,
+                )
+            )
+            v_sj[:] = v_0_sj_semi_analytic_v1d(
+                big_l,
+                k0,
+                radii[j_minus_1],
+                radii[s_minus_1],
+                j_l[j_minus_1, :],
+                r_coord,
+                phi_coord,
+                cos_theta_coord,
+                final_length,
+                transform,
+            )
+            a_sj[:], a_js[:] = a_0_sj_and_js_from_v_sj(
+                big_l, v_sj, k0_ratio_j_l_j, k0_ratio_j_l_s, giro_sign
+            )
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * j_minus_1), (
+                2 * big_l_plus_1_square * s_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_js
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * s_minus_1), (
+                2 * big_l_plus_1_square * j_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_sj
+            pass
+        pass
+    return almost_big_a_0
+
+
+def all_cross_interactions_n_spheres_from_v_2d(
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    k0: float,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
+    j_l: np.ndarray,
+    j_lp: np.ndarray,
+) -> np.ndarray:
+    big_l_plus_1_square = (big_l + 1) ** 2
+    num = 2 * n * big_l_plus_1_square
+    almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
+
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
+
+    quantity_theta_points, quantity_phi_points, weights, pre_vector_t = (
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
+    )
+    giro_sign = auxindexes.giro_sign(big_l)
+
+    r_coord = np.empty((quantity_theta_points, quantity_phi_points))
+    phi_coord = np.empty_like(r_coord)
+    cos_theta_coord = np.empty_like(r_coord)
+
+    k0_ratio_j_l_j = np.empty_like(j_l[0, :])
+    k0_ratio_j_l_s = np.empty_like(k0_ratio_j_l_j)
+
+    v_sj = np.empty(
+        (big_l_plus_1_square, big_l_plus_1_square), dtype=np.complex128
+    )
+
+    a_sj = np.empty(
+        (2 * big_l_plus_1_square, 2 * big_l_plus_1_square), dtype=np.complex128
+    )
+    a_js = np.empty_like(a_sj)
+    for j in np.arange(1, n + 1):
+        j_minus_1 = j - 1
+        k0_ratio_j_l_j[:] = k0 * (j_lp[j_minus_1, :] / j_l[j_minus_1, :])
+        for s in np.arange(j + 1, n + 1):
+            s_minus_1 = s - 1
+            k0_ratio_j_l_s[:] = k0 * (j_lp[s_minus_1, :] / j_l[s_minus_1, :])
+            r_coord[:], phi_coord[:], cos_theta_coord[:] = (
+                quadratures.from_sphere_s_cartesian_to_j_spherical_2d(
+                    radii[s_minus_1],
+                    center_positions[j_minus_1],
+                    center_positions[s_minus_1],
+                    quantity_theta_points,
+                    quantity_phi_points,
+                    pre_vector_t,
+                )
+            )
+            v_sj[:] = v_0_sj_semi_analytic_v2d(
+                big_l,
+                k0,
+                radii[j_minus_1],
+                radii[s_minus_1],
+                j_l[j_minus_1, :],
+                r_coord,
+                phi_coord,
+                cos_theta_coord,
+                weights,
+                pre_vector_t[2, :, 0],
+                quantity_theta_points,
+                quantity_phi_points,
+                pesykus,
+                p2_plus_p_plus_q,
+                p2_plus_p_minus_q,
+            )
+            a_sj[:], a_js[:] = a_0_sj_and_js_from_v_sj(
+                big_l, v_sj, k0_ratio_j_l_j, k0_ratio_j_l_s, giro_sign
+            )
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * j_minus_1), (
+                2 * big_l_plus_1_square * s_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_js
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * s_minus_1), (
+                2 * big_l_plus_1_square * j_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_sj
+            pass
+        pass
+    return almost_big_a_0
+
+
+def all_cross_interactions_n_spheres_1d(
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    k0: float,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
+) -> np.ndarray:
+    big_l_plus_1_square = (big_l + 1) ** 2
+    num = 2 * n * big_l_plus_1_square
+    almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
+
+    eles = np.arange(0, big_l + 1)
+
+    final_length, pre_vector_t, transform = (
+        quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
+    )
+    giro_sign = auxindexes.giro_sign(big_l)
+
+    r_coord = np.empty(final_length)
+    phi_coord = np.empty_like(r_coord)
+    cos_theta_coord = np.empty_like(r_coord)
+    er = np.empty_like(r_coord)
+    eth = np.empty_like(r_coord)
+    ephi = np.empty_like(r_coord)
+
+    j_l_j = np.empty((big_l + 1))
+    j_lp_j = np.empty((big_l + 1))
+
+    v_sj = np.empty(
+        (big_l_plus_1_square, big_l_plus_1_square), dtype=np.complex128
+    )
+
+    k_sj = np.empty_like(v_sj)
+    ka_sj = np.empty_like(v_sj)
+    w_sj = np.empty_like(v_sj)
+
+    a_sj = np.empty(
+        (2 * big_l_plus_1_square, 2 * big_l_plus_1_square), dtype=np.complex128
+    )
+    a_js = np.empty_like(a_sj)
+    for j in np.arange(1, n + 1):
+        j_minus_1 = j - 1
+        j_l_j[:] = scipy.special.spherical_jn(eles, radii[j_minus_1] * k0)
+        j_lp_j[:] = scipy.special.spherical_jn(
+            eles, radii[j_minus_1] * k0, derivative=True
+        )
+        for s in np.arange(j + 1, n + 1):
+            s_minus_1 = s - 1
+            (
+                r_coord[:],
+                phi_coord[:],
+                cos_theta_coord[:],
+                er[:],
+                eth[:],
+                ephi[:],
+            ) = quadratures.from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
+                radii[s_minus_1],
+                center_positions[j_minus_1],
+                center_positions[s_minus_1],
+                final_length,
+                pre_vector_t,
+            )
+            v_sj[:], k_sj[:], ka_sj[:], w_sj[:] = (
+                v_k_w_0_sj_from_quadratures_1d(
+                    big_l,
+                    k0,
+                    radii[j_minus_1],
+                    radii[s_minus_1],
+                    j_l_j,
+                    j_lp_j,
+                    r_coord,
+                    phi_coord,
+                    cos_theta_coord,
+                    er,
+                    eth,
+                    ephi,
+                    final_length,
+                    transform,
+                )
+            )
+            a_sj[:], a_js[:] = a_0_sj_and_js_from_v_k_w(
+                v_sj, k_sj, ka_sj, w_sj, giro_sign
+            )
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * j_minus_1), (
+                2 * big_l_plus_1_square * s_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_js
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * s_minus_1), (
+                2 * big_l_plus_1_square * j_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_sj
+            pass
+        pass
+    return almost_big_a_0
+
+
+def all_cross_interactions_n_spheres_2d(
+    n: int,
+    big_l: int,
+    big_l_c: int,
+    k0: float,
+    radii: np.ndarray,
+    center_positions: list[np.ndarray],
+) -> np.ndarray:
+    big_l_plus_1_square = (big_l + 1) ** 2
+    num = 2 * n * big_l_plus_1_square
+    almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
+
+    eles = np.arange(0, big_l + 1)
+
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
+    quantity_theta_points, quantity_phi_points, weights, pre_vector_t = (
+        quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
+    )
+    giro_sign = auxindexes.giro_sign(big_l)
+
+    r_coord = np.empty((quantity_theta_points, quantity_phi_points))
+    phi_coord = np.empty_like(r_coord)
+    cos_theta_coord = np.empty_like(r_coord)
+    er = np.empty_like(r_coord)
+    eth = np.empty_like(r_coord)
+    ephi = np.empty_like(r_coord)
+
+    j_l_j = np.empty((big_l + 1))
+    j_lp_j = np.empty((big_l + 1))
+
+    v_sj = np.empty(
+        (big_l_plus_1_square, big_l_plus_1_square), dtype=np.complex128
+    )
+
+    k_sj = np.empty_like(v_sj)
+    ka_sj = np.empty_like(v_sj)
+    w_sj = np.empty_like(v_sj)
+
+    a_sj = np.empty(
+        (2 * big_l_plus_1_square, 2 * big_l_plus_1_square), dtype=np.complex128
+    )
+    a_js = np.empty_like(a_sj)
+    for j in np.arange(1, n + 1):
+        j_minus_1 = j - 1
+        j_l_j[:] = scipy.special.spherical_jn(eles, radii[j_minus_1] * k0)
+        j_lp_j[:] = scipy.special.spherical_jn(
+            eles, radii[j_minus_1] * k0, derivative=True
+        )
+        for s in np.arange(j + 1, n + 1):
+            s_minus_1 = s - 1
+            (
+                r_coord[:],
+                phi_coord[:],
+                cos_theta_coord[:],
+                er[:],
+                eth[:],
+                ephi[:],
+            ) = quadratures.from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
+                radii[s_minus_1],
+                center_positions[j_minus_1],
+                center_positions[s_minus_1],
+                quantity_theta_points,
+                quantity_phi_points,
+                pre_vector_t,
+            )
+            v_sj[:], k_sj[:], ka_sj[:], w_sj[:] = (
+                v_k_w_0_sj_from_quadratures_2d(
+                    big_l,
+                    k0,
+                    radii[j_minus_1],
+                    radii[s_minus_1],
+                    j_l_j,
+                    j_lp_j,
+                    r_coord,
+                    phi_coord,
+                    cos_theta_coord,
+                    er,
+                    eth,
+                    ephi,
+                    weights,
+                    pre_vector_t[2, :, 0],
+                    quantity_theta_points,
+                    quantity_phi_points,
+                    pesykus,
+                    p2_plus_p_plus_q,
+                    p2_plus_p_minus_q,
+                )
+            )
+            a_sj[:], a_js[:] = a_0_sj_and_js_from_v_k_w(
+                v_sj, k_sj, ka_sj, w_sj, giro_sign
+            )
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * j_minus_1), (
+                2 * big_l_plus_1_square * s_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_js
+            rows_sum, columns_sum = (2 * big_l_plus_1_square * s_minus_1), (
+                2 * big_l_plus_1_square * j_minus_1
+            )
+            almost_big_a_0[
+                rows_sum : (rows_sum + 2 * big_l_plus_1_square),
+                columns_sum : (columns_sum + 2 * big_l_plus_1_square),
+            ] = a_sj
+            pass
+        pass
+    return almost_big_a_0
