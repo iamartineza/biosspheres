@@ -15,10 +15,26 @@ def overview_gauss_legendre_trapezoidal_2d() -> None:
         quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
     )
 
+    print("big_l_c : ", big_l_c)
+    print(
+        "Quantity of points for the quadrature in the theta variable: ",
+        quantity_theta_points,
+    )
+    print(
+        "Quantity of points for the quadrature in the phi variable:   ",
+        quantity_phi_points,
+    )
+
+    print("Gauss-Legendre Weights:\n", weights)
+
     vector = pre_vector
     fig = plt.figure()
     ax_1 = fig.add_subplot(111, projection="3d")
-    ax_1.scatter3D(vector[0, :, :], vector[1, :, :], vector[2, :, :])
+    ax_1.scatter3D(
+        vector[0, :, :],
+        vector[1, :, :],
+        vector[2, :, :],
+    )
     ax_1.set_xlabel("$x$")
     ax_1.set_ylabel("$y$")
     ax_1.set_zlabel("$z$")
@@ -32,10 +48,16 @@ def overview_gauss_legendre_trapezoidal_1d() -> None:
     final_length, total_weights, pre_vector = (
         quadratures.gauss_legendre_trapezoidal_1d(big_l_c)
     )
+    print("big_l_c : ", big_l_c)
+    print("Quantity of points for the quadrature: ", final_length)
     vector = pre_vector
     fig = plt.figure()
     ax_1 = fig.add_subplot(111, projection="3d")
-    ax_1.scatter3D(vector[0, :], vector[1, :], vector[2, :])
+    ax_1.scatter3D(
+        vector[0, :],
+        vector[1, :],
+        vector[2, :],
+    )
     ax_1.set_xlabel("$x$")
     ax_1.set_ylabel("$y$")
     ax_1.set_zlabel("$z$")
@@ -60,7 +82,11 @@ def overview_gauss_legendre_trapezoidal_real_sh_mapping_2d() -> None:
     vector = pre_vector
     fig = plt.figure()
     ax_1 = fig.add_subplot(111, projection="3d")
-    ax_1.scatter3D(vector[0, :, :], vector[1, :, :], vector[2, :, :])
+    ax_1.scatter3D(
+        vector[0, :, :],
+        vector[1, :, :],
+        vector[2, :, :],
+    )
     ax_1.set_xlabel("$x$")
     ax_1.set_ylabel("$y$")
     ax_1.set_zlabel("$z$")
