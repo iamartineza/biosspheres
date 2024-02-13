@@ -854,6 +854,66 @@ def calderon_versions() -> None:
     pass
 
 
+def all_cross_versions() -> None:
+    n = 3
+    big_l = 5
+    big_l_c = 28
+    radii = np.ones(n) * 1.112
+    center_positions = [
+        np.asarray([0.0, 0.0, 0]),
+        np.asarray([-7.0, -3.0, -2.0]),
+        np.asarray([3.0, 5.0, 7.0]),
+    ]
+    k0 = 7.0
+
+    eles = np.arange(0, big_l + 1)
+    j_l = np.empty((n, big_l + 1))
+    j_lp = np.empty((n, big_l + 1))
+
+    for j in np.arange(0, n):
+        j_l[j, :] = scipy.special.spherical_jn(eles, radii[j] * k0)
+        j_lp[j, :] = scipy.special.spherical_jn(
+            eles, radii[j] * k0, derivative=True
+        )
+
+    almost_big_a0_from_v_1d = (
+        crossinteractions.all_cross_interactions_n_spheres_from_v_1d(
+            n, big_l, big_l_c, k0, radii, center_positions, j_l, j_lp
+        )
+    )
+
+    almost_big_a0_from_v_2d = (
+        crossinteractions.all_cross_interactions_n_spheres_from_v_2d(
+            n, big_l, big_l_c, k0, radii, center_positions, j_l, j_lp
+        )
+    )
+
+    almost_big_a0_1d = crossinteractions.all_cross_interactions_n_spheres_1d(
+        n, big_l, big_l_c, k0, radii, center_positions
+    )
+
+    almost_big_a0_2d = crossinteractions.all_cross_interactions_n_spheres_2d(
+        n, big_l, big_l_c, k0, radii, center_positions
+    )
+
+    print(
+        "Difference between all_cross_interaction_routines:\n"
+        + "\t- from_v_1d vs from_v_2d\n"
+        + str(np.linalg.norm(almost_big_a0_from_v_1d - almost_big_a0_from_v_2d))
+        + "\n\t- from_v_2d vs 1d\n"
+        + str(np.linalg.norm(almost_big_a0_1d - almost_big_a0_from_v_2d))
+        + "\n\t- 1d vs 2d\n"
+        + str(np.linalg.norm(almost_big_a0_1d - almost_big_a0_2d))
+    )
+    aux = np.abs(almost_big_a0_1d - almost_big_a0_from_v_2d)
+    plt.figure()
+    plt.imshow(aux, cmap="RdBu", norm=colors.SymLogNorm(linthresh=10 ** (-8)))
+    plt.colorbar()
+    plt.title("Difference between from_v_2d and 1d")
+    plt.show()
+    pass
+
+
 if __name__ == "__main__":
     v_1d_vs_2d()
     v_js_from_the_other()
@@ -864,3 +924,4 @@ if __name__ == "__main__":
     w_1d_vs_2d()
     w_js_from_the_other()
     calderon_versions()
+    all_cross_versions()
