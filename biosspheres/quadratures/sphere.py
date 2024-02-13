@@ -1,11 +1,11 @@
 """
 This module has the implementation of functions that return
 - Points and weights for doing the Gauss-Legendre quadrature with a
-  composite trapezoidal quadrature rule.
+  composite trapezoidal quadrature rule on the surface of a sphere.
 - Evaluation of real and complex spherical harmonics in the points of
   the Gauss-Legendre and composite trapezoidal quadrature.
 - Arrays for implementing a slow spherical harmonic transform (real or
-  complex).
+  complex) on the surface of a sphere.
 - Translations from a coordinate system to another.
 
 Extended summary
