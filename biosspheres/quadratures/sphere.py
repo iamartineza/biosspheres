@@ -63,7 +63,11 @@ def gauss_legendre_trapezoidal_2d(
     pyshtools.
     Composite trapezoidal rule in phi.
     Integral on theta are (big_l_c + 1) quadrature points.
+    The weights returned correspond to the integral on this variable.
     Integral on phi are (2 * big_l_c + 1) quadrature points.
+    This function does not return any weight for the varphi variable,
+    because it is a trapezoidal rule equally spaced. The integral in
+    this variable can be solved using the fast fourier transform.
     Without considering errors produced by the approximation by finite
     numbers, the quadrature must be exact for functions consisting in
     polynomials of big_l_c degree times an exponential power to (m times
