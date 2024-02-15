@@ -745,17 +745,17 @@ def from_sphere_s_cartesian_to_j_spherical_2d(
     Notes
     -----
     Input:
-        x_s = r_s sin theta cos varphi ,
-        y_s = r_s sin theta sin varphi ,
-        z_s = r_s cos theta  ,
+        x_s = r_s sin(theta) cos(varphi) ,
+        y_s = r_s sin(theta) sin(varphi) ,
+        z_s = r_s cos(theta)  ,
     To the cartesian coordinate system j:
-        x_j = r_s sin theta cos varphi + (p_s - p_j)_x ,
-        y_j = r_s sin theta sin varphi + (p_s - p_j)_y ,
-        z_j = r_s cos theta  + (p_s - p_j)_z ,
+        x_j = x_s + (p_s - p_j)_x ,
+        y_j = y_s + (p_s - p_j)_y ,
+        z_j = z_s + (p_s - p_j)_z ,
     To the spherical coordinate system j:
         r_j = sqrt{x^2_j + y^2_j + z^2_j} ,
-        cos theta = frac{r_j}{z_j} ,
-        varphi = arctan2 ( frac{y_j}{x_j} )
+        cos theta = r_j / z_j ,
+        varphi = arctan2 (y_j / x_j)
 
     Parameters
     ----------
@@ -844,28 +844,27 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_2d(
 
     Notes
     -----
-    Input:
-        x_s = r_s sin theta cos varphi ,
-        y_s = r_s sin theta sin varphi ,
-        z_s = r_s cos theta  ,
+    put:
+        x_s = r_s sin(theta) cos(varphi) ,
+        y_s = r_s sin(theta) sin(varphi) ,
+        z_s = r_s cos(theta)  ,
     To the cartesian coordinate system j:
-        x_j = r_s sin theta cos varphi + (p_s - p_j)_x ,
-        y_j = r_s sin theta sin varphi + (p_s - p_j)_y ,
-        z_j = r_s cos theta  + (p_s - p_j)_z ,
+        x_j = x_s + (p_s - p_j)_x ,
+        y_j = y_s + (p_s - p_j)_y ,
+        z_j = z_s + (p_s - p_j)_z ,
     To the spherical coordinate system j:
         r_j = sqrt{x^2_j + y^2_j + z^2_j} ,
-        cos theta = frac{r_j}{z_j} ,
-        varphi = arctan2 ( frac{y_j}{x_j} )
+        cos theta = r_j / z_j ,
+        varphi = arctan2 (y_j / x_j)
     Unitary vectors:
-        widehat{mathbf{e}}_r = sin theta cos varphi widehat{mathbf{e}}_x
-            + sin theta sin varphi widehat{mathbf{e}}_y
-            + cos theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_theta = cos theta cos varphi
-            widehat{mathbf{e}}_x
-            + cos theta sin varphi widehat{mathbf{e}}_y
-            - sin theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_{varphi} = -sin varphi widehat{mathbf{e}}_x
-            + cos varphi widehat{mathbf{e}}_y
+        hat{mathbf{e}}_r = sin(theta) cos(varphi) hat{mathbf{e}}_x
+            + sin(theta) sin(varphi) hat{mathbf{e}}_y
+            + cos(theta) hat{mathbf{e}}_z
+        hat{mathbf{e}}_theta = cos(theta) cos(varphi) hat{mathbf{e}}_x
+            + cos(theta) sin(varphi) hat{mathbf{e}}_y
+            - sin(theta) hat{mathbf{e}}_z
+        hat{mathbf{e}}_{varphi} = -sin(varphi) hat{mathbf{e}}_x
+            + cos(varphi) hat{mathbf{e}}_y
 
     Parameters
     ----------
@@ -997,18 +996,18 @@ def from_sphere_s_cartesian_to_j_spherical_1d(
 
     Notes
     -----
-    Input:
-        x_s = r_s sin theta cos varphi ,
-        y_s = r_s sin theta sin varphi ,
-        z_s = r_s cos theta  ,
+    put:
+        x_s = r_s sin(theta) cos(varphi) ,
+        y_s = r_s sin(theta) sin(varphi) ,
+        z_s = r_s cos(theta)  ,
     To the cartesian coordinate system j:
-        x_j = r_s sin theta cos varphi + (p_s - p_j)_x ,
-        y_j = r_s sin theta sin varphi + (p_s - p_j)_y ,
-        z_j = r_s cos theta  + (p_s - p_j)_z ,
+        x_j = x_s + (p_s - p_j)_x ,
+        y_j = y_s + (p_s - p_j)_y ,
+        z_j = z_s + (p_s - p_j)_z ,
     To the spherical coordinate system j:
         r_j = sqrt{x^2_j + y^2_j + z^2_j} ,
-        cos theta = frac{r_j}{z_j} ,
-        varphi = arctan2 ( frac{y_j}{x_j} )
+        cos theta = r_j / z_j ,
+        varphi = arctan2 (y_j / x_j)
 
     Parameters
     ----------
@@ -1092,28 +1091,27 @@ def from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d(
 
     Notes
     -----
-    Input:
-        x_s = r_s sin theta cos varphi ,
-        y_s = r_s sin theta sin varphi ,
-        z_s = r_s cos theta  ,
+    put:
+        x_s = r_s sin(theta) cos(varphi) ,
+        y_s = r_s sin(theta) sin(varphi) ,
+        z_s = r_s cos(theta)  ,
     To the cartesian coordinate system j:
-        x_j = r_s sin theta cos varphi + (p_s - p_j)_x ,
-        y_j = r_s sin theta sin varphi + (p_s - p_j)_y ,
-        z_j = r_s cos theta  + (p_s - p_j)_z ,
+        x_j = x_s + (p_s - p_j)_x ,
+        y_j = y_s + (p_s - p_j)_y ,
+        z_j = z_s + (p_s - p_j)_z ,
     To the spherical coordinate system j:
         r_j = sqrt{x^2_j + y^2_j + z^2_j} ,
-        cos theta = frac{r_j}{z_j} ,
-        varphi = arctan2 ( frac{y_j}{x_j} )
+        cos theta = r_j / z_j ,
+        varphi = arctan2 (y_j / x_j)
     Unitary vectors:
-        widehat{mathbf{e}}_r = sin theta cos varphi widehat{mathbf{e}}_x
-            + sin theta sin varphi widehat{mathbf{e}}_y
-            + cos theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_theta = cos theta cos varphi
-            widehat{mathbf{e}}_x
-            + cos theta sin varphi widehat{mathbf{e}}_y
-            - sin theta widehat{mathbf{e}}_z
-        widehat{mathbf{e}}_{varphi} = -sin varphi widehat{mathbf{e}}_x
-            + cos varphi widehat{mathbf{e}}_y
+        hat{mathbf{e}}_r = sin(theta) cos(varphi) hat{mathbf{e}}_x
+            + sin(theta) sin(varphi) hat{mathbf{e}}_y
+            + cos(theta) hat{mathbf{e}}_z
+        hat{mathbf{e}}_theta = cos(theta) cos(varphi) hat{mathbf{e}}_x
+            + cos(theta) sin(varphi) hat{mathbf{e}}_y
+            - sin(theta) hat{mathbf{e}}_z
+        hat{mathbf{e}}_{varphi} = -sin(varphi) hat{mathbf{e}}_x
+            + cos(varphi) hat{mathbf{e}}_y
 
     Parameters
     ----------
