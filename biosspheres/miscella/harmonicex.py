@@ -14,6 +14,15 @@ expansions of selected functions:
     point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry,
     point_source_coefficients_neumann_expansion_0j.
 
+Routine listings
+----------------
+function_zero
+function_cte
+point_source_coefficients_dirichlet_expansion_azimuthal_symmetry
+point_source_coefficients_dirichlet_expansion
+point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry
+point_source_coefficients_neumann_expansion_0j
+
 """
 
 import numpy as np
