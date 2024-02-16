@@ -9,7 +9,7 @@ This module has the implementation of functions that return
 - Translations from a coordinate system to another.
 
 Extended summary
--------
+----------------
 This module has the implementation of functions that return
 - Points and weights for doing the Gauss-Legendre quadrature with a
   composite trapezoidal quadrature rule. See
