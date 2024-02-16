@@ -11,6 +11,10 @@ def cube_vertex_positions(number: int, r: float, d: float) -> list[np.ndarray]:
     orders them in the corners of an array of cubes, starting in the
     origin of the coordinate system and placing them in the first
     quadrant.
+    We need three parameters, number, r and d. These are translated to
+    number**3 spheres, with r the radius of each one, and the length of
+    the edge of each cube is 2r + d. If d=0 the spheres will touch each
+    other.
 
     Parameters
     ----------
@@ -20,11 +24,11 @@ def cube_vertex_positions(number: int, r: float, d: float) -> list[np.ndarray]:
         radius of each sphere.
     d: float
         distance between two surfaces of spheres. The length of the edge
-        of each cube 2r + d. If d =0 the spheres will touch each other.
+        of each cube 2r + d. If d=0 the spheres will touch each other.
 
     Returns
     -------
-    ps
+    ps: list[np.ndarray]
         position of the center of the spheres.
 
     """
