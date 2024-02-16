@@ -1,3 +1,21 @@
+"""
+This module has functions for returning the spherical harmonic
+expansions of selected functions.
+
+Extended summary
+----------------
+This module has functions for returning the spherical harmonic
+expansions of selected functions:
+- The zero function. See function_zero.
+- The constant function. See function_cte.
+- Point source function, dirichlet and neumann expansions. See
+    point_source_coefficients_dirichlet_expansion_azimuthal_symmetry,
+    point_source_coefficients_dirichlet_expansion,
+    point_source_coefficients_neumann_expansion_0j_azimuthal_symmetry,
+    point_source_coefficients_neumann_expansion_0j.
+
+"""
+
 import numpy as np
 import pyshtools
 import biosspheres.miscella.auxindexes as auxindexes
@@ -11,7 +29,7 @@ def function_zero(big_l: int, azimuthal: bool = True) -> np.ndarray:
     return np.zeros(num)
 
 
-def function_cte_dirichlet(
+def function_cte(
     big_l: int, cte: float, azimuthal: bool = True
 ) -> np.ndarray:
     """
