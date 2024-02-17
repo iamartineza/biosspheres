@@ -72,7 +72,7 @@ def v_0_sj_semi_analytic_v1d(
     Notes
     -----
     data_v[p(2p + 1) + q, l(2l + 1) + m] =
-        ( V_{s,j}^0 Y_{l,m,j} ; \conjugate{Y_{p,q,s}} )_{L^2(S_s)}
+        ( V_{s,j}^0 Y_{l,m,j} ; Y_{p,q,s} )_{L^2(S_s)}
     Y_{l,m,j} : spherical harmonic degree l, order m, in the coordinate
         system j.
     S_s : surface of the sphere s.
