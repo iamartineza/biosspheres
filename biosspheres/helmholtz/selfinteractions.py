@@ -1,3 +1,20 @@
+"""
+
+Routine listings
+----------------
+v_jj_azimuthal_symmetry
+k_0_jj_azimuthal_symmetry
+k_1_jj_azimuthal_symmetry
+w_jj_azimuthal_symmetry
+bio_jj
+a_0j_matrix
+a_j_matrix
+a_0j_linear_operator
+a_j_linear_operator
+a_0_a_n_sparse_matrices
+reduced_a_sparse_matrix
+"""
+
 from typing import Callable
 import numpy as np
 from scipy import special
