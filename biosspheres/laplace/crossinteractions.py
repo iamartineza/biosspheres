@@ -1,3 +1,24 @@
+"""
+
+Routine listings
+----------------
+v_0_sj_semi_analytic_v1d
+v_0_sj_semi_analytic_v2d
+v_0_js_from_v_0_sj
+k_0_sj_semi_analytic_v1d
+k_0_sj_semi_analytic_v2d
+k_0_sj_from_v_0_sj
+ka_0_sj_semi_analytic_recurrence_v1d
+ka_0_sj_semi_analytic_recurrence_v2d
+ka_0_sj_from_k_js
+ka_0_sj_from_v_sj
+w_0_sj_from_v_sj
+a_0_sj_and_js_v1d
+a_0_sj_and_js_v2d
+all_cross_interactions_n_spheres_v1d
+all_cross_interactions_n_spheres_v2d
+"""
+
 import numpy as np
 from scipy import sparse
 import pyshtools
