@@ -2331,3 +2331,16 @@ def all_cross_interactions_n_spheres_v2d(
             pass
         pass
     return almost_big_a_0
+
+
+def v_sj_v_js_property_checks_cuts(
+    v_sj: np.ndarray,
+    v_js: np.ndarray,
+    tolerance: float,
+):
+    aux = (2.0 * (np.abs(v_sj - v_js.T) / np.abs(v_sj + v_js.T))) < tolerance
+    cut_v_sj = np.zeros_like(v_sj)
+    cut_v_sj[aux] = v_sj[aux]
+    cut_v_js = np.zeros_like(v_sj)
+    cut_v_js[aux.T] = v_js[aux.T]
+    return cut_v_sj, cut_v_js
