@@ -26,8 +26,10 @@ point_source_coefficients_neumann_expansion_0j
 """
 
 import numpy as np
+import scipy.special as special
 import pyshtools
 import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.miscella.extensions as extensions
 
 
 def function_zero(big_l: int, azimuthal: bool = True) -> np.ndarray:
@@ -38,9 +40,7 @@ def function_zero(big_l: int, azimuthal: bool = True) -> np.ndarray:
     return np.zeros(num)
 
 
-def function_cte(
-    big_l: int, cte: float, azimuthal: bool = True
-) -> np.ndarray:
+def function_cte(big_l: int, cte: float, azimuthal: bool = True) -> np.ndarray:
     """
 
     Parameters
@@ -270,3 +270,50 @@ def point_source_coefficients_neumann_expansion_0j(
         * np.sin(pesykus[:, 1] * phi_p)
     )
     return values
+
+
+def plane_wave_coefficients_dirichlet_expansion_0j(
+    big_l: int, radius: float, p_z: float, k0: float, a: float, azimuthal: bool
+) -> np.ndarray:
+    eles = np.arange(0, big_l + 1)
+    expansion = (
+        2
+        * np.sqrt(np.pi)
+        * a
+        * np.exp(1j * k0 * p_z)
+        * (
+            1j**eles
+            * np.sqrt(2 * eles + 1)
+            * special.spherical_jn(eles, radius * k0)
+        )
+    )
+    if not azimuthal:
+        expansion[:] = extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, expansion
+        )
+    pass
+    return expansion
+
+
+def plane_wave_coefficients_neumann_expansion_0j(
+    big_l: int, radius: float, p_z: float, k0: float, a: float, azimuthal: bool
+) -> np.ndarray:
+    eles = np.arange(0, big_l + 1)
+    expansion = (
+        -2
+        * np.sqrt(np.pi)
+        * a
+        * k0
+        * np.exp(1j * k0 * p_z)
+        * (
+            1j**eles
+            * np.sqrt(2 * eles + 1)
+            * special.spherical_jn(eles, radius * k0, derivative=True)
+        )
+    )
+    if not azimuthal:
+        expansion[:] = extensions.azimuthal_trace_to_general_with_zeros(
+            big_l, expansion
+        )
+    pass
+    return expansion
