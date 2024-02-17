@@ -8,16 +8,16 @@ import biosspheres.miscella.auxindexes as auxindexes
 
 
 def v_transpose_check() -> None:
-    radio_1 = 1.2
-    radio_2 = 3.0
+    radio_1 = 0.9
+    radio_2 = 0.7
 
     p_1 = np.asarray([2.0, 3.0, 4.0])
     p_2 = -p_1
 
-    k0 = 7.0
+    k0 = 2.0
 
-    big_l = 2
-    big_l_c = 25
+    big_l = 10
+    big_l_c = 2 * big_l + 10
 
     j_l_1 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_1 * k0)
     j_l_2 = scipy.special.spherical_jn(np.arange(0, big_l + 1), radio_2 * k0)
@@ -86,8 +86,11 @@ def v_transpose_check() -> None:
     )
 
     plt.figure(dpi=75.0, layout="constrained")
-    im = np.abs(data_v12 - aux) / np.abs(data_v12)
-    plt.imshow(im, cmap="RdBu")
+    im = np.sqrt(np.abs(data_v12 - aux)**2 / np.abs(data_v12)**2)
+    plt.imshow(
+        im,
+        # cmap="RdBu"
+    )
     plt.colorbar()
     plt.title(
         "Relative error between $V_{1,2}^0$ and"
