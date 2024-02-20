@@ -29,9 +29,10 @@ def v_jj_azimuthal_symmetry(big_l: int, r: float) -> np.ndarray:
 
     Notes
     -----
-    v[l] = < V_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    v[l] = ( V_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = r**3 / (2 l + 1)
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
 
     Parameters
@@ -62,14 +63,15 @@ def k_0_jj_azimuthal_symmetry(big_l: int, r: float) -> np.ndarray:
     Notes
     -----
     k_0_jj[l] =
-        < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+        ( K_{j,j}^0 Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
         = r**2 / (2*(2l + 1))
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
 
     Notice that in this specific case
-    < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    = < K_{j,j}^{*0} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
+    ( K_{j,j}^0 Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
+    = ( K_{j,j}^{*0} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
     where K_{j,j}^{*0} has normals from out to in of the sphere, and
     with Laplace kernel.
 
@@ -100,14 +102,15 @@ def k_1_jj_azimuthal_symmetry(big_l: int, r: float) -> np.ndarray:
 
     Notes
     -----
-    k_jj[l] = < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    k_jj[l] = ( K_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = -r**2 / (2*(2l + 1))
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
 
     Notice that in this specific case
-    < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    = < K_{j,j}^{*} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
+    ( K_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
+    = ( K_{j,j}^{*} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
     where K_{j,j}^{*} has normals from in to out of the sphere, and with
     Laplace kernel.
 
@@ -137,9 +140,10 @@ def w_jj_azimuthal_symmetry(big_l: int, r: float) -> np.ndarray:
 
     Notes
     -----
-    w[l] = < W_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    w[l] = ( W_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = r * l(l+1) / (2l + 1)
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
 
     Parameters
@@ -172,10 +176,11 @@ def bio_jj(
     Notes
     -----
     D[l*(2l+1) + m] =
-        < D_{j,j} Y_l,m ; Y_l,m >_L^2(surface sphere radius r).
+        (D_{j,j} Y_l,m ; Y_l,m )_L^2(surface sphere radius r).
     which in this case is equal to
     = D[l*(2l+1)]
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     D: boundary integral operator corresponding to the function
         bio_azimuthal
     Y_l,m: spherical harmonic degree l, order m.

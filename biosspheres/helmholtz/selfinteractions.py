@@ -29,9 +29,10 @@ def v_jj_azimuthal_symmetry(big_l: int, r: float, k: float) -> np.ndarray:
 
     Notes
     -----
-    v[l] = < V_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    v[l] = ( V_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = i r**4 k j_l(kr) h_l(kr)
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
     j_l: spherical Bessel function.
     h_l: spherical Hanckel function of first kind.
@@ -73,18 +74,19 @@ def k_0_jj_azimuthal_symmetry(big_l: int, r: float, k: float) -> np.ndarray:
 
     Notes
     -----
-    k_0_jj[l] = <K_{j,j}^0 Y_l,0 ; Y_l,0>_L^2(surface sphere radius r).
+    k_0_jj[l] = (K_{j,j}^0 Y_l,0 ; Y_l,0)_L^2(surface sphere radius r).
     = -1j * k**2 * r**4 * 0.5
       * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
     j_l: spherical Bessel function, and j_l_d its derivative.
     h_l: spherical Hanckel function of first kind, and j_l_d its
          derivative.
 
     Notice that in this specific case
-    < K_{j,j}^0 Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    = < K_{j,j}^{*0} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
+    ( K_{j,j}^0 Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
+    = ( K_{j,j}^{*0} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
     where K_{j,j}^{*0} has normals from out to in of the sphere, and
     with Helmholtz kernel.
 
@@ -122,18 +124,19 @@ def k_1_jj_azimuthal_symmetry(big_l: int, r: float, k: float) -> np.ndarray:
 
     Notes
     -----
-    k_jj[l] = < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    k_jj[l] = ( K_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = 1j * k**2 * r**4 * 0.5
       * (j_l(r k) * h_l_d(r k) + j_l_d(r k) * h_l(r k))
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
     j_l: spherical Bessel function, and j_l_d its derivative.
     h_l: spherical Hanckel function of first kind, and j_l_d its
          derivative.
 
     Notice that in this specific case
-    < K_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
-    = < K_{j,j}^{*} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r)
+    ( K_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
+    = ( K_{j,j}^{*} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r)
     where K_{j,j}^{*} has normals from in to out of the sphere, and with
     Helmholtz kernel.
 
@@ -165,9 +168,10 @@ def w_jj_azimuthal_symmetry(big_l: int, r: float, k: float) -> np.ndarray:
 
     Notes
     -----
-    w[l] = < W_{j,j} Y_l,0 ; Y_l,0 >_L^2(surface sphere radius r).
+    w[l] = ( W_{j,j} Y_l,0 ; Y_l,0 )_L^2(surface sphere radius r).
     = -1j k**3 * r**4 * j_l_d(k r) h_l_d(k r)
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     Y_l,0: spherical harmonic degree l, order 0.
     j_l_d: derivative of the spherical Bessel function.
     h_l_d: derivative of the spherical Hanckel function of first kind.
@@ -209,10 +213,11 @@ def bio_jj(
 
     Notes
     -----
-    D[l*(2l+1) + m] = <D_{j,j}Y_l,m;Y_l,m>_L^2(surface sphere radius r).
+    D[l*(2l+1) + m] = (D_{j,j}Y_l,m;Y_l,m)_L^2(surface sphere radius r).
     which in this case is equal to
     = D[l*(2l+1)]
     for each l such that 0 <= l <= big_l, and with
+    ( ., .)_L^2(surface sphere radius r): inner product where indicated.
     D: boundary integral operator corresponding to the function
        bio_azimuthal
     Y_l,m: spherical harmonic degree l, order m.
