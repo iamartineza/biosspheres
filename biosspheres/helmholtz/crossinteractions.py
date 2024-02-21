@@ -1,3 +1,31 @@
+"""
+
+Routine listings
+----------------
+sj_pre_single_layer_semi_analytic_v1d
+v_0_sj_semi_analytic_v1d
+v_0_sj_semi_analytic_v2d
+v_0_js_from_v_0_sj
+k_0_sj_semi_analytic_v1d
+k_0_sj_semi_analytic_v2d
+jey_array
+k_0_sj_from_v_0_sj
+ka_0_sj_semi_analytic_recurrence_v1d
+ka_0_sj_semi_analytic_recurrence_v2d
+ka_0_sj_from_k_js
+w_0_sj_from_ka_sj
+w_0_sj_semi_analytic_recurrence_v1d
+w_0_sj_semi_analytic_recurrence_v2d
+a_0_sj_and_js_from_v_sj
+v_k_w_0_sj_from_quadratures_1d
+v_k_w_0_sj_from_quadratures_2d
+a_0_sj_and_js_from_v_k_w
+all_cross_interactions_n_spheres_from_v_1d
+all_cross_interactions_n_spheres_from_v_2d
+all_cross_interactions_n_spheres_1d
+all_cross_interactions_n_spheres_2d
+"""
+
 import numpy as np
 import scipy.special
 from scipy import sparse
