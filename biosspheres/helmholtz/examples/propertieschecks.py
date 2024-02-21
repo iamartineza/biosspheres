@@ -114,7 +114,7 @@ def k_with_v_check() -> None:
 
     eles = np.arange(0, big_l + 1)
     j_l_1 = scipy.special.spherical_jn(eles, radio_1 * k0)
-    j_lp_1 = scipy.special.spherical_jn(eles, radio_1 * k0)
+    j_lp_1 = scipy.special.spherical_jn(eles, radio_1 * k0, derivative=True)
 
     final_length, pre_vector_t, transform = (
         quadratures.complex_spherical_harmonic_transform_1d(big_l, big_l_c)
