@@ -140,7 +140,6 @@ def v_js_from_the_other() -> None:
             pre_vector_t_2d,
         )
     )
-    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
     data_v12_2d = crossinteractions.v_0_sj_semi_analytic_v2d(
         big_l,
         k0,
