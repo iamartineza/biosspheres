@@ -444,11 +444,12 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     sen_phi = np.sin(phi)
 
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
+    exp_neg = np.zeros_like(exp_pos)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
+        exp_neg[m - 1, :] = (-1.0) ** m / exp_pos[m - 1, :]
         pass
     del phi
-    exp_neg = (-1.0) ** np.arange(1, big_l + 1) / exp_pos
 
     cos_theta = zeros
 
