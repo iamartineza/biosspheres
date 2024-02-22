@@ -1,5 +1,6 @@
 import numpy as np
 import pyshtools
+import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.miscella.auxindexes as auxindexes
 
 
@@ -76,7 +77,7 @@ def b_vector_n_spheres_mtf_cte_function(
 def b_vector_n_spheres_mtf_point_source(
     n: int,
     big_l: int,
-    ps,
+    ps: list[np.array],
     p0: np.ndarray,
     rs: np.ndarray,
     sigma_e: float,
@@ -171,6 +172,71 @@ def b_vector_n_spheres_mtf_point_source(
                 l_times_l_plus_l_divided_by_2[pesykus[:, 0]] + pesykus[:, 1]
             ]
             * np.sin(phi * pesykus[:, 1])
+        )
+    b[2 * num * n : 4 * num * n] = b[0 : 2 * num * n] * x_dia
+    b[0 : 2 * num * n] = -b[0 : 2 * num * n] * mass_n_two_j_blocks
+    return b
+
+
+def b_vector_n_spheres_mtf_plane_wave(
+    n: int,
+    big_l: int,
+    ps: list[np.array],
+    p_z: float,
+    k0: float,
+    a: float,
+    radii: np.ndarray,
+    x_dia: np.ndarray,
+    mass_n_two_j_blocks: np.ndarray,
+) -> np.array:
+    """
+
+    Notes
+    -----
+    All arrays that represent vectors are in the cartesian coordinate
+    system.
+
+    Parameters
+    ----------
+    n : int
+        >= 1, number of spheres.
+    big_l : int
+        >= 0, max degree.
+    ps : list of numpy arrays
+        of floats, the numpy arrays are of length 3, and represent
+        the position vectors of the center of the spheres.
+    p_z : float
+    k0: float
+        > 0, wave number.
+    radii : numpy array
+        of the radii of the spheres.
+    a : float
+        > 0, parameter, intensity.
+    x_dia : np.ndarray
+    mass_n_two_j_blocks : np.ndarray.
+
+    Returns
+    -------
+    b : numpy array
+        of 1 dimension and length 4 * n * (big_l+1)**2
+    """
+    num = (big_l + 1) ** 2
+    b = np.zeros(4 * num * n, dtype=np.complex128)
+
+    eles = np.arange(0, big_l + 1)
+    eles_plus_one = eles + 1
+    eles_times_eles_plus_one = eles * eles_plus_one
+    for index in np.arange(0, n):
+        vector_z = p_z - ps[index][2]
+        b[2 * num * index + eles_times_eles_plus_one] = (
+            harmonicex.plane_wave_coefficients_dirichlet_expansion_0j(
+                big_l, radii[index], vector_z, k0, a, azimuthal=True
+            )
+        )
+        b[(2 * index + 1) * num + eles_times_eles_plus_one] = (
+            harmonicex.plane_wave_coefficients_neumann_expansion_0j(
+                big_l, radii[index], vector_z, k0, a, azimuthal=True
+            )
         )
     b[2 * num * n : 4 * num * n] = b[0 : 2 * num * n] * x_dia
     b[0 : 2 * num * n] = -b[0 : 2 * num * n] * mass_n_two_j_blocks
