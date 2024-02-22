@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.sparse.linalg
 import biosspheres.formulations.mtf.mtf as mtf
-import biosspheres.laplace.selfinteractions as laplaceself
+import biosspheres.laplace.selfinteractions as self
 import biosspheres.miscella.extensions as extensions
 
 
@@ -30,14 +30,14 @@ def testing_mtf_linear_operators_and_matrices_one_sphere(
     num = big_l + 1
     b = np.random.random((4 * num))
 
-    a_0 = laplaceself.a_0j_linear_operator(big_l, r)
-    a_1 = laplaceself.a_j_linear_operator(big_l, r)
+    a_0 = self.a_0j_linear_operator(big_l, r)
+    a_1 = self.a_j_linear_operator(big_l, r)
     x_j = mtf.x_j_diagonal(big_l, r, pi, True)
     x_j_inv = mtf.x_j_diagonal_inv(big_l, r, pi, True)
     linear_operator = mtf.mtf_1_linear_operator(a_0, a_1, x_j, x_j_inv)
 
-    a_0 = laplaceself.a_0j_matrix(big_l, r)
-    a_1 = laplaceself.a_j_matrix(big_l, r, True)
+    a_0 = self.a_0j_matrix(big_l, r)
+    a_1 = self.a_j_matrix(big_l, r, True)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
 
     norms = []
@@ -65,13 +65,13 @@ def testing_mtf_linear_operators_and_matrices_one_sphere(
     num = (big_l + 1) ** 2
     b = np.random.random((4 * num))
 
-    a_0 = laplaceself.a_0j_linear_operator(big_l, r, False)
-    a_1 = laplaceself.a_j_linear_operator(big_l, r, False)
+    a_0 = self.a_0j_linear_operator(big_l, r, False)
+    a_1 = self.a_j_linear_operator(big_l, r, False)
     x_j = mtf.x_j_diagonal(big_l, r, pi, False)
     x_j_inv = mtf.x_j_diagonal_inv(big_l, r, pi, False)
     linear_operator = mtf.mtf_1_linear_operator(a_0, a_1, x_j, x_j_inv)
-    a_0 = laplaceself.a_0j_matrix(big_l, r, False)
-    a_1 = laplaceself.a_j_matrix(big_l, r, False)
+    a_0 = self.a_0j_matrix(big_l, r, False)
+    a_1 = self.a_j_matrix(big_l, r, False)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
 
     norms = []
@@ -134,8 +134,8 @@ def testing_mtf_azimuthal_and_no_azimuthal(
     b2_34 = np.concatenate((b_2_3, b_2_4))
     b2 = np.concatenate((b2_12, b2_34))
 
-    a_0 = laplaceself.a_0j_linear_operator(big_l, r, False)
-    a_1 = laplaceself.a_j_linear_operator(big_l, r, False)
+    a_0 = self.a_0j_linear_operator(big_l, r, False)
+    a_1 = self.a_j_linear_operator(big_l, r, False)
     x_j = mtf.x_j_diagonal(big_l, r, pi, False)
     x_j_inv = mtf.x_j_diagonal_inv(big_l, r, pi, False)
     linear_operator = mtf.mtf_1_linear_operator(a_0, a_1, x_j, x_j_inv)
@@ -157,8 +157,8 @@ def testing_mtf_azimuthal_and_no_azimuthal(
     )
     num = big_l + 1
 
-    a_0 = laplaceself.a_0j_linear_operator(big_l, r)
-    a_1 = laplaceself.a_j_linear_operator(big_l, r)
+    a_0 = self.a_0j_linear_operator(big_l, r)
+    a_1 = self.a_j_linear_operator(big_l, r)
     x_j = mtf.x_j_diagonal(big_l, r, pi, True)
     x_j_inv = mtf.x_j_diagonal_inv(big_l, r, pi, True)
     linear_operator = mtf.mtf_1_linear_operator(a_0, a_1, x_j, x_j_inv)
@@ -219,7 +219,7 @@ def testing_mtf_reduced_linear_operators_and_matrices(
     b = np.random.random((2 * num))
 
     linear_operator = mtf.mtf_1_reduced_linear_operator(big_l, r, pi)
-    a_0 = laplaceself.a_0j_matrix(big_l, r, True)
+    a_0 = self.a_0j_matrix(big_l, r, True)
     matrix = mtf.mtf_1_reduced_matrix_laplace(pi, a_0)
 
     norms = []
@@ -248,7 +248,7 @@ def testing_mtf_reduced_linear_operators_and_matrices(
     b = np.random.random((2 * num))
 
     linear_operator = mtf.mtf_1_reduced_linear_operator(big_l, r, pi, False)
-    a_0 = laplaceself.a_0j_matrix(big_l, r, False)
+    a_0 = self.a_0j_matrix(big_l, r, False)
     matrix = mtf.mtf_1_reduced_matrix_laplace(pi, a_0)
 
     norms = []
@@ -378,8 +378,8 @@ def testing_mtf_reduced_vs_not_one_sphere(
     b = np.random.random((4 * num))
 
     linear_operator_red = mtf.mtf_1_reduced_linear_operator(big_l, r, pi)
-    a_0 = laplaceself.a_0j_linear_operator(big_l, r)
-    a_1 = laplaceself.a_j_linear_operator(big_l, r)
+    a_0 = self.a_0j_linear_operator(big_l, r)
+    a_1 = self.a_j_linear_operator(big_l, r)
     x_j = mtf.x_j_diagonal(big_l, r, pi, True)
     x_j_inv = mtf.x_j_diagonal_inv(big_l, r, pi, True)
     linear_operator = mtf.mtf_1_linear_operator(a_0, a_1, x_j, x_j_inv)
@@ -402,7 +402,7 @@ def testing_mtf_reduced_vs_not_one_sphere(
 
     norms = []
 
-    a_1_lin_op = laplaceself.a_j_linear_operator(big_l, r)
+    a_1_lin_op = self.a_j_linear_operator(big_l, r)
     b_red_1 = b[0 : 2 * num] + 2.0 * (
         a_1_lin_op.matvec(b[2 * num : 4 * num])
         / mtf.x_j_diagonal(big_l, r, pi, True)

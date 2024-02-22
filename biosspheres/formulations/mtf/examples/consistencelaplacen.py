@@ -3,8 +3,8 @@ import scipy.sparse.linalg
 import biosspheres.formulations.mtf.mtf as mtf
 import biosspheres.formulations.massmatrices as mass
 import biosspheres.formulations.mtf.righthands as righthands
-import biosspheres.laplace.selfinteractions as laplaceself
-import biosspheres.laplace.crossinteractions as laplacecross
+import biosspheres.laplace.selfinteractions as self
+import biosspheres.laplace.crossinteractions as cross
 
 
 def testing_mtf_linear_operators_and_matrices_n_spheres() -> None:
@@ -30,10 +30,10 @@ def testing_mtf_linear_operators_and_matrices_n_spheres() -> None:
     x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
         n, big_l, radii, pii, azimuthal=False
     )
-    big_a_0_cross = laplacecross.all_cross_interactions_n_spheres_v2d(
+    big_a_0_cross = cross.all_cross_interactions_n_spheres_v2d(
         n, big_l, big_l_c, radii, center_positions
     )
-    sparse_big_a_0_self, sparse_big_a_n = laplaceself.a_0_a_n_sparse_matrices(
+    sparse_big_a_0_self, sparse_big_a_n = self.a_0_a_n_sparse_matrices(
         n, big_l, radii, azimuthal=False
     )
 
@@ -100,10 +100,10 @@ def testing_mtf_reduced_vs_not_n_spheres() -> None:
     x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
         n, big_l, radii, pii, azimuthal=False
     )
-    big_a_0_cross = laplacecross.all_cross_interactions_n_spheres_v2d(
+    big_a_0_cross = cross.all_cross_interactions_n_spheres_v2d(
         n, big_l, big_l_c, radii, center_positions
     )
-    sparse_big_a_0_self, sparse_big_a_n = laplaceself.a_0_a_n_sparse_matrices(
+    sparse_big_a_0_self, sparse_big_a_n = self.a_0_a_n_sparse_matrices(
         n, big_l, radii, azimuthal=False
     )
 
@@ -118,7 +118,7 @@ def testing_mtf_reduced_vs_not_n_spheres() -> None:
     solution_not_reduced = np.linalg.solve(matrix, b)
 
     # Reduced system
-    sparse_reduced = laplaceself.reduced_a_sparse_matrix(
+    sparse_reduced = self.reduced_a_sparse_matrix(
         n, big_l, radii, pii, azimuthal=False
     )
     matrix = mtf.mtf_n_reduced_matrix(big_a_0_cross, sparse_reduced)
