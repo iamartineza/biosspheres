@@ -1613,14 +1613,14 @@ def w_0_sj_from_ka_sj(
 
     Returns
     -------
-    data_k : np.ndarray
-        of complex numbers. Same shape than data_v.
+    data_w : np.ndarray
+        of complex numbers. Same shape than data_ka_sj.
         See notes for the indexes ordering.
 
     See Also
     --------
-    k_0_sj_semi_analytic_v1d
-    k_0_sj_semi_analytic_v2d
+    w_0_sj_semi_analytic_recurrence_v1d
+    w_0_sj_semi_analytic_recurrence_v2d
 
     """
     data_w = -k_0_sj_from_v_0_sj(data_ka_sj, k0, r_j)
