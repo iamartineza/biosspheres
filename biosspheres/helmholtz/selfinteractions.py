@@ -714,7 +714,7 @@ def reduced_a_sparse_matrix(
             s_minus_1 = s - 1
             s_minus_1_times_2 = s_minus_1 * 2
 
-            v = v_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]) - pii[
+            v = v_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]) + pii[
                 s_minus_1
             ] ** (-1) * v_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s])
             reduced_big_a[number : (number + num)] = np.repeat(v, l2_1)
@@ -750,7 +750,7 @@ def reduced_a_sparse_matrix(
             )
             number += num
 
-            w = w_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]) - pii[
+            w = w_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[0]) + pii[
                 s_minus_1
             ] * w_jj_azimuthal_symmetry(big_l, radii[s_minus_1], kii[s])
             reduced_big_a[number : (number + num)] = np.repeat(w, l2_1)
@@ -769,7 +769,7 @@ def reduced_a_sparse_matrix(
 
             reduced_big_a[number : (number + num)] = v_jj_azimuthal_symmetry(
                 big_l, radii[s_minus_1], kii[0]
-            ) - pii[s_minus_1] ** (-1) * v_jj_azimuthal_symmetry(
+            ) + pii[s_minus_1] ** (-1) * v_jj_azimuthal_symmetry(
                 big_l, radii[s_minus_1], kii[s]
             )
             rows_big_a_sparse[number : (number + num)] = (
@@ -804,7 +804,7 @@ def reduced_a_sparse_matrix(
 
             reduced_big_a[number : (number + num)] = w_jj_azimuthal_symmetry(
                 big_l, radii[s_minus_1], kii[0]
-            ) - pii[s_minus_1] * w_jj_azimuthal_symmetry(
+            ) + pii[s_minus_1] * w_jj_azimuthal_symmetry(
                 big_l, radii[s_minus_1], kii[s]
             )
             rows_big_a_sparse[number : (number + num)] = rango + num * (
