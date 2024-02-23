@@ -34,9 +34,38 @@ successful installation could work. See the files:
 - env_example_1.txt
 - env_biosspheres.txt
 
-# Comments about the code.
+# Comments about the code
+
+## About the packages used
+
+### numpy
+
+Library for arrays, vectors and matrices in dense format, along with routines of linear algebra, norm computation, dot product. It also computes functions like sine, cosine, exponential, etc.
+
+- [Web page](https://numpy.org/).
+- [GitHub repository](https://github.com/numpy/numpy).
+- [Documentation](https://numpy.org/doc/stable/).
+
+### scipy
+
+- [Web page](https://scipy.org/).
+- [GitHub repository](https://github.com/scipy/scipy).
+- [Documentation](https://docs.scipy.org/doc/scipy/).
+
+#### scipy.special
+
+Library for special functions, as the spherical Bessel and spherical Hankel
+
+#### scipy.sparse
+
+Library for sparse arrays.
+
+### pyshtools
 
 All Legendre's functions are computed using the package pyshtools 
 ([documentation of pyshtools](https://shtools.github.io/SHTOOLS/index.html)).
 
 Before running in a parallel see [pyshtools issue #385 (thread safety)](https://github.com/SHTOOLS/SHTOOLS/issues/385). 
+
+- [Web page and documentation](https://shtools.github.io/SHTOOLS/).
+- [GitHub repository of SHTOOLS](https://github.com/SHTOOLS/SHTOOLS).
