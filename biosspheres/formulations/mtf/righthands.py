@@ -227,7 +227,7 @@ def b_vector_n_spheres_mtf_plane_wave(
     eles_plus_one = eles + 1
     eles_times_eles_plus_one = eles * eles_plus_one
     for index in np.arange(0, n):
-        vector_z = p_z - ps[index][2]
+        vector_z = p_z + ps[index][2]
         b[2 * num * index + eles_times_eles_plus_one] = (
             harmonicex.plane_wave_coefficients_dirichlet_expansion_0j(
                 big_l, radii[index], vector_z, k0, a, azimuthal=True
