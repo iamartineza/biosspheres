@@ -186,9 +186,9 @@ def phantom_1_plane_wave_azimuthal() -> None:
         cstride=1,
         facecolors=cm.RdBu(np.real(surface_field_d0)),
     )
-    ax_1.set_xlabel("$x \\ [\\mu m]$")
-    ax_1.set_ylabel("$y \\ [\\mu m]$")
-    ax_1.set_zlabel("$z \\ [\\mu m]$")
+    ax_1.set_xlabel("$x$")
+    ax_1.set_ylabel("$y$")
+    ax_1.set_zlabel("$z$")
     ax_1.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -210,9 +210,9 @@ def phantom_1_plane_wave_azimuthal() -> None:
         cstride=1,
         facecolors=cm.RdBu(np.real(surface_field_n0)),
     )
-    ax.set_xlabel("$x \\ [\\mu m]$")
-    ax.set_ylabel("$y \\ [\\mu m]$")
-    ax.set_zlabel("$z \\ [\\mu m]$")
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
+    ax.set_zlabel("$z$")
     ax.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -222,7 +222,7 @@ def phantom_1_plane_wave_azimuthal() -> None:
             cmap=cm.RdBu,
         ),
         ax=ax,
-        label="[V $/ \\mu m$ ]",
+        label="",
     )
     plt.show()
     pass
