@@ -87,8 +87,11 @@ def x_diagonal_with_its_inv(
     n: int, big_l: int, radii: float, pii: np.ndarray, azimuthal: bool = False
 ):
     """
-    Returns a numpy array with the diagonal of the matrix:
-    X
+    Returns a numpy array with the diagonals of the matrices given in
+    the functions x_j_diagonal and x_j_diagonal_inv for n spheres.
+
+    Notes
+    -----
 
     Parameters
     ----------
@@ -105,9 +108,11 @@ def x_diagonal_with_its_inv(
 
     Returns
     -------
-    x_j : np.ndarray
-        of floats. If azimuthal = False, its is length 2*(big_l+1), else
-        it is 2*(big_l+1)**2.
+    x_dia : np.ndarray
+        of floats. If azimuthal = False, its is length 2n(big_l+1),
+        else it is 2n(big_l+1)**2.
+    x_inv : np.ndarray
+        of floats. = 1. / x_dia
 
     """
     num = big_l + 1
