@@ -187,9 +187,9 @@ def phantom_1_point_source_azimuthal(
         cstride=1,
         facecolors=cm.viridis(surface_field_d0),
     )
-    ax_1.set_xlabel("$x \\ [\\mu m]$")
-    ax_1.set_ylabel("$y \\ [\\mu m]$")
-    ax_1.set_zlabel("$z \\ [\\mu m]$")
+    ax_1.set_xlabel("$x$")
+    ax_1.set_ylabel("$y$")
+    ax_1.set_zlabel("$z$")
     ax_1.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -199,7 +199,7 @@ def phantom_1_point_source_azimuthal(
             cmap=cm.viridis,
         ),
         ax=ax_1,
-        label="[V]",
+        label="",
     )
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
@@ -211,9 +211,9 @@ def phantom_1_point_source_azimuthal(
         cstride=1,
         facecolors=cm.viridis(surface_field_n0),
     )
-    ax.set_xlabel("$x \\ [\\mu m]$")
-    ax.set_ylabel("$y \\ [\\mu m]$")
-    ax.set_zlabel("$z \\ [\\mu m]$")
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
+    ax.set_zlabel("$z$")
     ax.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -223,7 +223,7 @@ def phantom_1_point_source_azimuthal(
             cmap=cm.viridis,
         ),
         ax=ax,
-        label="[V $/ \\mu m$ ]",
+        label="",
     )
 
     def point_source(x: np.ndarray) -> float:
@@ -263,9 +263,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 2
     x1, y1, data = (
@@ -293,9 +293,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 3
     x1, y1, data = (
@@ -315,7 +315,7 @@ def phantom_1_point_source_azimuthal(
     plt.figure()
     plt.imshow(
         data,
-        origin="lower",
+        origin="",
         extent=[
             -horizontal / 2 + center[0],
             horizontal / 2 + center[0],
@@ -323,9 +323,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[1],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="")
 
     temp = np.zeros_like(solution2[2 * (max_l + 1) : 4 * (max_l + 1)])
     temp[:] = solution2[2 * (max_l + 1) : 4 * (max_l + 1)]
@@ -357,9 +357,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 2
     x1, y1, data = (
@@ -388,9 +388,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 3
     x1, y1, data = (
@@ -419,9 +419,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[1],
         ],
     )
-    plt.colorbar(label="[V]")
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
+    plt.colorbar(label="")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
 
     def point_source(x: np.ndarray) -> float:
         return mathfunctions.point_source(x, p, sigma_e)
@@ -453,9 +453,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 2
     x1, y1, data = (
@@ -483,8 +483,8 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
     plt.colorbar(label="[V]")
 
     cut = 3
@@ -513,9 +513,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[1],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="")
 
     solution2[2 * (max_l + 1) : 4 * (max_l + 1)] = 0.0
     cut = 1
@@ -545,9 +545,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 2
     x1, y1, data = (
@@ -576,9 +576,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[2],
         ],
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 3
     x1, y1, data = (
@@ -607,9 +607,9 @@ def phantom_1_point_source_azimuthal(
             vertical / 2 + center[1],
         ],
     )
-    plt.colorbar(label="[V]")
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
+    plt.colorbar(label="")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
 
     pass
 
@@ -800,9 +800,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         cstride=1,
         facecolors=cm.viridis(surface_field_d0),
     )
-    ax_1.set_xlabel("$x \\ [\\mu m]$")
-    ax_1.set_ylabel("$y \\ [\\mu m]$")
-    ax_1.set_zlabel("$z \\ [\\mu m]$")
+    ax_1.set_xlabel("$x$")
+    ax_1.set_ylabel("$y$")
+    ax_1.set_zlabel("$z$")
     ax_1.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -812,7 +812,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
             cmap=cm.viridis,
         ),
         ax=ax_1,
-        label="[V]",
+        label="",
     )
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
@@ -824,9 +824,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         cstride=1,
         facecolors=cm.viridis(surface_field_n0),
     )
-    ax.set_xlabel("$x \\ [\\mu m]$")
-    ax.set_ylabel("$y \\ [\\mu m]$")
-    ax.set_zlabel("$z \\ [\\mu m]$")
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
+    ax.set_zlabel("$z$")
     ax.set_aspect("equal")
     fig.colorbar(
         cm.ScalarMappable(
@@ -836,7 +836,7 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
             cmap=cm.viridis,
         ),
         ax=ax,
-        label="[V $/ \\mu m$ ]",
+        label="",
     )
 
     def point_source(x: np.ndarray) -> float:
@@ -868,8 +868,8 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(halfrange=0.00045),
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
     plt.colorbar()
 
     cut = 2
@@ -898,9 +898,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 3
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -928,9 +928,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="")
 
     aux_drawing[2 * num_big : 3 * num_big] = (
         extensions.azimuthal_trace_to_general_with_zeros(
@@ -969,8 +969,8 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
     plt.colorbar()
 
     cut = 2
@@ -999,9 +999,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="")
 
     cut = 3
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -1029,9 +1029,9 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="")
     pass
 
 
@@ -1248,9 +1248,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="", orientation="horizontal")
 
     cut = 2
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -1278,9 +1278,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="", orientation="horizontal")
 
     cut = 3
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -1308,9 +1308,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="", orientation="horizontal")
 
     solution_cut[2 * num * n : 3 * num * n] = (
         solution_cut[2 * num * n : 3 * num * n] + b[0 : num * n]
@@ -1345,9 +1345,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$y \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$y$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="", orientation="horizontal")
 
     cut = 2
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -1375,9 +1375,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$z \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$x$")
+    plt.ylabel("$z$")
+    plt.colorbar(label="", orientation="horizontal")
 
     cut = 3
     x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
@@ -1405,9 +1405,9 @@ def mix_phantom_total_3_different_1_point_source(
         ],
         norm=colors.CenteredNorm(),
     )
-    plt.xlabel("$x \\ [\\mu m]$")
-    plt.ylabel("$y \\ [\\mu m]$")
-    plt.colorbar(label="[V]", orientation="horizontal")
+    plt.xlabel("$x$")
+    plt.ylabel("$y$")
+    plt.colorbar(label="", orientation="horizontal")
     return
 
 

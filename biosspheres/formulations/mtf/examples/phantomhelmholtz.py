@@ -198,7 +198,7 @@ def phantom_1_plane_wave_azimuthal() -> None:
             cmap=cm.RdBu,
         ),
         ax=ax_1,
-        label="[V]",
+        label="",
     )
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
