@@ -17,6 +17,7 @@ a_0_sj_and_js_v1d
 a_0_sj_and_js_v2d
 all_cross_interactions_n_spheres_v1d
 all_cross_interactions_n_spheres_v2d
+v_sj_v_js_property_checks_cuts
 """
 
 import numpy as np
