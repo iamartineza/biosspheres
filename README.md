@@ -69,3 +69,11 @@ Before running in a parallel see [pyshtools issue #385 (thread safety)](https://
 
 - [Web page and documentation](https://shtools.github.io/SHTOOLS/).
 - [GitHub repository of SHTOOLS](https://github.com/SHTOOLS/SHTOOLS).
+
+### matplotlib
+
+Library used in the examples for plotting.
+- [Web page](https://matplotlib.org/).
+- [GitHub repository](https://github.com/matplotlib/matplotlib).
+- [Documentation](https://matplotlib.org/stable/users/index.html).
+
