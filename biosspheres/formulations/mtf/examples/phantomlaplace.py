@@ -3,15 +3,16 @@ import matplotlib.pyplot as plt
 from matplotlib import cm, colors
 import biosspheres.formulations.massmatrices as mass
 import biosspheres.formulations.mtf.mtf as mtf
+import biosspheres.formulations.mtf.reconstructions as reconstructions
 import biosspheres.formulations.mtf.righthands as righthands
 import biosspheres.laplace.selfinteractions as selfin
 import biosspheres.laplace.crossinteractions as crossin
 import biosspheres.laplace.drawing as draw
 import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.miscella.drawing as draw2
 import biosspheres.miscella.extensions as extensions
 import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.miscella.mathfunctions as mathfunctions
-import biosspheres.miscella.spherearrangements as arrangements
 import biosspheres.quadratures.sphere as quadratures
 
 
@@ -315,7 +316,7 @@ def phantom_1_point_source_azimuthal(
     plt.figure()
     plt.imshow(
         data,
-        origin="",
+        origin="lower",
         extent=[
             -horizontal / 2 + center[0],
             horizontal / 2 + center[0],
@@ -839,98 +840,22 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         label="",
     )
 
-    def point_source(x: np.ndarray) -> float:
-        return 0.0
-
-    cut = 1
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
+    u_rf = reconstructions.rf_laplace_n_spheres_call(
+        1, radius, center_positions, max_l, aux_drawing
     )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[1],
-            horizontal / 2 + center[1],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(halfrange=0.00045),
-    )
-    plt.xlabel("$y$")
-    plt.ylabel("$z$")
-    plt.colorbar()
-
-    cut = 2
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",  # vmin=0., vmax=0.0032,
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="")
-
-    cut = 3
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",  # vmin=0., vmax=0.0032,
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[1],
-            vertical / 2 + center[1],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-    plt.colorbar(label="")
+    for cut in np.arange(1, 4):
+        x1, y1, data, extent, x_label, y_label = draw2.draw_cut_with_call(
+            cut,
+            center,
+            horizontal,
+            vertical,
+            inter_horizontal,
+            inter_vertical,
+            "",
+            "",
+            u_rf,
+        )
+        pass
 
     aux_drawing[2 * num_big : 3 * num_big] = (
         extensions.azimuthal_trace_to_general_with_zeros(
@@ -943,95 +868,22 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         )
     )
 
-    cut = 1
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
+    u_rf = reconstructions.rf_laplace_n_spheres_call(
+        1, radius, center_positions, max_l, aux_drawing
     )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[1],
-            horizontal / 2 + center[1],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$y$")
-    plt.ylabel("$z$")
-    plt.colorbar()
-
-    cut = 2
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="")
-
-    cut = 3
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        aux_drawing,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[1],
-            vertical / 2 + center[1],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-    plt.colorbar(label="")
+    for cut in np.arange(1, 4):
+        x1, y1, data, extent, x_label, y_label = draw2.draw_cut_with_call(
+            cut,
+            center,
+            horizontal,
+            vertical,
+            inter_horizontal,
+            inter_vertical,
+            "",
+            "",
+            u_rf,
+        )
+        pass
     pass
 
 
@@ -1222,95 +1074,24 @@ def mix_phantom_total_3_different_1_point_source(
 
     solution_cut = np.zeros(np.shape(solution2))
     solution_cut[0 : 2 * num * n] = solution2[0 : 2 * num * n]
-    cut = 1
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",  # vmax=0.004,
-        extent=[
-            -horizontal / 2 + center[1],
-            horizontal / 2 + center[1],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$y$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="", orientation="horizontal")
 
-    cut = 2
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
+    u_rf = reconstructions.rf_laplace_n_spheres_call(
+        n, radius, center_positions, max_l, solution_cut
     )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="", orientation="horizontal")
-
-    cut = 3
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[1],
-            vertical / 2 + center[1],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-    plt.colorbar(label="", orientation="horizontal")
+    for cut in np.arange(1, 4):
+        x1, y1, data, extent, x_label, y_label = draw2.draw_cut_with_call(
+            cut,
+            center,
+            horizontal,
+            vertical,
+            inter_horizontal,
+            inter_vertical,
+            "",
+            "",
+            u_rf,
+            "horizontal"
+        )
+        pass
 
     solution_cut[2 * num * n : 3 * num * n] = (
         solution_cut[2 * num * n : 3 * num * n] + b[0 : num * n]
@@ -1319,102 +1100,30 @@ def mix_phantom_total_3_different_1_point_source(
         solution_cut[3 * num * n : 4 * num * n] - b[num * n : 2 * num * n]
     )
 
-    cut = 1
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
+    u_rf = reconstructions.rf_laplace_n_spheres_call(
+        n, radius, center_positions, max_l, solution_cut
     )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[1],
-            horizontal / 2 + center[1],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$y$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="", orientation="horizontal")
-
-    cut = 2
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[2],
-            vertical / 2 + center[2],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$z$")
-    plt.colorbar(label="", orientation="horizontal")
-
-    cut = 3
-    x1, y1, data = draw.draw_cut_representation_formula_n_sphere(
-        cut,
-        center,
-        horizontal,
-        vertical,
-        inter_horizontal,
-        inter_vertical,
-        solution_cut,
-        radius,
-        center_positions,
-        max_l,
-        point_source,
-    )
-    plt.figure()
-    plt.imshow(
-        data,
-        origin="lower",
-        extent=[
-            -horizontal / 2 + center[0],
-            horizontal / 2 + center[0],
-            -vertical / 2 + center[1],
-            vertical / 2 + center[1],
-        ],
-        norm=colors.CenteredNorm(),
-    )
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-    plt.colorbar(label="", orientation="horizontal")
+    for cut in np.arange(1, 4):
+        x1, y1, data, extent, x_label, y_label = draw2.draw_cut_with_call(
+            cut,
+            center,
+            horizontal,
+            vertical,
+            inter_horizontal,
+            inter_vertical,
+            "",
+            "",
+            u_rf,
+            "horizontal"
+        )
+        pass
     return
 
 
 if __name__ == "__main__":
     phantom_1_point_source_azimuthal(resolution=100)
     plt.show()
-    non_phantom_1_point_source_z_alignment_distance_convergence(resolution=100)
+    non_phantom_1_point_source_z_alignment_distance_convergence(resolution=10)
     plt.show()
     mix_phantom_total_3_different_1_point_source(resolution=100)
     plt.show()
