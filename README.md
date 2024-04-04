@@ -2,13 +2,11 @@
 
 A Python-based solver for Laplace and acoustic scattering by multiple disjoint spheres, utilizing spherical harmonic decomposition and local multiple trace formulations.
 
-# Python requirement
+Tested with **python 3.9**
 
-It has been tested with **python 3.9**
+# Installation
 
-# Example instructions for installing
-
-## First example instructions
+## Via pip/conda
 
 An example installation using conda:
 - Clone the repository.
@@ -42,7 +40,9 @@ successful installation could work. See the files:
 
 The biosspheres-notebook Docker image is configured to run biosspheres with Python 1.10. This can be done running:
 
-`docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 pescapil/biosspheres-notebook`
+```
+docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 pescapil/biosspheres-notebook
+```
 
 # Comments about the code
 
