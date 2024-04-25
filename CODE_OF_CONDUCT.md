@@ -66,6 +66,6 @@ reporter of any incident.
 
 We are thankful to the groups behind the following documents,
 from which we drew content and inspiration
-- [The Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).
+- [The Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).
 - [Django Projects](https://www.djangoproject.com/conduct/).
 - [The SciPy Code of Conduct](https://docs.scipy.org/doc/scipy/dev/conduct/code_of_conduct.html).
