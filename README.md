@@ -48,9 +48,11 @@ The biosspheres-notebook Docker image is configured to run biosspheres with Pyth
 docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 pescapil/biosspheres-notebook
 ```
 
-# About external packages used in biosspheres
+# Acknowledgments
 
-## numpy
+## External packages used in biosspheres
+
+### numpy
 
 Library for arrays, vectors and matrices in dense format, along
 with routines of linear algebra, norm computation, dot product,
@@ -60,22 +62,22 @@ among others. It also computes functions like sine, cosine, exponential, etc.
 - [GitHub repository](https://github.com/numpy/numpy).
 - [Documentation](https://numpy.org/doc/stable/).
 
-## scipy
+### scipy
 
 - [Web page](https://scipy.org/).
 - [GitHub repository](https://github.com/scipy/scipy).
 - [Documentation](https://docs.scipy.org/doc/scipy/).
 
-### scipy.special
+#### scipy.special
 
 Library for special functions, as the spherical Bessel and
 spherical Hankel functions.
 
-### scipy.sparse
+#### scipy.sparse
 
 Library for sparse arrays.
 
-## pyshtools
+### pyshtools
 
 All Legendre's functions are computed using the package pyshtools 
 ([documentation of pyshtools](https://shtools.github.io/SHTOOLS/index.html)).
@@ -83,7 +85,7 @@ All Legendre's functions are computed using the package pyshtools
 - [Web page and documentation](https://shtools.github.io/SHTOOLS/).
 - [GitHub repository of SHTOOLS](https://github.com/SHTOOLS/SHTOOLS).
 
-## matplotlib
+### matplotlib
 
 Library used in the examples for plotting.
 
