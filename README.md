@@ -48,6 +48,10 @@ The biosspheres-notebook Docker image is configured to run biosspheres with Pyth
 docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 pescapil/biosspheres-notebook
 ```
 
+# How to use
+
+See the Jupyter notebook examples in the folder "notebooks" to see how biosspheres can be used.
+
 # Acknowledgments
 
 ## External packages used in biosspheres

@@ -36,11 +36,17 @@ Write summary.
 
 # Statement of need
 
-Write it.
+Scattering by spheres can be efficiently solved through spherical harmonic functions. These functions diagonalize the Laplace operator for spheres in three dimensions, enabling a sparse representation of the operators under study. Typically, solvers based on spherical harmonics are restricted to solving transmission problems for a single sphere. However, there is currently no open-source library available for performing scattering problems involving multiple objects.
+
+Biosspheres offers a comprehensive suite of routines designed to efficiently assemble boundary integral operators within spherical function spaces for a collection of three-dimensional disjoint spheres. In its operations, Biosspheres leverages the capabilities of pyshtools to accurately evaluate spherical harmonic functions, ensuring precise and reliable computations.
+
+Direct applications serve as benchmarks for comparing and testing BEM solvers. They are also valuable for rapidly computing complex problems involving a large number of spheres. Furthermore, they can generate solutions for a range of scatterers, with direct relevance to uncertainty quantification, scientific machine learning, and cloaking.
 
 # Mathematics
 
-Examples:
+Consider the Laplace (resp., Helmholtz) scattering problem for $N$ disjoint spheres.
+
+Be succinct with the mathematics. We could perhaps focus on Laplace or Helmholtz.
 
 Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
 
