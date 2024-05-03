@@ -5,7 +5,7 @@ The following are some ways of contributing:
 - Fixing bugs, improving documentation, and other maintenance work.
 - Triaging issues.
 
-## Reporting issues
+## Reporting issues or bugs
 
 Ensure the bug was not already reported by searching on GitHub under Issues.
 
