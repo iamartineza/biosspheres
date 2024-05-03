@@ -29,11 +29,11 @@ permission from the original author to relicense the contributed code.
 
 ## Coding conventions
 
-- For formatting the code we use Black with the options `-l 80 -t py39`.
+- For formatting the code we use the [Black code style](https://black.readthedocs.io/en/stable/the_black_code_style/index.html)
+with the options `-l 80 -t py39`. Black is a PEP 8 compliant opinionated formatter with its own style.
 - For the docstrings, we mainly follow the numpy format see
 [numpy style guide](https://numpydoc.readthedocs.io/en/latest/format.html).
 - We usually add type hints.
-
 
 ## Feature request
 
