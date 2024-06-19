@@ -1,8 +1,8 @@
-ipython
-jupyterlab
-ipykernel
-numpy==1.26.2
-scipy==1.11.4
-matplotlib==3.8.2
-pyshtools==4.10.4
-setuptools>=68.2.2
+pyshtools==4.12.2 || pyshtools==4.10.4
+numpy==1.26.4 || numpy==1.26.2
+scipy==1.13.1 || scipy==1.11.4
+matplotlib==3.8.4 || matplotlib==3.8.2
+#ipython
+#jupyterlab
+#ipykernel
+#setuptools>=68.2.2
