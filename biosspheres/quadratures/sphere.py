@@ -48,6 +48,34 @@ import numpy as np
 import pyshtools
 
 
+def gauss_legendre_trapezoidal_init(
+    big_l_c: int,
+):
+    assert big_l_c is int
+    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
+    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
+
+    quantity_theta_points = len(zeros)
+    quantity_phi_points = len(phi)
+
+    cos_phi = np.cos(phi)
+    sin_phi = np.sin(phi)
+    del phi
+
+    cos_theta = zeros
+    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
+
+    return (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+    )
+
+
 def gauss_legendre_trapezoidal_2d(
     big_l_c: int,
 ) -> tuple[int, int, np.ndarray, np.ndarray]:
