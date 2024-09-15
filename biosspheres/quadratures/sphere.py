@@ -31,6 +31,7 @@ This module has the implementation of functions that return
 
 Routine listings
 ----------------
+gauss_legendre_trapezoidal_init
 gauss_legendre_trapezoidal_2d
 gauss_legendre_trapezoidal_1d
 gauss_legendre_trapezoidal_real_sh_mapping_2d
@@ -51,7 +52,6 @@ import pyshtools
 def gauss_legendre_trapezoidal_init(
     big_l_c: int,
 ):
-    assert big_l_c is int
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
     phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
 
@@ -60,7 +60,6 @@ def gauss_legendre_trapezoidal_init(
 
     cos_phi = np.cos(phi)
     sin_phi = np.sin(phi)
-    del phi
 
     cos_theta = zeros
     sin_theta = np.sqrt(1.0 - np.square(cos_theta))
@@ -73,6 +72,7 @@ def gauss_legendre_trapezoidal_init(
         sin_phi,
         cos_theta,
         sin_theta,
+        phi,
     )
 
 
@@ -127,28 +127,26 @@ def gauss_legendre_trapezoidal_2d(
     gauss_legendre_trapezoidal_1d
 
     """
-    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
-    quantity_theta_points = len(zeros)
-    quantity_phi_points = len(phi)
-
-    cos_phi = np.cos(phi)
-    sen_phi = np.sin(phi)
+    (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+        phi,
+    ) = gauss_legendre_trapezoidal_init(big_l_c)
     del phi
-
-    cos_theta = zeros
-    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
-
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in np.arange(0, quantity_theta_points):
-        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
+        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
-
-    del sen_theta
+    del sin_theta
     del cos_phi
-    del sen_phi
+    del sin_phi
     del cos_theta
 
     return quantity_theta_points, quantity_phi_points, weights, pre_vector
@@ -208,18 +206,17 @@ def gauss_legendre_trapezoidal_1d(
     gauss_legendre_trapezoidal_2d
 
     """
-    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
-
-    quantity_theta_points = len(zeros)
-    quantity_phi_points = len(phi)
-
-    cos_phi = np.cos(phi)
-    sin_phi = np.sin(phi)
+    (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+        phi,
+    ) = gauss_legendre_trapezoidal_init(big_l_c)
     del phi
-
-    cos_theta = zeros
-    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
 
     # First is tile (theta integral) and then is repeat (phi integral)
     total_weights = (
@@ -313,13 +310,16 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
 
     """
-    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
-    quantity_theta_points = len(zeros)
-    quantity_phi_points = len(phi)
-
-    cos_phi = np.cos(phi)
-    sen_phi = np.sin(phi)
+    (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+        phi,
+    ) = gauss_legendre_trapezoidal_init(big_l_c)
 
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
@@ -328,8 +328,6 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         np.sin(m * phi, out=sin_m_phi[m - 1, :])
         pass
     del phi
-
-    cos_theta = zeros
 
     legendre_functions = np.zeros(
         ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
@@ -368,18 +366,16 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     del sin_m_phi
     del j_range
 
-    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
-
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in i_range:
-        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
+        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
 
-    del sen_theta
+    del sin_theta
     del cos_phi
-    del sen_phi
+    del sin_phi
     del cos_theta
 
     return (
@@ -463,13 +459,16 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
 
     """
-    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
-    quantity_theta_points = len(zeros)
-    quantity_phi_points = len(phi)
-
-    cos_phi = np.cos(phi)
-    sen_phi = np.sin(phi)
+    (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+        phi,
+    ) = gauss_legendre_trapezoidal_init(big_l_c)
 
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     exp_neg = np.zeros_like(exp_pos)
@@ -478,8 +477,6 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
         exp_neg[m - 1, :] = (-1.0) ** m / exp_pos[m - 1, :]
         pass
     del phi
-
-    cos_theta = zeros
 
     legendre_functions = np.zeros(
         ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
@@ -517,19 +514,17 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     del legendre_functions
     del j_range
 
-    sen_theta = np.sqrt(1.0 - np.square(cos_theta))
-
     pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
     for i in i_range:
-        np.multiply(sen_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sen_theta[i], sen_phi, out=pre_vector[1, i, :])
+        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
         pre_vector[2, i, :] = cos_theta[i]
         pass
 
     del i_range
-    del sen_theta
+    del sin_theta
     del cos_phi
-    del sen_phi
+    del sin_phi
     del cos_theta
 
     return (
@@ -588,10 +583,16 @@ def real_spherical_harmonic_transform_1d(
     gauss_legendre_trapezoidal_1d
 
     """
-    zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
-    phi = np.linspace(0.0, 2.0 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
-    quantity_theta_points = len(zeros)
-    quantity_phi_points = len(phi)
+    (
+        quantity_theta_points,
+        quantity_phi_points,
+        weights,
+        cos_phi,
+        sin_phi,
+        cos_theta,
+        sin_theta,
+        phi,
+    ) = gauss_legendre_trapezoidal_init(big_l_c)
 
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
     sin_m_phi = np.zeros((big_l, quantity_phi_points))
@@ -604,14 +605,11 @@ def real_spherical_harmonic_transform_1d(
     legendre_functions = np.zeros(
         ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
     )
-    cos_theta = zeros
     for i in np.arange(0, quantity_theta_points):
         legendre_functions[:, i] = pyshtools.legendre.PlmON(
             big_l, cos_theta[i], csphase=-1, cnorm=0
         )
         pass
-
-    sin_theta = np.sqrt(1.0 - np.square(cos_theta))
 
     # Help:
     # first is tile (theta integral) and then is repeat (phi integral)
