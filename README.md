@@ -14,31 +14,19 @@ Tested with **python 3.9**
 
 # Installation
 
-## Via pip/conda
+We recommend to install the package in its own python environment.
 
-An example installation using conda:
-- Clone the repository.
-- Create a new conda environment (with python=3.9) and activate it.
-- Add conda-forge channel if not added
-`conda config --add channels conda-forge`
-- cd to local directory.
-- Install the packages in requirements.txt using
-`conda install --file requirements.txt`
-    - This should install the package `pyshtools==4.10.4` along with its 
-dependencies. See its official documentation if not installed correctly
-([Install pyshtools](https://pypi.org/project/pyshtools/#installation)).
-- Install pip (if not installed)
-`conda install pip`
-- Install biosspheres
-`pip install --editable .`
+## Via pip
 
-## Second example instructions
+The package is available in TestPyPi.
 
-If the first example does not work, 
-an installation using as a reference a list of packages installed in a 
-successful installation could work. See the files:
-- env_example_1.txt
-- env_biosspheres.txt
+For the minimum installation:
+
+`pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ biosspheres`
+
+For the installation including the dependencies necessary for running jupyter notebooks:
+
+`pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ biosspheres[all]`
 
 ## Docker
 
