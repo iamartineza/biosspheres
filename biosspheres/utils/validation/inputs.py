@@ -20,7 +20,7 @@ def big_l_validation(big_l: int, name: str) -> None:
 
 
 def radius_validation(r: float, name: str) -> None:
-    if not isinstance(r, (float, np.integer, np.floating)):
+    if not isinstance(r, (float, np.floating)):
         raise TypeError(
             f"{name} must be a float or numpy float type), got "
             f"{type(r).__name__}"
@@ -72,4 +72,15 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
         raise ValueError(f"All elements in {name} must be a finite number")
     if not np.all(radii > 0):
         raise ValueError(f"All elements in {name} must be positive numbers")
+    pass
+
+
+def pi_validation(pi: float, name: str) -> None:
+    if not isinstance(pi, (float, np.floating)):
+        raise TypeError(
+            f"{name} must be a float or numpy float type), got "
+            f"{type(pi).__name__}"
+        )
+    if not (np.isfinite(pi)):
+        raise ValueError(f"{name} must be a finite number, got {pi}")
     pass
