@@ -49,7 +49,7 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
             # Attempt to convert to NumPy array
             radii = np.asarray(radii)
             warnings.warn(
-                "{name} was not a numpy array. "
+                f"{name} was not a numpy array. "
                 "It is recommended to use numpy arrays for better performance.",
                 UserWarning,
             )
@@ -64,19 +64,7 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
             f"{radii.dtype}"
         )
     if radii.size == 0:
-        raise ValueError("{name} array must not be empty")
-    if radii.ndim == 0:
-        try:
-            radii = radii.reshape(1)
-            warnings.warn(
-                "{name} was a zero-dimensional.",
-                UserWarning,
-            )
-        except Exception as e:
-            raise ValueError(
-                f"{name} is zero-dimensional and could not be reshaped to "
-                f"one-dimensional array: {e}"
-            )
+        raise ValueError(f"{name} array must not be empty")
     if radii.ndim != 1:
         raise ValueError(
             f"Expected '{name}' to be one-dimensional, but got {radii.ndim}"
@@ -90,5 +78,5 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
             f"number"
         )
     if not np.all(radii > 0):
-        raise ValueError("All elements in {name} must be positive numbers")
+        raise ValueError(f"All elements in {name} must be positive numbers")
     pass
