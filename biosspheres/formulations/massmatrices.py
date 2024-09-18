@@ -49,6 +49,9 @@ def j_block(big_l: int, r: float, azimuthal: bool = True) -> np.ndarray:
     if not azimuthal:
         num = num**2
     mass_matrix = r**2 * np.ones(num)
+
+    assert np.isfinite(mass_matrix).all(), "Array contains NaN or Inf values."
+
     return mass_matrix
 
 
@@ -91,6 +94,9 @@ def two_j_blocks(big_l: int, r: float, azimuthal: bool = True) -> np.ndarray:
     if not azimuthal:
         num = num**2
     mass_matrix = r**2 * np.ones(2 * num)
+
+    assert np.isfinite(mass_matrix).all(), "Array contains NaN or Inf values."
+
     return mass_matrix
 
 
@@ -139,6 +145,9 @@ def n_j_blocks(
         mass_matrix[j * num : (j + 1) * num] = (
             radii[j] ** 2 * mass_matrix[j * num : (j + 1) * num]
         )
+
+    assert np.isfinite(mass_matrix).all(), "Array contains NaN or Inf values."
+
     return mass_matrix
 
 
@@ -189,4 +198,7 @@ def n_two_j_blocks(
         mass_matrix[2 * j * num : 2 * (j + 1) * num] = (
             radii[j] ** 2 * mass_matrix[2 * j * num : 2 * (j + 1) * num]
         )
+
+    assert np.isfinite(mass_matrix).all(), "Array contains NaN or Inf values."
+
     return mass_matrix
