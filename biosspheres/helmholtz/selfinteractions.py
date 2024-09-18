@@ -25,7 +25,7 @@ def v_jj_azimuthal_symmetry(big_l: int, r: float, k: float) -> np.ndarray:
     """
     Returns a numpy array with the boundary integral operator V_{j,j}
     with Helmholtz kernel evaluated and tested with spherical harmonics
-    of order 0.
+    of order 0 in a sphere of radius r.
 
     Notes
     -----
