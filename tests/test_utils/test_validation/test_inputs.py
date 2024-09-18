@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-import warnings
 from biosspheres.utils.validation.inputs import (
     big_l_validation,
     radius_validation,
