@@ -1,50 +1,11 @@
 import numpy as np
 from scipy import sparse
 import biosspheres.helmholtz.selfinteractions as helmholtz
-
-
-def x_j_diagonal(
-    big_l: int, r: float, pi: np.ndarray, azimuthal: bool = True
-) -> np.ndarray:
-    """
-    Returns a numpy array with the diagonal of the matrix:
-    X_j = [I ,       0      ]
-          [0 , -(pi)^{-1} I ]
-    with I[l*(2l+1) + m] = < I Y_l,m ; Y_l,m >_L^2(S).
-              = r**2
-    for each l such that 0 <= l <= big_l, and with
-    S: surface sphere radius r
-    Y_l,m: spherical harmonic degree l, order m.
-
-    Parameters
-    ----------
-    big_l : int
-        >= 0
-    r : float
-        > 0, radius
-    pi : float
-        > 0, adimensional parameter.
-    azimuthal : bool
-        default = True
-
-    Returns
-    -------
-    x_j : np.ndarray
-        of floats. If azimuthal = False, its is length 2*(big_l+1), else
-        it is 2*(big_l+1)**2.
-
-    """
-    num = big_l + 1
-    if not azimuthal:
-        num = num**2
-    eles = np.arange(0, num)
-    x_j = r**2 * np.ones((2 * num))
-    x_j[num + eles] = x_j[num + eles] / -pi
-    return x_j
+import biosspheres.utils.validation.inputs as val
 
 
 def x_j_diagonal_inv(
-    big_l: int, r: float, pi: np.ndarray, azimuthal: bool = True
+    big_l: int, r: float, pi: float, azimuthal: bool = True
 ) -> np.ndarray:
     """
     Returns a numpy array with the diagonal of the matrix:
@@ -74,12 +35,21 @@ def x_j_diagonal_inv(
         it is 2*(big_l+1)**2.
 
     """
+    # Input validation
+    val.big_l_validation(big_l, "big_l")
+    val.radius_validation(r, "r")
+    val.pi_validation(pi, "pi")
+    val.bool_validation(azimuthal, "azimuthal")
+
     num = big_l + 1
     if not azimuthal:
         num = num**2
     eles = np.arange(0, num)
     x_j = r**2 * np.ones((2 * num))
     x_j[num + eles] = x_j[num + eles] * -pi
+
+    assert np.isfinite(x_j).all(), "Array contains NaN or Inf values."
+
     return x_j
 
 
@@ -140,6 +110,46 @@ def x_diagonal_with_its_inv(
             -radii[s_minus_1] ** 2 * pii[s_minus_1]
         )
     return x_dia, x_inv
+
+
+def x_j_diagonal(
+    big_l: int, r: float, pi: np.ndarray, azimuthal: bool = True
+) -> np.ndarray:
+    """
+    Returns a numpy array with the diagonal of the matrix:
+    X_j = [I ,       0      ]
+          [0 , -(pi)^{-1} I ]
+    with I[l*(2l+1) + m] = < I Y_l,m ; Y_l,m >_L^2(S).
+              = r**2
+    for each l such that 0 <= l <= big_l, and with
+    S: surface sphere radius r
+    Y_l,m: spherical harmonic degree l, order m.
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0
+    r : float
+        > 0, radius
+    pi : float
+        > 0, adimensional parameter.
+    azimuthal : bool
+        default = True
+
+    Returns
+    -------
+    x_j : np.ndarray
+        of floats. If azimuthal = False, its is length 2*(big_l+1), else
+        it is 2*(big_l+1)**2.
+
+    """
+    num = big_l + 1
+    if not azimuthal:
+        num = num**2
+    eles = np.arange(0, num)
+    x_j = r**2 * np.ones((2 * num))
+    x_j[num + eles] = x_j[num + eles] / -pi
+    return x_j
 
 
 def mtf_1_matrix(
