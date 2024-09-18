@@ -63,6 +63,7 @@ def test_radius_validation_valid(r, name):
 
 
 @pytest.mark.parametrize("r, name", [
+    (2, "pi"),
     ("1.0", "radius"),
     (True, "radius"),
     (None, "radius"),
@@ -84,6 +85,31 @@ def test_radius_validation_invalid_type(r, name):
 def test_radius_validation_invalid_value(r, name, error_msg):
     with pytest.raises(ValueError) as exc_info:
         radius_validation(r, name)
+    assert error_msg in str(exc_info.value)
+
+
+# Test for pi_validation
+@pytest.mark.parametrize("pi, name", [
+    (2, "pi"),
+    ("1.0", "pi"),
+    (True, "pi"),
+    (None, "pi"),
+    ([1.0], "pi"),
+])
+def test_radius_validation_invalid_type(pi, name):
+    with pytest.raises(TypeError) as exc_info:
+        radius_validation(pi, name)
+    assert f"{name} must be a float or numpy float type" in str(exc_info.value)
+
+
+@pytest.mark.parametrize("pi, name, error_msg", [
+    (np.inf, "pi", "must be a finite number"),
+    (-np.inf, "pi", "must be a finite number"),
+    (np.nan, "pi", "must be a finite number"),
+])
+def test_radius_validation_invalid_value(pi, name, error_msg):
+    with pytest.raises(ValueError) as exc_info:
+        radius_validation(pi, name)
     assert error_msg in str(exc_info.value)
 
 
