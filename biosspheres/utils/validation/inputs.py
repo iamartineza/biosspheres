@@ -27,8 +27,6 @@ def radius_validation(r: float, name: str) -> None:
         )
     if not (np.isfinite(r)):
         raise ValueError(f"{name} must be a finite number, got {r}")
-    if not (np.isfinite(r**2)):
-        raise ValueError(f"{name}**2 must be a finite number, got {r}")
     if r <= 0:
         raise ValueError(f"{name} must be positive, got {r}")
     pass
@@ -72,11 +70,6 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
         )
     if not (np.all(np.isfinite(radii))):
         raise ValueError(f"All elements in {name} must be a finite number")
-    if not (np.all(np.isfinite(radii**2))):
-        raise ValueError(
-            f"All elements to the power of two in {name} must be a finite"
-            f"number"
-        )
     if not np.all(radii > 0):
         raise ValueError(f"All elements in {name} must be positive numbers")
     pass
