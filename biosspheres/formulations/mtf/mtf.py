@@ -79,12 +79,21 @@ def x_diagonal_with_its_inv(
     Returns
     -------
     x_dia : np.ndarray
-        of floats. If azimuthal = False, its is length 2n(big_l+1),
+        of floats. If azimuthal = False, its length is 2n(big_l+1),
         else it is 2n(big_l+1)**2.
     x_inv : np.ndarray
         of floats. = 1. / x_dia
 
     """
+    # Input validation
+    val.n_validation(n, "n")
+    val.big_l_validation(big_l, "big_l")
+    val.radii_validation(radii, "radii")
+    val.pii_validation(pii, "pii")
+    val.bool_validation(azimuthal, "azimuthal")
+    assert n == len(radii), "radii must have length n"
+    assert n + 1 == len(pii), "pii must have length n + 1"
+
     num = big_l + 1
     if not azimuthal:
         num = num**2
@@ -109,6 +118,8 @@ def x_diagonal_with_its_inv(
         x_inv[((s_minus_1_times_2 + 1) * num) : (s * 2 * num)] = (
             -radii[s_minus_1] ** 2 * pii[s_minus_1]
         )
+    assert np.isfinite(x_dia).all(), "Array contains NaN or Inf values."
+    assert np.isfinite(x_inv).all(), "Array contains NaN or Inf values."
     return x_dia, x_inv
 
 
@@ -143,12 +154,21 @@ def x_j_diagonal(
         it is 2*(big_l+1)**2.
 
     """
+    # Input validation
+    val.big_l_validation(big_l, "big_l")
+    val.r_validation(r, "r")
+    val.pi_validation(pi, "pi")
+    val.bool_validation(azimuthal, "azimuthal")
+
     num = big_l + 1
     if not azimuthal:
         num = num**2
     eles = np.arange(0, num)
     x_j = r**2 * np.ones((2 * num))
     x_j[num + eles] = x_j[num + eles] / -pi
+
+    assert np.isfinite(x_j).all(), "Array contains NaN or Inf values."
+
     return x_j
 
 
@@ -182,6 +202,12 @@ def mtf_1_matrix(
         Same type than a_0j. Shape 2 * Shape(a_0j)
 
     """
+    # Input validation
+    val.r_validation(r, "r")
+    val.pi_validation(pi, "pi")
+    val.two_dimensional_array_check(a_0j, "a_0j")
+    val.two_dimensional_array_check(a_j, "a_j")
+
     num = len(a_0j[0, :]) // 2
     eles = np.arange(0, num)
 
@@ -203,6 +229,8 @@ def mtf_1_matrix(
 
     mtf_matrix[num + eles, 3 * num + eles] = pi * r**2
     mtf_matrix[3 * num + eles, num + eles] = r**2 / pi
+
+    assert np.isfinite(mtf_matrix).all(), "Array contains NaN or Inf values."
 
     return mtf_matrix
 
