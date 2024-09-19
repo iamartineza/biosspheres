@@ -27,7 +27,7 @@ def radius_validation(r: float, name: str) -> None:
         )
     if not (np.isfinite(r)):
         raise ValueError(f"{name} must be a finite number, got {r}")
-    if r <= 0:
+    if r <= 0.0:
         raise ValueError(f"{name} must be positive, got {r}")
     pass
 
@@ -43,19 +43,7 @@ def bool_validation(b: bool, name: str) -> None:
 
 def radii_validation(radii: np.ndarray, name: str) -> None:
     if not isinstance(radii, np.ndarray):
-        try:
-            # Attempt to convert to NumPy array
-            radii = np.asarray(radii)
-            warnings.warn(
-                f"{name} was not a numpy array. "
-                "It is recommended to use numpy arrays for better performance.",
-                UserWarning,
-            )
-        except Exception as e:
-            raise TypeError(
-                f"{name} must be an array, got {type(radii).__name__}"
-            )
-
+        raise TypeError(f"{name} must be an array, got {type(radii).__name__}")
     if not issubclass(radii.dtype.type, np.floating):
         raise TypeError(
             f"{name} must be an array of floats, got array with dtype"
@@ -70,7 +58,7 @@ def radii_validation(radii: np.ndarray, name: str) -> None:
         )
     if not (np.all(np.isfinite(radii))):
         raise ValueError(f"All elements in {name} must be a finite number")
-    if not np.all(radii > 0):
+    if not np.all(radii > 0.0):
         raise ValueError(f"All elements in {name} must be positive numbers")
     pass
 
@@ -83,4 +71,59 @@ def pi_validation(pi: float, name: str) -> None:
         )
     if not (np.isfinite(pi)):
         raise ValueError(f"{name} must be a finite number, got {pi}")
+    if np.abs(pi) == np.abs(0.0):
+        raise ValueError(f"{name} must be different from 0, got {pi}")
+    pass
+
+
+def pii_validation(pii: np.ndarray, name: str) -> None:
+    if not isinstance(pii, np.ndarray):
+        raise TypeError(f"{name} must be an array, got {type(pii).__name__}")
+
+    if not issubclass(pii.dtype.type, np.floating):
+        raise TypeError(
+            f"{name} must be an array of floats, got array with dtype"
+            f"{pii.dtype}"
+        )
+    if pii.size == 0:
+        raise ValueError(f"{name} array must not be empty")
+    if pii.ndim != 1:
+        raise ValueError(
+            f"Expected '{name}' to be one-dimensional, but got {pii.ndim}"
+            f"dimensions."
+        )
+    if not (np.all(np.isfinite(pii))):
+        raise ValueError(f"All elements in {name} must be a finite number")
+    if np.any(np.abs(pii) == np.abs(0.0)):
+        raise ValueError(f"All elements in {name} must be non-zero")
+    pass
+
+
+def n_validation(n: int, name: str) -> None:
+    if not isinstance(n, (int, np.integer)):
+        raise TypeError(
+            f"{name} must be an integer or numpy integer type,"
+            f"got {type(n).__name__}"
+        )
+    if n <= 0:
+        raise ValueError(f"{name} must be positive, got {n}")
+    pass
+
+
+def two_dimensional_array_check(array: np.ndarray, name: str) -> None:
+    if not isinstance(array, np.ndarray):
+        raise TypeError(
+            f"{name} should be a numpy array, but got {type(array).__name__}."
+        )
+    if array.ndim != 2:
+        raise ValueError(f"{name} should be 2D, but got {array.ndim}D.")
+    pass
+
+
+def square_array_check(array: np.ndarray, name: str) -> None:
+    rows, cols = array.shape
+    if rows != cols:
+        raise ValueError(
+            f"{name} is not square: {rows} rows vs {cols} columns."
+        )
     pass
