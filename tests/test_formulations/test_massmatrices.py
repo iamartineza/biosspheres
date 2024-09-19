@@ -130,9 +130,21 @@ def test_n_j_blocks_correct_output(
 @pytest.mark.parametrize(
     "big_l, radii, azimuthal, expected_exception, match",
     [
-        (1, [1, 2, 3], True, TypeError, "radii must be an array of floats"),
-        (-1, 1.0, True, ValueError, "big_l must be non-negative"),
-        (2, [1., 2., 3.], "False", TypeError, "azimuthal must be a boolean"),
+        (
+            1,
+            np.asarray([1, 2, 3], dtype=np.int32),
+            True,
+            TypeError,
+            "radii must be an array of floats",
+        ),
+        (-1, np.asarray([1.0]), True, ValueError, "big_l must be non-negative"),
+        (
+            2,
+            np.asarray([1.0, 2.0, 3.0]),
+            "False",
+            TypeError,
+            "azimuthal must be a boolean",
+        ),
     ],
 )
 def test_n_j_blocks_input_validation(
@@ -190,9 +202,21 @@ def test_n_two_j_blocks_correct_output(
 @pytest.mark.parametrize(
     "big_l, radii, azimuthal, expected_exception, match",
     [
-        (1, [1, 2, 3], True, TypeError, "radii must be an array of floats"),
-        (-1, 1.0, True, ValueError, "big_l must be non-negative"),
-        (2, [1., 2., 3.], "False", TypeError, "azimuthal must be a boolean"),
+        (
+            1,
+            np.asarray([1, 2, 3], dtype=np.int32),
+            True,
+            TypeError,
+            "radii must be an array of floats",
+        ),
+        (-1, np.asarray([1.0]), True, ValueError, "big_l must be non-negative"),
+        (
+            2,
+            np.asarray([1.0, 2.0, 3.0]),
+            "False",
+            TypeError,
+            "azimuthal must be a boolean",
+        ),
     ],
 )
 def test_n_two_j_blocks_input_validation(
