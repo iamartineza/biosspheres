@@ -1,5 +1,6 @@
 import pytest
 import numpy as np
+from scipy import sparse
 from biosspheres.utils.validation.inputs import (
     big_l_validation,
     radius_validation,
@@ -10,6 +11,10 @@ from biosspheres.utils.validation.inputs import (
     n_validation,
     two_dimensional_array_check,
     square_array_check,
+    same_size_check,
+    is_scipy_linear_op,
+    same_type_check,
+    is_scipy_sparse_array,
 )
 
 
@@ -431,3 +436,304 @@ def test_square_arrays_check_invalid(array, name, expected_message):
     with pytest.raises(ValueError) as exc_info:
         square_array_check(array, name)
     assert str(exc_info.value).__contains__(expected_message)
+
+
+# Testing same_size_check
+@pytest.mark.parametrize(
+    "arr1, name1, arr2, name2",
+    [
+        (np.array([]), "array1", np.array([]), "array2"),
+        (np.array([1, 2, 3]), "array1", np.array([4, 5, 6]), "array2"),
+        (
+            np.array([[1, 2], [3, 4]]),
+            "array1",
+            np.array([[5, 6], [7, 8]]),
+            "array2",
+        ),
+        (np.zeros((2, 3, 4)), "array1", np.ones((2, 3, 4)), "array2"),
+        (
+            np.array([1, 2, 3], dtype=int),
+            "array1",
+            np.array([4.0, 5.0, 6.0], dtype=float),
+            "array2",
+        ),
+        (
+            sparse.linalg.LinearOperator(
+                shape=(2, 2), matvec=lambda x: 2 * np.array(x)
+            ),
+            "array1",
+            np.array([[5, 6], [7, 8]]),
+            "array2",
+        ),
+    ],
+)
+def test_same_size_check_pass(arr1, name1, arr2, name2):
+    """
+    Test that same_size_check does not raise an exception
+    when both arrays have the same shape.
+    """
+    same_size_check(arr1, name1, arr2, name2)
+
+
+# Test for is_scipy_linear_op
+@pytest.mark.parametrize(
+    "arr1, name1, arr2, name2, expected_msg",
+    [
+        # Both arrays are empty but with different shapes
+        (
+            np.array([]),
+            "array1",
+            np.array([1]),
+            "array2",
+            "different",
+        ),
+        # 1D arrays with different shapes
+        (
+            np.array([1, 2, 3]),
+            "array1",
+            np.array([4, 5]),
+            "array2",
+            "different",
+        ),
+        # 2D arrays with different shapes
+        (
+            np.array([[1, 2], [3, 4]]),
+            "array1",
+            np.array([[5, 6, 7], [8, 9, 10]]),
+            "array2",
+            "different",
+        ),
+        # Higher-dimensional arrays with different shapes
+        (
+            np.zeros((2, 3, 4)),
+            "array1",
+            np.ones((2, 4, 3)),
+            "array2",
+            "different",
+        ),
+        # One empty and one non-empty array
+        (
+            np.array([]),
+            "array1",
+            np.array([[1, 2], [3, 4]]),
+            "array2",
+            "different",
+        ),
+    ],
+)
+def test_same_size_check_fail(arr1, name1, arr2, name2, expected_msg):
+    """
+    Test that same_size_check raises a ValueError
+    when arrays have different shapes.
+    """
+    with pytest.raises(ValueError) as exc_info:
+        same_size_check(arr1, name1, arr2, name2)
+    assert str(exc_info.value).__contains__(expected_msg)
+    pass
+
+
+# Test is_scipy_linear_op
+@pytest.mark.parametrize(
+    "linear_op,name",
+    [
+        (
+            sparse.linalg.LinearOperator(
+                shape=(2, 2), matvec=lambda x: 2 * np.array(x)
+            ),
+            "valid_op_1",
+        ),
+        (
+            sparse.linalg.LinearOperator(shape=(3, 3), matvec=lambda x: x + 1),
+            "valid_op_2",
+        ),
+    ],
+)
+def test_is_scipy_linear_op_valid_cases(linear_op, name):
+    """
+    Test that is_scipy_linear_op does not raise an exception for valid
+    LinearOperator instances.
+    """
+    is_scipy_linear_op(linear_op, name)
+    pass
+
+
+@pytest.mark.parametrize(
+    "invalid_obj,name",
+    [
+        # Numpy array
+        (np.array([[1, 2], [3, 4]]), "array_op"),
+        # Python list
+        ([1, 2, 3], "list_op"),
+        # Integer
+        (42, "int_op"),
+        # String
+        ("not an operator", "string_op"),
+        # None
+        (None, "none_op"),
+        # Dictionary
+        ({"key": "value"}, "dict_op"),
+    ],
+)
+def test_is_scipy_linear_op_invalid_cases(invalid_obj, name):
+    """
+    Test that is_scipy_linear_op raises a TypeError for invalid objects.
+    """
+    with pytest.raises(TypeError) as exc_info:
+        is_scipy_linear_op(invalid_obj, name)
+    pass
+
+
+# Test same_type_check
+@pytest.mark.parametrize(
+    "array1, name1, array2, name2",
+    [
+        (
+            np.array([1, 2, 3], dtype=np.int32),
+            "array1",
+            np.array([4, 5, 6], dtype=np.int32),
+            "array2",
+        ),
+        (
+            np.array([1.0, 2.0, 3.0], dtype=np.float64),
+            "array1",
+            np.array([4.0, 5.0, 6.0], dtype=np.float64),
+            "array2",
+        ),
+        (
+            np.array(["a", "b", "c"], dtype="<U1"),
+            "array1",
+            np.array(["x", "y", "z"], dtype="<U1"),
+            "array2",
+        ),
+        (
+            np.array([True, False, True], dtype=bool),
+            "array1",
+            np.array([False, False, True], dtype=bool),
+            "array2",
+        ),
+        (
+            np.array([1 + 2j, 3 + 4j], dtype=np.complex64),
+            "array1",
+            np.array([5 + 6j, 7 + 8j], dtype=np.complex64),
+            "array2",
+        ),
+        (
+            np.array([1 + 2j, 3 + 4j], dtype=np.complex128),
+            "array1",
+            np.array([5 + 6j, 7 + 8j], dtype=np.complex128),
+            "array2",
+        ),
+    ],
+)
+def test_same_type_check_pass(array1, name1, array2, name2):
+    """
+    Test cases where arrays have the same dtype.
+    Expect no exception to be raised.
+    """
+    same_type_check(array1, name1, array2, name2)
+    pass
+
+
+@pytest.mark.parametrize(
+    "array1, name1, array2, name2, expected_message",
+    [
+        (
+            np.array([1, 2, 3], dtype=np.int32),
+            "array1",
+            np.array([1.0, 2.0, 3.0], dtype=np.float64),
+            "array2",
+            "type",
+        ),
+        (
+            np.array([1.0, 2.0], dtype=np.float32),
+            "first_array",
+            np.array([3.0, 4.0], dtype=np.float64),
+            "second_array",
+            "type",
+        ),
+        (
+            np.array(["a", "b"], dtype="<U1"),
+            "arr1",
+            np.array(["c", "d"], dtype="<U2"),
+            "arr2",
+            "type",
+        ),
+        (
+            np.array([True, False], dtype=bool),
+            "bool_array",
+            np.array([1, 0], dtype=int),
+            "int_array",
+            "type",
+        ),
+        (
+            np.array([1 + 2j, 3 + 4j], dtype=np.complex64),
+            "complex_array1",
+            np.array([5 + 6j, 7 + 8j], dtype=np.complex128),
+            "complex_array2",
+            "type",
+        ),
+        (
+            np.array([1 + 2j, 3 + 4j], dtype=np.complex128),
+            "complex_array",
+            np.array([5.0, 6.0], dtype=np.float64),
+            "float_array",
+            "type",
+        ),
+        (
+            np.array([1 + 2j, 3 + 4j], dtype=np.complex64),
+            "complex_array",
+            np.array([1, 2, 3], dtype=np.int32),
+            "int_array",
+            "type",
+        ),
+    ],
+)
+def test_same_type_check_fail(array1, name1, array2, name2, expected_message):
+    """
+    Test cases where arrays have different dtypes.
+    Expect a ValueError to be raised with the correct message.
+    """
+    with pytest.raises(ValueError) as exc_info:
+        same_type_check(array1, name1, array2, name2)
+    assert str(exc_info.value).__contains__(expected_message)
+    pass
+
+
+# Test for is_scipy_sparse_array
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (sparse.csr_array([[1, 0], [0, 1]]), "test_array"),
+        (sparse.csc_array([[0, 2], [3, 0]]), "sparse_array"),
+        (sparse.lil_array([[4, 0], [0, 5]]), "another_array"),
+        (sparse.dok_array([[6, 0], [0, 7]]), "dok_array"),
+        (sparse.bsr_array([[8, 0], [0, 9]]), "bsr_array"),
+    ],
+)
+def test_is_scipy_sparse_matrix_valid(array, name):
+    """
+    Test that is_scipy_sparse_array does not raise an exception
+    when a valid scipy sparse array is provided.
+    """
+    try:
+        is_scipy_sparse_array(array, name)
+    except Exception as e:
+        pytest.fail(f"Unexpected exception raised: {e}")
+
+
+@pytest.mark.parametrize(
+    "array, name, expected_msg",
+    [
+        (np.array([[1, 0], [0, 1]]), "numpy_array", "ndarray"),
+        (sparse.csr_matrix([[1, 0], [0, 1]]), "test_matrix", "matrix"),
+    ],
+)
+def test_is_scipy_sparse_matrix_invalid(array, name, expected_msg):
+    """
+    Test that is_scipy_sparse_matrix raises a TypeError
+    with the correct message when an invalid object is provided.
+    """
+    with pytest.raises(TypeError) as exc_info:
+        is_scipy_sparse_array(array, name)
+    assert str(exc_info.value).__contains__(expected_msg)
+    pass
