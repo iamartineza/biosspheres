@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import sparse
 import warnings
 
 
@@ -117,6 +118,8 @@ def two_dimensional_array_check(array: np.ndarray, name: str) -> None:
         )
     if array.ndim != 2:
         raise ValueError(f"{name} should be 2D, but got {array.ndim}D.")
+    if not (np.all(np.isfinite(array))):
+        raise ValueError(f"All elements in {name} must be a finite number")
     pass
 
 
@@ -125,5 +128,50 @@ def square_array_check(array: np.ndarray, name: str) -> None:
     if rows != cols:
         raise ValueError(
             f"{name} is not square: {rows} rows vs {cols} columns."
+        )
+    pass
+
+
+def same_size_check(
+    array1: np.ndarray, name1: str, array2: np.ndarray, name2: str
+) -> None:
+    if array1.shape != array2.shape:
+        raise ValueError(
+            f"{name1} has different shape than {name2}: "
+            f"{array1.shape} vs {array2.shape}."
+        )
+    pass
+
+
+def same_type_check(
+    array1: np.ndarray, name1: str, array2: np.ndarray, name2: str
+) -> None:
+    if array1.dtype != array2.dtype:
+        raise ValueError(
+            f"{name1} has different type than {name2}: "
+            f"{array1.shape} vs {array2.shape}."
+        )
+    pass
+
+
+def is_scipy_linear_op(
+    linear_op: sparse.linalg.LinearOperator, name: str
+) -> None:
+    if not isinstance(linear_op, sparse.linalg.LinearOperator):
+        raise TypeError(
+            f"{name} should be a scipy.sparse.linalg.LinearOperator, "
+            f"but received an object of type {type(linear_op).__name__}."
+        )
+    pass
+
+
+def is_scipy_sparse_array(array: sparse.sparray, name: str) -> None:
+    """
+    Checks if the provided object is a scipy sparse array.
+    """
+    if not isinstance(array, sparse.sparray):
+        raise TypeError(
+            f"{name} should be a scipy sparse array, but received an"
+            f"object of type {type(array).__name__}."
         )
     pass
