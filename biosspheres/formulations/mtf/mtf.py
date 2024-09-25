@@ -92,7 +92,7 @@ def x_diagonal_with_its_inv(
     val.pii_validation(pii, "pii")
     val.bool_validation(azimuthal, "azimuthal")
     assert n == len(radii), "radii must have length n"
-    assert n + 1 == len(pii), "pii must have length n + 1"
+    assert n == len(pii), "pii must have length n"
 
     num = big_l + 1
     if not azimuthal:
@@ -203,7 +203,7 @@ def mtf_1_matrix(
 
     """
     # Input validation
-    val.r_validation(r, "r")
+    val.radius_validation(r, "r")
     val.pi_validation(pi, "pi")
     val.two_dimensional_array_check(a_0j, "a_0j")
     val.two_dimensional_array_check(a_j, "a_j")
@@ -323,8 +323,8 @@ def mtf_n_matrix(
     # Input validation
     val.two_dimensional_array_check(big_a_0_cross, "big_a_0_cross")
     val.square_array_check(big_a_0_cross, "big_a_0_cross")
-    val.is_scipy_sparse_matrix(sparse_big_a_0_self, "sparse_big_a_0_self")
-    val.is_scipy_sparse_matrix(sparse_big_a_n, "sparse_big_a_n")
+    val.is_scipy_sparse_array(sparse_big_a_0_self, "sparse_big_a_0_self")
+    val.is_scipy_sparse_array(sparse_big_a_n, "sparse_big_a_n")
     val.same_size_check(
         big_a_0_cross,
         "big_a_0_cross",
