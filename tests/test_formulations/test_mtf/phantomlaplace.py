@@ -9,7 +9,7 @@ import biosspheres.laplace.selfinteractions as selfin
 import biosspheres.laplace.crossinteractions as crossin
 import biosspheres.laplace.drawing as draw
 import biosspheres.utils.auxindexes as auxindexes
-import biosspheres.miscella.drawing as draw2
+import biosspheres.utils.drawing as draw2
 import biosspheres.miscella.extensions as extensions
 import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.miscella.mathfunctions as mathfunctions
