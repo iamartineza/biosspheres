@@ -5,7 +5,7 @@ import biosspheres.laplace.selfinteractions as selfinteractions
 import biosspheres.formulations.massmatrices as mass
 
 
-def mass_matrix_inv_preconditioning_big_as(
+def mass_matrix_inv_preconditioning_big_as_laplace(
     big_l: int = 10, r: float = 2.5
 ) -> None:
     num = big_l + 1
@@ -208,4 +208,4 @@ def mass_matrix_inv_preconditioning_big_as(
 
 
 if __name__ == "__main__":
-    mass_matrix_inv_preconditioning_big_as()
+    mass_matrix_inv_preconditioning_big_as_laplace()
