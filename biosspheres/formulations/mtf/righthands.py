@@ -1,7 +1,7 @@
 import numpy as np
 import pyshtools
 import biosspheres.miscella.harmonicex as harmonicex
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 
 
 def b_vector_1_sphere_mtf(

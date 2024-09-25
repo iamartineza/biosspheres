@@ -30,7 +30,7 @@ plane_wave_coefficients_neumann_expansion_0j
 import numpy as np
 import scipy.special as special
 import pyshtools
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 import biosspheres.miscella.extensions as extensions
 
 

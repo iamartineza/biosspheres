@@ -5,7 +5,7 @@ This module contains the test for biosspheres.quadratures.sphere.py
 import pytest
 import numpy as np
 import biosspheres.quadratures.sphere as quadratures
-from biosspheres.miscella.auxindexes import pes_y_kus
+from biosspheres.utils.auxindexes import pes_y_kus
 
 
 def test_gauss_legendre_trapezoidal_2d() -> None:

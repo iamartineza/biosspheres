@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import biosspheres.helmholtz.crossinteractions as crossinteractions
 import biosspheres.quadratures.sphere as quadratures
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 
 
 def v_1d_vs_2d() -> None:

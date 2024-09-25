@@ -28,10 +28,9 @@ all_cross_interactions_n_spheres_2d
 
 import numpy as np
 import scipy.special
-from scipy import sparse
 import pyshtools
 import biosspheres.quadratures.sphere as quadratures
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 
 
 def sj_pre_single_layer_semi_analytic_v1d(

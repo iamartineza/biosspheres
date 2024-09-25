@@ -24,7 +24,7 @@ import numpy as np
 from scipy import sparse
 import pyshtools
 import biosspheres.quadratures.sphere as quadratures
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 
 
 def v_0_sj_semi_analytic_v1d(

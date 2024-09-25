@@ -6,6 +6,7 @@ import biosspheres.formulations.mtf.righthands as righthands
 import biosspheres.laplace.selfinteractions as laplaceself
 import biosspheres.laplace.crossinteractions as laplacecross
 import biosspheres.miscella.harmonicex as harmonicex
+import biosspheres.utils.validation.inputs as valin
 
 
 def mtf_laplace_one_sphere_point_source_azimuthal_direct_solver(
@@ -50,6 +51,12 @@ def mtf_laplace_one_sphere_point_source_azimuthal_direct_solver(
         of floats. Length 4 * (big_l + 1).
 
     """
+    # Input validation
+    valin.big_l_validation(big_l, "big_l")
+    valin.radius_validation(r, "r")
+    valin.pi_validation(sigma_e, "sigma_e")
+    valin.pi_validation(sigma_i, "sigma_i")
+
     pi = sigma_i / sigma_e
 
     # Build of phi_e.

@@ -7,7 +7,7 @@ import biosspheres.formulations.mtf.mtf as mtf
 import biosspheres.formulations.mtf.righthands as righthands
 import biosspheres.helmholtz.selfinteractions as self
 import biosspheres.helmholtz.crossinteractions as cross
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 import biosspheres.miscella.extensions as extensions
 import biosspheres.miscella.harmonicex as harmonicex
 import biosspheres.quadratures.sphere as quadratures

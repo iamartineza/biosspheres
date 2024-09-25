@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import biosspheres.laplace.crossinteractions as crossinteractions
 import biosspheres.quadratures.sphere as quadratures
-import biosspheres.miscella.auxindexes as auxindexes
+import biosspheres.utils.auxindexes as auxindexes
 
 
 def v_transpose_check() -> None:
