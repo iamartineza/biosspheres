@@ -1,6 +1,6 @@
 # Biosspheres
 
-A Python-based solver for Laplace and acoustic scattering by
+A Python-based solver for Laplace and Helmholtz scattering by
 multiple disjoint spheres, utilizing spherical harmonic
 decomposition and local multiple trace formulations.
 
@@ -44,6 +44,11 @@ they can be installed using `pip install -r requirements.txt`
 # How to use
 
 See the Jupyter notebook examples in the folder "notebooks" to see how biosspheres can be used.
+
+# Contributing
+
+Read the file `CONTRIBUTING.md` and also see the Jupyter notebooks.
+
 
 # Acknowledgments
 
