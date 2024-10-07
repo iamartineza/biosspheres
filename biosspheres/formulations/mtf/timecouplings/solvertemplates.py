@@ -83,7 +83,7 @@ def mtf_time_coupling_one_sphere(
     b[4 * num : 5 * num] = -tau * b_i_current + c_m_matrix.dot(wes_0)
 
     solutions[1, 0 : 5 * num] = splinalg.lu_solve((lu, piv), b)
-    solutions[1, 5 * num : (5+number_of_extra_unknowns) * num] = ode_next_sol(
+    solutions[1, 5 * num : (5 + number_of_extra_unknowns) * num] = ode_next_sol(
         qu_0, q_hat, w_hat
     )
     del wes_0
@@ -99,22 +99,24 @@ def mtf_time_coupling_one_sphere(
         v_hat[:] = (
             3.0 * solutions[i, 4 * num : 5 * num]
             - solutions[i - 1, 4 * num : 5 * num]
-        ) / 2.0
+        ) * 0.5
         q_hat[:] = (
-            3.0 * solutions[i, 5 * num : (5+number_of_extra_unknowns) * num]
-            - solutions[i - 1, 5 * num : (5+number_of_extra_unknowns) * num]
-        ) / 2.0
+            3.0 * solutions[i, 5 * num : (5 + number_of_extra_unknowns) * num]
+            - solutions[i - 1, 5 * num : (5 + number_of_extra_unknowns) * num]
+        ) * 0.5
 
         b_i_current = i_current(v_hat, q_hat)
         aux = half_iden_2n_n.dot(solutions[i, 4 * num : 5 * num])
         aux = np.concatenate((-aux, aux), axis=0)
         b[0 : 4 * num] = b_phi_part_time_function(medium_times[i]) + aux
-        b[4 * num : 5 * num] = -tau * b_i_current + c_m_matrix.dot(solutions[i, 4 * num : 5 * num])
+        b[4 * num : 5 * num] = -tau * b_i_current + c_m_matrix.dot(
+            solutions[i, 4 * num : 5 * num]
+        )
 
         solutions[i + 1, 0 : 5 * num] = splinalg.lu_solve((lu, piv), b)
-        solutions[i + 1, 5 * num : (5+number_of_extra_unknowns) * num] = (
+        solutions[i + 1, 5 * num : (5 + number_of_extra_unknowns) * num] = (
             ode_next_sol(
-                solutions[i, 5 * num : (5+number_of_extra_unknowns) * num],
+                solutions[i, 5 * num : (5 + number_of_extra_unknowns) * num],
                 q_hat,
                 v_hat,
             )
