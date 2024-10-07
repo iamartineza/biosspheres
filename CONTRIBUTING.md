@@ -1,5 +1,8 @@
 # Contributing to biosspheres
 
+Please, read the Jupyter notebooks where most of the structure and functions of biosspheres are explained, 
+before starting to contribute.
+
 The following are some ways of contributing:
 - Answering questions and participating.
 - Fixing bugs, improving documentation, and other maintenance work.
