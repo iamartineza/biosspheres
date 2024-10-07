@@ -1,6 +1,6 @@
 # Summary
 
-Compilation of jupyter notebooks with examples using the package [biosspheres](https://github.com/iamartineza/biosspheres).
+Jupyter notebooks with examples using the package [biosspheres](https://github.com/iamartineza/biosspheres).
 
 # Python requirement
 
