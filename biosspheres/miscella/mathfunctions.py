@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def cte(c: float) -> float:
+def cte(c: float):
     """
     Constant function.
 
@@ -12,13 +12,17 @@ def cte(c: float) -> float:
 
     Returns
     -------
-    c: float
-        constant result.
+    constant_function: Callable of one parameter
+
     """
-    return c
+
+    def constant_function(x: np.ndarray):
+        return c
+
+    return constant_function
 
 
-def linear_function(coefficients: np.ndarray, vector: np.ndarray) -> float:
+def linear_function(coefficients: np.ndarray):
     """
     Linear function.
 
@@ -31,16 +35,19 @@ def linear_function(coefficients: np.ndarray, vector: np.ndarray) -> float:
     ----------
     coefficients: np.ndarray
         of floats, parameters of the linear function.
-    vector: np.ndarray
-        of floats, variable.
 
     Returns
     -------
-    float
-        result of the linear function given the parameters and the
-        vector variable.
+    linear: Callable of one parameter
     """
-    return np.dot(coefficients, vector)
+
+    def linear(x: np.ndarray):
+        assert len(coefficients) == len(
+            x
+        ), "Vector is not of the correct length"
+        return np.dot(coefficients, x)
+
+    return linear
 
 
 def plane_wave(
@@ -71,6 +78,14 @@ def plane_wave(
         vector variable.
     """
     return a * np.exp(np.dot(k, (r + p)) * 1j)
+
+
+def callable_plane_wave(a: float, k: np.ndarray, p: np.ndarray):
+    def plane_wave_function(x: np.ndarray):
+        assert len(p) == len(x), "Vector is not of the correct length"
+        return a * np.exp(np.dot(k, (x + p)) * 1j)
+
+    return plane_wave_function
 
 
 def point_source(r: np.ndarray, p: np.ndarray, sigma_e: float) -> float:
