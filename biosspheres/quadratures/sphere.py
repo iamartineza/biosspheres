@@ -13,6 +13,9 @@ Extended summary
 This module has the implementation of functions that return
 - Points and weights for doing the Gauss-Legendre quadrature with a
   composite trapezoidal quadrature rule. See
+    gauss_legendre_trapezoidal_init,
+    pre_vector_2d_init,
+    pre_vector_1d_init
     gauss_legendre_trapezoidal_2d,
     gauss_legendre_trapezoidal_1d.
 - Evaluation of real and complex spherical harmonics in the points of
@@ -32,6 +35,8 @@ This module has the implementation of functions that return
 Routine listings
 ----------------
 gauss_legendre_trapezoidal_init
+pre_vector_2d_init
+pre_vector_1d_init
 gauss_legendre_trapezoidal_2d
 gauss_legendre_trapezoidal_1d
 gauss_legendre_trapezoidal_real_sh_mapping_2d
@@ -47,11 +52,84 @@ from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
 
 import numpy as np
 import pyshtools
+import biosspheres.utils.auxindexes as auxindexes
+import biosspheres.utils.validation.inputs as valin
 
 
 def gauss_legendre_trapezoidal_init(
     big_l_c: int,
-):
+) -> tuple[
+    int,
+    int,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+]:
+    """
+    It returns the weights for the Gauss-Legendre quadrature
+    rule and a composite trapezoidal quadrature rule to approximate
+    numerically the integral in a surface of a sphere. Along with the
+    coordinate phi of the quadrature points,
+    and the evaluation of the cosine and sine of the
+    phi and theta coordinates.
+
+    Notes
+    -----
+    Gauss-legendre quadrature in theta. This one uses the package
+    pyshtools for obtaining the points and weights.
+    Integral on theta are (big_l_c + 1) quadrature points.
+    The weights returned correspond to the integral on this variable.
+
+    Composite trapezoidal rule in phi.
+    Integral on phi are (2 * big_l_c + 1) quadrature points.
+    This function does not return any weight for the phi variable,
+    because it is a trapezoidal rule equally spaced.
+    The integral in this variable can be solved using the fast fourier
+    transform.
+
+    Without considering errors produced by the approximation by finite
+    numbers, the quadrature must be exact for functions consisting in
+    polynomials of big_l_c degree times an exponential power to (m times
+    i), with |m| <= big_l_c.
+
+    Parameters
+    ----------
+    big_l_c : int
+        >= 0. It's the parameter used to compute the points of the
+        quadrature.
+
+    Returns
+    -------
+    quantity_theta_points : int
+        how many points for the integral in theta, (big_l_c + 1).
+    quantity_phi_points : int
+        how many points for the integral in phi, (2 * big_l_c + 1).
+    weights : np.ndarray
+        of floats, with the weights for the integral quadrature in
+        theta. Length (big_l_c + 1).
+    cos_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Cosine of the phi coordinate of the quadrature points.
+    sin_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Sine of the phi coordinate of the quadrature points.
+    cos_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Cosine of the theta coordinate of the quadrature points.
+    sin_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Sine of the theta coordinate of the quadrature points.
+    phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Phi coordinate of the quadrature points.
+
+    """
+    # Input validation
+    valin.big_l_validation(big_l_c, "big_l_c")
+
     zeros, weights = pyshtools.expand.SHGLQ(big_l_c)
     phi = np.linspace(0, 2 * np.pi, num=(2 * big_l_c + 1), endpoint=False)
 
@@ -74,6 +152,240 @@ def gauss_legendre_trapezoidal_init(
         sin_theta,
         phi,
     )
+
+
+def pre_vector_2d_init(
+    sin_theta: np.ndarray,
+    cos_theta: np.ndarray,
+    sin_phi: np.ndarray,
+    cos_phi: np.ndarray,
+) -> np.ndarray:
+    """
+    It returns the vectors ordered in a 2D array for coordinates phi and
+    theta given implicitly in the evaluation of the sine and cosine
+    functions in those coordinates. If the output of
+    gauss_legendre_trapezoidal_init is used as input of this routine,
+    then this functions returns the points for the Gauss-Legendre
+    quadrature rule and a composite trapezoidal quadrature rule to
+    approximate numerically the integral in a surface of a sphere.
+
+    Parameters
+    ----------
+    sin_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Sine of the theta coordinate of the quadrature points.
+    cos_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Cosine of the theta coordinate of the quadrature points.
+    sin_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Sine of the phi coordinate of the quadrature points.
+    cos_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Cosine of the phi coordinate of the quadrature points.
+
+    Returns
+    -------
+    pre_vector : np.ndarray
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, length of sin_theta, length of sin_phi).
+
+    See Also
+    --------
+    gauss_legendre_trapezoidal_init
+    pre_vector_1d_init
+
+    """
+    # Input validation
+    valin.trigonometric_arrays_validation_1d(sin_theta, "sin_theta")
+    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
+    valin.trigonometric_arrays_validation_1d(sin_phi, "sin_phi")
+    valin.trigonometric_arrays_validation_1d(cos_phi, "cos_phi")
+    valin.same_size_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
+    valin.same_size_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
+
+    pre_vector = np.zeros((3, len(sin_theta), len(cos_phi)))
+    for i in np.arange(0, len(sin_theta)):
+        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
+        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
+        pre_vector[2, i, :] = cos_theta[i]
+        pass
+    return pre_vector
+
+
+def pre_vector_1d_init(
+    sin_theta: np.ndarray,
+    cos_theta: np.ndarray,
+    sin_phi: np.ndarray,
+    cos_phi: np.ndarray,
+) -> np.ndarray:
+    """
+    It returns the vectors ordered in a 1D array for coordinates phi and
+    theta given implicitly in the evaluation of the sine and cosine
+    functions in those coordinates. If the output of
+    gauss_legendre_trapezoidal_init is used as input of this routine,
+    then this functions returns the points for the Gauss-Legendre
+    quadrature rule and a composite trapezoidal quadrature rule to
+    approximate numerically the integral in a surface of a sphere.
+
+    Parameters
+    ----------
+    sin_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Sine of the theta coordinate of the quadrature points.
+    cos_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Cosine of the theta coordinate of the quadrature points.
+    sin_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Sine of the phi coordinate of the quadrature points.
+    cos_phi : np.ndarray
+        of floats. Length (2 * big_l_c + 1).
+        Cosine of the phi coordinate of the quadrature points.
+
+    Returns
+    -------
+    pre_vector : np.ndarray
+        of floats. Represents the vectors of the quadrature points.
+        Shape (3, length of sin_theta x length of sin_phi).
+
+    See Also
+    --------
+    gauss_legendre_trapezoidal_init
+    pre_vector_2d_init
+
+    """
+    # Input validation
+    valin.trigonometric_arrays_validation_1d(sin_theta, "sin_theta")
+    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
+    valin.trigonometric_arrays_validation_1d(sin_phi, "sin_phi")
+    valin.trigonometric_arrays_validation_1d(cos_phi, "cos_phi")
+    valin.same_size_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
+    valin.same_size_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
+
+    quantity_theta_points = len(sin_theta)
+    quantity_phi_points = len(sin_phi)
+    pre_vector = np.zeros((3, quantity_theta_points * quantity_phi_points))
+
+    cos_phi = np.repeat(cos_phi, quantity_theta_points)
+    sin_phi = np.repeat(sin_phi, quantity_theta_points)
+    sin_theta = np.tile(sin_theta, quantity_phi_points)
+    cos_theta = np.tile(cos_theta, quantity_phi_points)
+
+    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
+    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
+    pre_vector[2, :] = cos_theta[:]
+
+    return pre_vector
+
+
+def phi_part_for_real_sh_mapping_2d(
+    big_l: int, phi: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0, max degree.
+    phi : np.ndarray
+        of floats. Phi coordinates.
+
+    Returns
+    -------
+    cos_m_phi : np.ndarray
+        of floats. Size (big_l, length of phi).
+    sin_m_phi : np.ndarray
+        of floats. Size (big_l, length of phi).
+
+    """
+    # Input validation
+    valin.big_l_validation(big_l, "big_l")
+    valin.full_float_array_validation_1d(phi, "phi")
+
+    quantity_phi_points = len(phi)
+    cos_m_phi = np.zeros((big_l, quantity_phi_points))
+    sin_m_phi = np.zeros((big_l, quantity_phi_points))
+    for m in np.arange(1, big_l + 1):
+        np.cos(m * phi, out=cos_m_phi[m - 1, :])
+        np.sin(m * phi, out=sin_m_phi[m - 1, :])
+        pass
+    return cos_m_phi, sin_m_phi
+
+
+def theta_part_for_real_sh_mapping_2d(
+    big_l: int, cos_theta: np.ndarray
+) -> np.ndarray:
+    """
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0, max degree.
+    cos_theta : np.ndarray
+        of floats. Length (big_l_c + 1).
+        Cosine of the theta coordinates
+
+    Returns
+    -------
+    legendre_functions : np.ndarray
+        of floats. Legendre functions normalized for real spherical
+        harmonics evaluated in cos_theta.
+        Size: ((big_l + 1) * (big_l + 2) // 2, len(cos_theta))
+    """
+    # Input validation
+    valin.big_l_validation(big_l, "big_l")
+    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
+
+    quantity_theta_points = len(cos_theta)
+    legendre_functions = np.zeros(
+        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    )
+    for i in np.arange(0, quantity_theta_points):
+        legendre_functions[:, i] = pyshtools.legendre.PlmON(
+            big_l, cos_theta[i], csphase=-1, cnorm=0
+        )
+        pass
+    return legendre_functions
+
+
+def real_sh_mapping_2d(
+    quantity_theta_points: int,
+    quantity_phi_points: int,
+    big_l: int,
+    legendre_functions: np.ndarray,
+    cos_m_phi: np.ndarray,
+    sin_m_phi: np.ndarray,
+) -> np.ndarray:
+    spherical_harmonics = np.zeros(
+        ((big_l + 1) ** 2, quantity_theta_points, quantity_phi_points)
+    )
+
+    # Auxiliary functions (they are implemented with cache)
+    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
+    eles, el_square_plus_el, el_square_plus_el_divided_by_two = (
+        auxindexes.eles_combination(big_l)
+    )
+
+    spherical_harmonics[el_square_plus_el, :, :] = legendre_functions[
+        el_square_plus_el_divided_by_two, :, np.newaxis
+    ]
+
+    index_temp = (pesykus[:, 0] * (pesykus[:, 0] + 1)) // 2 + pesykus[:, 1]
+    index_temp_m = pesykus[:, 1] - 1
+    j_range = np.arange(0, quantity_phi_points)
+
+    for i in np.arange(0, quantity_theta_points):
+        for j in j_range:
+            spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j]
+            )
+            spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
+                legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j]
+            )
+            pass
+        pass
+    return spherical_harmonics
 
 
 def gauss_legendre_trapezoidal_2d(
@@ -125,8 +437,11 @@ def gauss_legendre_trapezoidal_2d(
     See Also
     --------
     gauss_legendre_trapezoidal_1d
+    pre_vector_2d_init
 
     """
+
+    # Input validation is inside the function gauss_legendre_trapezoidal_init
     (
         quantity_theta_points,
         quantity_phi_points,
@@ -138,12 +453,8 @@ def gauss_legendre_trapezoidal_2d(
         phi,
     ) = gauss_legendre_trapezoidal_init(big_l_c)
     del phi
-    pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
-    for i in np.arange(0, quantity_theta_points):
-        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
-        pre_vector[2, i, :] = cos_theta[i]
-        pass
+
+    pre_vector = pre_vector_2d_init(sin_theta, cos_theta, sin_phi, cos_phi)
     del sin_theta
     del cos_phi
     del sin_phi
@@ -206,6 +517,7 @@ def gauss_legendre_trapezoidal_1d(
     gauss_legendre_trapezoidal_2d
 
     """
+    # Input validation is inside the function gauss_legendre_trapezoidal_init
     (
         quantity_theta_points,
         quantity_phi_points,
@@ -218,33 +530,24 @@ def gauss_legendre_trapezoidal_1d(
     ) = gauss_legendre_trapezoidal_init(big_l_c)
     del phi
 
+    pre_vector = pre_vector_1d_init(sin_theta, cos_theta, sin_phi, cos_phi)
+
+    del cos_phi
+    del sin_phi
+    del sin_theta
+    del cos_theta
+
     # First is tile (theta integral) and then is repeat (phi integral)
     total_weights = (
         np.tile(weights, quantity_phi_points) * 2 * np.pi / quantity_phi_points
     )
-
     final_length = len(total_weights)
-
-    pre_vector = np.zeros((3, final_length))
-
-    cos_phi = np.repeat(cos_phi, quantity_theta_points)
-    sin_phi = np.repeat(sin_phi, quantity_theta_points)
-    sin_theta = np.tile(sin_theta, quantity_phi_points)
-    cos_theta = np.tile(cos_theta, quantity_phi_points)
-
-    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
-    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
-    pre_vector[2, :] = cos_theta[:]
 
     return final_length, total_weights, pre_vector
 
 
 def gauss_legendre_trapezoidal_real_sh_mapping_2d(
-    big_l: int,
-    big_l_c: int,
-    pesykus: np.ndarray,
-    p2_plus_p_plus_q: np.ndarray,
-    p2_plus_p_minus_q: np.ndarray,
+    big_l: int, big_l_c: int
 ) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
     """
     This function is for obtaining the quadratures points to
@@ -276,21 +579,6 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     big_l_c : int
         >= 0. It's the parameter used to compute the points of the
         quadrature.
-    pesykus : np.ndarray
-        dtype int, shape ((big_l+1) * big_l // 2, 2).
-        Used for the vectorization of some computations.
-        Comes from the function
-        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
-    p2_plus_p_plus_q : np.ndarray
-        dtype int, length (big_l+1) * big_l // 2.
-        Used for the vectorization of some computations.
-        Comes from the function
-        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
-    p2_plus_p_minus_q : np.ndarray
-        dtype int, length (big_l+1) * big_l // 2.
-        Used for the vectorization of some computations.
-        Comes from the function
-        biosspheres.miscella.auxindexes.pes_y_kus(big_l)
 
     Returns
     -------
@@ -310,6 +598,9 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
 
     """
+
+    # Input validation for big_l_c is inside the function
+    # gauss_legendre_trapezoidal_init
     (
         quantity_theta_points,
         quantity_phi_points,
@@ -321,62 +612,31 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
         phi,
     ) = gauss_legendre_trapezoidal_init(big_l_c)
 
-    cos_m_phi = np.zeros((big_l, quantity_phi_points))
-    sin_m_phi = np.zeros((big_l, quantity_phi_points))
-    for m in np.arange(1, big_l + 1):
-        np.cos(m * phi, out=cos_m_phi[m - 1, :])
-        np.sin(m * phi, out=sin_m_phi[m - 1, :])
-        pass
+    # Input validation for big_l is inside the function
+    # phi_part_for_real_sh_mapping_2d
+    cos_m_phi, sin_m_phi = phi_part_for_real_sh_mapping_2d(big_l, phi)
     del phi
 
-    legendre_functions = np.zeros(
-        ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
-    )
-    i_range = np.arange(0, quantity_theta_points)
-    for i in i_range:
-        legendre_functions[:, i] = pyshtools.legendre.PlmON(
-            big_l, cos_theta[i], csphase=-1, cnorm=0
-        )
-        pass
+    legendre_functions = theta_part_for_real_sh_mapping_2d(big_l, cos_theta)
 
-    spherical_harmonics = np.zeros(
-        ((big_l + 1) ** 2, quantity_theta_points, quantity_phi_points)
-    )
-    eles = np.arange(0, big_l + 1)
-    el_square_plus_el = eles * (eles + 1)
-    el_square_plus_el_divided_by_two = el_square_plus_el // 2
-    spherical_harmonics[el_square_plus_el, :, :] = legendre_functions[
-        el_square_plus_el_divided_by_two, :, np.newaxis
-    ]
-    index_temp = (pesykus[:, 0] * (pesykus[:, 0] + 1)) // 2 + pesykus[:, 1]
-    index_temp_m = pesykus[:, 1] - 1
-    j_range = np.arange(0, quantity_phi_points)
-    for i in i_range:
-        for j in j_range:
-            spherical_harmonics[p2_plus_p_plus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], cos_m_phi[index_temp_m, j]
-            )
-            spherical_harmonics[p2_plus_p_minus_q, i, j] = np.multiply(
-                legendre_functions[index_temp, i], sin_m_phi[index_temp_m, j]
-            )
-            pass
-        pass
-    del legendre_functions
-    del cos_m_phi
-    del sin_m_phi
-    del j_range
-
-    pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
-    for i in i_range:
-        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
-        pre_vector[2, i, :] = cos_theta[i]
-        pass
-
+    pre_vector = pre_vector_2d_init(sin_theta, cos_theta, sin_phi, cos_phi)
     del sin_theta
     del cos_phi
     del sin_phi
     del cos_theta
+
+    spherical_harmonics = real_sh_mapping_2d(
+        quantity_theta_points,
+        quantity_phi_points,
+        big_l,
+        legendre_functions,
+        cos_m_phi,
+        sin_m_phi,
+    )
+
+    del legendre_functions
+    del cos_m_phi
+    del sin_m_phi
 
     return (
         quantity_theta_points,
@@ -459,6 +719,9 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
         ((big_l + 1)**2, quantity_theta_points, quantity_phi_points)
 
     """
+
+    # Input validation for big_l_c is inside the function
+    # gauss_legendre_trapezoidal_init
     (
         quantity_theta_points,
         quantity_phi_points,
@@ -514,12 +777,7 @@ def gauss_legendre_trapezoidal_complex_sh_mapping_2d(
     del legendre_functions
     del j_range
 
-    pre_vector = np.zeros((3, quantity_theta_points, quantity_phi_points))
-    for i in i_range:
-        np.multiply(sin_theta[i], cos_phi, out=pre_vector[0, i, :])
-        np.multiply(sin_theta[i], sin_phi, out=pre_vector[1, i, :])
-        pre_vector[2, i, :] = cos_theta[i]
-        pass
+    pre_vector = pre_vector_2d_init(sin_theta, cos_theta, sin_phi, cos_phi)
 
     del i_range
     del sin_theta
@@ -641,16 +899,12 @@ def real_spherical_harmonic_transform_1d(
             pass
         pass
 
-    pre_vector = np.zeros((3, final_length))
+    pre_vector = pre_vector_1d_init(sin_theta, cos_theta, sin_phi, cos_phi)
 
-    cos_phi = np.repeat(cos_m_phi[0, :], quantity_theta_points)
-    sin_phi = np.repeat(sin_m_phi[0, :], quantity_theta_points)
-    sin_theta = np.tile(sin_theta, quantity_phi_points)
-    cos_theta = np.tile(cos_theta, quantity_phi_points)
-
-    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
-    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
-    pre_vector[2, :] = cos_theta[:]
+    del cos_phi
+    del sin_phi
+    del sin_theta
+    del cos_theta
 
     return final_length, pre_vector, transform
 
@@ -714,7 +968,6 @@ def complex_spherical_harmonic_transform_1d(
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
         pass
-    del phi
     exp_neg = (-1.0) ** np.arange(1, big_l + 1)[:, np.newaxis] / exp_pos
 
     legendre_functions = np.zeros(
@@ -759,14 +1012,13 @@ def complex_spherical_harmonic_transform_1d(
             pass
         pass
 
-    pre_vector = np.zeros((3, final_length))
-
-    sin_theta = np.tile(sin_theta, quantity_phi_points)
-    cos_theta = np.tile(cos_theta, quantity_phi_points)
-
-    np.multiply(sin_theta, cos_phi, out=pre_vector[0, :])
-    np.multiply(sin_theta, sin_phi, out=pre_vector[1, :])
-    pre_vector[2, :] = cos_theta[:]
+    pre_vector = pre_vector_1d_init(
+        sin_theta, cos_theta, np.sin(phi), np.cos(phi)
+    )
+    del cos_phi
+    del sin_phi
+    del sin_theta
+    del cos_theta
 
     return final_length, pre_vector, transform
 
