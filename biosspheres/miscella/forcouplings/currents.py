@@ -3,6 +3,23 @@ import pyshtools
 import biosspheres.utils.validation.inputs as valin
 
 
+def i_linear_resistive_current_function_crearion_one_sphere(
+    big_l: int, r_m: float
+):
+    valin.big_l_validation(big_l, "big_l")
+
+    num = (big_l + 1) ** 2
+
+    def i_current(v: np.ndarray) -> np.ndarray:
+        assert (
+            len(v) == num
+        ), "length of v is not equal to n*(big_l+1)**2"
+        i = v / r_m
+        return i
+
+    return i_current
+
+
 def i_linear_resistive_current_function_creation_n_spheres(
     big_l: int, n: int, r_m: np.ndarray
 ):
