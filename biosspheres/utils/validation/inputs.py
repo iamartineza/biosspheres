@@ -3,12 +3,24 @@ from scipy import sparse
 import warnings
 
 
-def big_l_validation(big_l: int, name: str) -> None:
-    if not isinstance(big_l, (int, np.integer)):
+def integer_validation(integer: int, name: str) -> None:
+    """
+    To check if integer (named name) is an integer type.
+    """
+    if not isinstance(integer, (int, np.integer)):
         raise TypeError(
             f"{name} must be an integer or numpy integer type,"
-            f"got {type(big_l).__name__}"
+            f"got {type(integer).__name__}"
         )
+    pass
+
+
+def big_l_validation(big_l: int, name: str) -> None:
+    """
+    To check if big_l (named name) represents the degree of a spherical
+    harmonic.
+    """
+    integer_validation(big_l, name)
     if big_l < 0:
         raise ValueError(f"{name} must be non-negative, got {big_l}")
     if big_l > 3000:
@@ -16,6 +28,77 @@ def big_l_validation(big_l: int, name: str) -> None:
             f"{name} is {big_l}, there might be issues with "
             f"{name} being too big.",
             UserWarning,
+        )
+    pass
+
+
+def numpy_array_validation(array: np.ndarray, name: str) -> None:
+    """
+    To check if array (named name) is a numpy array.
+    """
+    if not isinstance(array, np.ndarray):
+        raise TypeError(f"{name} must be an array, got {type(array).__name__}")
+    pass
+
+
+def finite_values_in_array(array: np.ndarray, name: str) -> None:
+    """
+    To check if array (named name) has only finite values.
+    """
+    if not (np.all(np.isfinite(array))):
+        raise ValueError(f"All elements in {name} must be a finite number")
+    pass
+
+
+def dimensions_array_validation(array: np.ndarray, name: str, dim: int) -> None:
+    """
+    To check if array (named name) is a numpy array of one dimension.
+    """
+    if array.ndim != dim:
+        raise ValueError(
+            f"Expected '{name}' to be one-dimensional, but got {array.ndim}"
+            f"dimensions."
+        )
+    pass
+
+
+def float_array_validation(array: np.ndarray, name: str) -> None:
+    """
+    To check if array (named name) is a numpy array of floats.
+    """
+    if not issubclass(array.dtype.type, np.floating):
+        raise TypeError(
+            f"{name} must be an array of floats, got array with dtype"
+            f"{array.dtype}"
+        )
+    pass
+
+
+def full_float_array_validation_1d(array: np.ndarray, name: str) -> None:
+    """
+    To check if array (named name) is a 1D array with finite and real
+    values.
+    """
+    numpy_array_validation(array, name)
+    dimensions_array_validation(array, name, 1)
+    float_array_validation(array, name)
+    finite_values_in_array(array, name)
+    pass
+
+
+def trigonometric_arrays_validation_1d(array: np.ndarray, name: str) -> None:
+    """
+    To check if array (named name) is an array that corresponds with a
+    trigonometric function of real values.
+    """
+    full_float_array_validation_1d(array, name)
+    if not np.all(array >= -1.0):
+        raise ValueError(
+            f"All elements in {name} must be greater or equal to -1"
+        )
+    if not np.all(array <= 1.0):
+        raise ValueError(
+            f"All elements in {name} must be greater or equal to 1"
         )
     pass
 
