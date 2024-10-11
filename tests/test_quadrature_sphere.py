@@ -79,9 +79,8 @@ def test_gauss_legendre_trapezoidal_real_sh_mapping_2d() -> None:
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        big_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
-    )
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(big_l,
+                                                                  big_l_c)
 
     quantity_theta_points_2, quantity_phi_points_2, weights_2, pre_vector_2 = (
         quadratures.gauss_legendre_trapezoidal_2d(big_l_c)
@@ -134,9 +133,8 @@ def overview_real_spherical_harmonic_transform_1d() -> None:
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        big_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
-    )
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(big_l,
+                                                                  big_l_c)
 
     integral = np.sum(
         spherical_harmonics[0, :, :].flatten("F") * transform[0, :]
