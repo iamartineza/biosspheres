@@ -45,9 +45,8 @@ def one_sphere_fitzhughnagumo(
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        big_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
-    )
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(big_l,
+                                                                  big_l_c)
 
     # Set up of the time steps
     tau, times, medium_times = solve.tau_times_medium(
