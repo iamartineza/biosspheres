@@ -150,9 +150,8 @@ def phantom_1_point_source_azimuthal(
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        max_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
-    )
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(max_l,
+                                                                  big_l_c)
     eles = np.arange(0, max_l + 1)
     l_square_plus_l = (eles + 1) * eles
 
@@ -763,9 +762,8 @@ def non_phantom_1_point_source_z_alignment_distance_convergence(
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
-        max_l, big_l_c, pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q
-    )
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(max_l,
+                                                                  big_l_c)
     eles = np.arange(0, max_l + 1)
     l_square_plus_l = (eles + 1) * eles
 
