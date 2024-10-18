@@ -11,11 +11,43 @@ from biosspheres.utils.validation.inputs import (
     n_validation,
     two_dimensional_array_check,
     square_array_check,
-    same_size_check,
+    same_shape_check,
     is_scipy_linear_op,
     same_type_check,
     is_scipy_sparse_array,
 )
+import biosspheres.utils.validation.inputs as valin
+
+
+# Tests for valin.integer_validation
+@pytest.mark.parametrize(
+    "integer, name",
+    [
+        (0, "0"),
+        (1500, "1500"),
+        (-1, "-1"),
+        (np.int32(100), "numpy integer"),
+    ],
+)
+def test_integer_validation(integer, name):
+    # Should not raise any exception
+    valin.integer_validation(integer, name)
+    pass
+
+
+@pytest.mark.parametrize(
+    "integer, name",
+    [
+        ("100", "string"),
+        (10.5, "float"),
+        (None, "None"),
+        ([100], "List"),
+    ],
+)
+def test_big_l_validation_type_error(integer, name):
+    with pytest.raises(TypeError) as exc_info:
+        big_l_validation(integer, name)
+    pass
 
 
 # Tests for big_l_validation
@@ -472,7 +504,7 @@ def test_same_size_check_pass(arr1, name1, arr2, name2):
     Test that same_size_check does not raise an exception
     when both arrays have the same shape.
     """
-    same_size_check(arr1, name1, arr2, name2)
+    same_shape_check(arr1, name1, arr2, name2)
 
 
 # Test for is_scipy_linear_op
@@ -527,7 +559,7 @@ def test_same_size_check_fail(arr1, name1, arr2, name2, expected_msg):
     when arrays have different shapes.
     """
     with pytest.raises(ValueError) as exc_info:
-        same_size_check(arr1, name1, arr2, name2)
+        same_shape_check(arr1, name1, arr2, name2)
     assert str(exc_info.value).__contains__(expected_msg)
     pass
 
