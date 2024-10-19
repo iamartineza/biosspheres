@@ -52,6 +52,7 @@ from_sphere_s_cartesian_to_j_spherical_and_spherical_vectors_1d
 
 import numpy as np
 import pyshtools
+from functools import lru_cache
 import biosspheres.utils.auxindexes as auxindexes
 import biosspheres.utils.validation.inputs as valin
 
@@ -197,12 +198,12 @@ def pre_vector_2d_init(
 
     """
     # Input validation
-    valin.trigonometric_arrays_validation_1d(sin_theta, "sin_theta")
-    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
-    valin.trigonometric_arrays_validation_1d(sin_phi, "sin_phi")
-    valin.trigonometric_arrays_validation_1d(cos_phi, "cos_phi")
-    valin.same_size_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
-    valin.same_size_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
+    valin.trigonometric_arrays_validation(sin_theta, "sin_theta", 1)
+    valin.trigonometric_arrays_validation(cos_theta, "cos_theta", 1)
+    valin.trigonometric_arrays_validation(sin_phi, "sin_phi", 1)
+    valin.trigonometric_arrays_validation(cos_phi, "cos_phi", 1)
+    valin.same_shape_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
+    valin.same_shape_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
 
     pre_vector = np.zeros((3, len(sin_theta), len(cos_phi)))
     for i in np.arange(0, len(sin_theta)):
@@ -256,12 +257,12 @@ def pre_vector_1d_init(
 
     """
     # Input validation
-    valin.trigonometric_arrays_validation_1d(sin_theta, "sin_theta")
-    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
-    valin.trigonometric_arrays_validation_1d(sin_phi, "sin_phi")
-    valin.trigonometric_arrays_validation_1d(cos_phi, "cos_phi")
-    valin.same_size_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
-    valin.same_size_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
+    valin.trigonometric_arrays_validation(sin_theta, "sin_theta", 1)
+    valin.trigonometric_arrays_validation(cos_theta, "cos_theta", 1)
+    valin.trigonometric_arrays_validation(sin_phi, "sin_phi", 1)
+    valin.trigonometric_arrays_validation(cos_phi, "cos_phi", 1)
+    valin.same_shape_check(sin_theta, "sin_theta", cos_theta, "cos_theta")
+    valin.same_shape_check(sin_phi, "sin_phi", cos_phi, "cos_phi")
 
     quantity_theta_points = len(sin_theta)
     quantity_phi_points = len(sin_phi)
@@ -301,7 +302,7 @@ def phi_part_for_real_sh_mapping_2d(
     """
     # Input validation
     valin.big_l_validation(big_l, "big_l")
-    valin.full_float_array_validation_1d(phi, "phi")
+    valin.full_float_array_validation(phi, "phi", 1)
 
     quantity_phi_points = len(phi)
     cos_m_phi = np.zeros((big_l, quantity_phi_points))
@@ -335,7 +336,7 @@ def theta_part_for_real_sh_mapping_2d(
     """
     # Input validation
     valin.big_l_validation(big_l, "big_l")
-    valin.trigonometric_arrays_validation_1d(cos_theta, "cos_theta")
+    valin.trigonometric_arrays_validation(cos_theta, "cos_theta", 1)
 
     quantity_theta_points = len(cos_theta)
     legendre_functions = np.zeros(
@@ -350,13 +351,38 @@ def theta_part_for_real_sh_mapping_2d(
 
 
 def real_sh_mapping_2d(
-    quantity_theta_points: int,
-    quantity_phi_points: int,
-    big_l: int,
     legendre_functions: np.ndarray,
     cos_m_phi: np.ndarray,
     sin_m_phi: np.ndarray,
 ) -> np.ndarray:
+    """
+
+    Parameters
+    ----------
+    legendre_functions : np.ndarray
+        of floats. Legendre functions normalized for real spherical
+        harmonics evaluated in cos_theta.
+        Size: ((big_l + 1) * (big_l + 2) // 2, quantity_theta_points)
+    cos_m_phi : np.ndarray
+        of floats. Size (big_l, quantity_phi_points).
+    sin_m_phi : np.ndarray
+        of floats. Size (big_l, quantity_phi_points).
+
+    Returns
+    -------
+    spherical_harmonics : np.ndarray
+
+    """
+    # Input validation
+    valin.full_float_array_validation(
+        legendre_functions, "legendre_functions", 2
+    )
+    valin.same_shape_check(sin_m_phi, "sin_phi", cos_m_phi, "cos_phi")
+
+    quantity_theta_points = len(legendre_functions[0, :])
+    quantity_phi_points = len(sin_m_phi[0, :])
+    big_l = len(sin_m_phi[:, 0])
+
     spherical_harmonics = np.zeros(
         ((big_l + 1) ** 2, quantity_theta_points, quantity_phi_points)
     )
@@ -546,6 +572,7 @@ def gauss_legendre_trapezoidal_1d(
     return final_length, total_weights, pre_vector
 
 
+@lru_cache(maxsize=2)
 def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     big_l: int, big_l_c: int
 ) -> tuple[int, int, np.ndarray, np.ndarray, np.ndarray]:
@@ -626,12 +653,7 @@ def gauss_legendre_trapezoidal_real_sh_mapping_2d(
     del cos_theta
 
     spherical_harmonics = real_sh_mapping_2d(
-        quantity_theta_points,
-        quantity_phi_points,
-        big_l,
-        legendre_functions,
-        cos_m_phi,
-        sin_m_phi,
+        legendre_functions, cos_m_phi, sin_m_phi
     )
 
     del legendre_functions
@@ -961,9 +983,6 @@ def complex_spherical_harmonic_transform_1d(
     quantity_theta_points = len(zeros)
     quantity_phi_points = len(phi)
 
-    cos_phi = np.repeat(np.cos(phi), quantity_theta_points)
-    sin_phi = np.repeat(np.sin(phi), quantity_theta_points)
-
     exp_pos = np.zeros((big_l, quantity_phi_points), dtype=np.complex128)
     for m in np.arange(1, big_l + 1):
         np.exp(1j * m * phi, out=exp_pos[m - 1, :])
@@ -1015,8 +1034,6 @@ def complex_spherical_harmonic_transform_1d(
     pre_vector = pre_vector_1d_init(
         sin_theta, cos_theta, np.sin(phi), np.cos(phi)
     )
-    del cos_phi
-    del sin_phi
     del sin_theta
     del cos_theta
 
