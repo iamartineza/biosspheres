@@ -1,6 +1,6 @@
+from functools import lru_cache
 import numpy as np
 import scipy.sparse
-from functools import lru_cache
 import biosspheres.utils.validation.inputs as valin
 
 
