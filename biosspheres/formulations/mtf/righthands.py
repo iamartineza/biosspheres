@@ -1,3 +1,15 @@
+"""
+
+Routine listings
+----------------
+b_vector_1_sphere_mtf
+b_vector_n_spheres_mtf_cte_function
+b_vector_n_spheres_mtf_linear_function_z
+b_vector_n_spheres_mtf_point_source
+b_vector_n_spheres_mtf_plane_wave
+
+"""
+
 import numpy as np
 import pyshtools
 import biosspheres.miscella.harmonicex as harmonicex
