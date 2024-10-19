@@ -1,3 +1,4 @@
+from typing import Callable
 import numpy as np
 import biosspheres.formulations.massmatrices as mass
 import biosspheres.formulations.mtf.mtf as mtf
@@ -5,8 +6,8 @@ import biosspheres.formulations.mtf.righthands as righthands
 
 
 def phi_part_of_b_separable_in_space_time(
-    space_b_classic_mtf: np.ndarray, time_function, c_m
-):
+    space_b_classic_mtf: np.ndarray, time_function
+) -> Callable[[float], np.ndarray]:
 
     def b_phi_part(time: float) -> np.ndarray:
         return space_b_classic_mtf * time_function(time)
