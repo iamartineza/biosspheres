@@ -1,3 +1,16 @@
+"""
+This module has implementation for routines that return mass matrices
+for one or several spheres when using spherical harmonics basis as
+test and trial functions in a boundary integral formulation setting.
+
+Routine listings
+----------------
+j_block
+two_j_blocks
+n_j_blocks
+n_two_j_blocks
+"""
+
 import numpy as np
 import biosspheres.utils.validation.inputs as val
 
@@ -7,6 +20,7 @@ def j_block(big_l: int, r: float, azimuthal: bool = True) -> np.ndarray:
     Returns a numpy array with the boundary integral operator
     corresponding to the identity evaluated and tested with spherical
     harmonics of order 0 in a sphere of radius r.
+    (Only returns the diagonal).
 
     Notes
     -----
