@@ -1,3 +1,4 @@
+from functools import lru_cache
 import numpy as np
 from scipy import sparse
 import biosspheres.helmholtz.selfinteractions as helmholtz
@@ -209,7 +210,7 @@ def mtf_1_matrix(
     val.two_dimensional_array_check(a_j, "a_j")
     val.square_array_check(a_0j, "a_0j")
     val.square_array_check(a_j, "a_j")
-    val.same_size_check(a_0j, "a_0j", a_j, "a_j")
+    val.same_shape_check(a_0j, "a_0j", a_j, "a_j")
     val.same_type_check(a_0j, "a_0j", a_j, "a_j")
 
     num = len(a_0j[0, :]) // 2
@@ -277,7 +278,7 @@ def mtf_1_linear_operator(
     val.is_scipy_linear_op(a_j, "a_j")
     val.pii_validation(x_j, "x_j")
     val.pii_validation(x_j_inv, "x_j_inv")
-    val.same_size_check(x_j, "x_j", x_j_inv, "x_j_inv")
+    val.same_shape_check(x_j, "x_j", x_j_inv, "x_j_inv")
 
     num = len(x_j) // 2
 
@@ -325,21 +326,13 @@ def mtf_n_matrix(
     val.square_array_check(big_a_0_cross, "big_a_0_cross")
     val.is_scipy_sparse_array(sparse_big_a_0_self, "sparse_big_a_0_self")
     val.is_scipy_sparse_array(sparse_big_a_n, "sparse_big_a_n")
-    val.same_size_check(
-        big_a_0_cross,
-        "big_a_0_cross",
-        sparse_big_a_0_self,
-        "sparse_big_a_0_self",
-    )
-    val.same_size_check(
-        sparse_big_a_n,
-        "sparse_big_a_n",
-        sparse_big_a_0_self,
-        "sparse_big_a_0_self",
-    )
+    val.same_shape_check(big_a_0_cross, "big_a_0_cross", sparse_big_a_0_self,
+                         "sparse_big_a_0_self")
+    val.same_shape_check(sparse_big_a_n, "sparse_big_a_n", sparse_big_a_0_self,
+                         "sparse_big_a_0_self")
     val.pii_validation(x_dia, "x_dia")
     val.pii_validation(x_dia_inv, "x_dia_inv")
-    val.same_size_check(x_dia, "x_j", x_dia_inv, "x_j_inv")
+    val.same_shape_check(x_dia, "x_j", x_dia_inv, "x_j_inv")
 
     num = len(big_a_0_cross[0, :]) // 2
     mtf_matrix = np.zeros((4 * num, 4 * num), dtype=big_a_0_cross.dtype)
