@@ -1,3 +1,11 @@
+"""
+
+Routine listings
+----------------
+mtf_laplace_one_sphere_point_source_azimuthal_direct_solver
+mtf_laplace_n_spheres_point_source_direct_solver
+mtf_laplace_n_spheres_point_source_indirect_solver
+"""
 import numpy as np
 import scipy.sparse.linalg
 import biosspheres.formulations.massmatrices as mass
