@@ -33,11 +33,6 @@ def one_sphere_fitzhughnagumo(
         big_l, 1, np.asarray([radius]), cte
     )
 
-    # Auxiliary arrays
-    pesykus, p2_plus_p_plus_q, p2_plus_p_minus_q = auxindexes.pes_y_kus(big_l)
-    eles = np.arange(0, big_l + 1)
-    l_square_plus_l = (eles + 1) * eles
-
     # Set up of the quadrature
     (
         quantity_theta_points,
@@ -45,32 +40,26 @@ def one_sphere_fitzhughnagumo(
         weights,
         pre_vector,
         spherical_harmonics,
-    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(big_l,
-                                                                  big_l_c)
+    ) = quadratures.gauss_legendre_trapezoidal_real_sh_mapping_2d(
+        big_l, big_l_c
+    )
 
     # Set up of the time steps
     tau, times, medium_times = solve.tau_times_medium(
         initial_time, final_time, number_steps
     )
 
-    # Set up of the non linear current
-    i_current = currents.i_fitzhughnagumo_one_sphere_function_creation(
-        big_l,
-        spherical_harmonics,
-        weights,
-        pre_vector[2, :, 0],
-        pesykus,
-        p2_plus_p_plus_q,
-        p2_plus_p_minus_q,
-        l_square_plus_l,
-        eles,
-    )
+    # Set up of the non-linear current
+    i_current = currents.i_fitzhughnagumo_one_sphere_function_creation(big_l,
+                                                                       big_l_c,
+                                                                       1.)
 
     # Set up of the semi-implicit scheme for the "gating" variables (or similar)
     ode_next_sol = (
-        oderesolutions.semi_implicit_fitzhughnagumo_one_sphere_next_creation(
-            radius, tau, parameter_theta, parameter_b, parameter_a
-        )
+        oderesolutions.semi_implicit_fitzhughnagumo_one_sphere_next_step(tau,
+                                                                         parameter_theta,
+                                                                         parameter_b,
+                                                                         parameter_a)
     )
 
     # Solve
@@ -89,6 +78,11 @@ def one_sphere_fitzhughnagumo(
     )
 
     # Plottings
+
+    # Auxiliary arrays
+    eles = np.arange(0, big_l + 1)
+    l_square_plus_l = (eles + 1) * eles
+
     plt.figure()
     little_partial_spherical = np.sqrt((2 * eles + 1))
     plt.plot(
