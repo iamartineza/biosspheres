@@ -18,12 +18,14 @@ def phi_part_of_b_separable_in_space_time(
 def phi_part_of_b_cte_space_and_time(
     big_l: int, n: int, radii: np.ndarray, cte: float
 ):
-    b = righthands.b_vector_n_spheres_mtf_cte_function(
+    b_space = righthands.b_vector_n_spheres_mtf_cte_function(
         n, big_l, radii, cte, azimuthal=False
     )
 
-    def b_phi_part(time: float) -> np.ndarray:
-        return b
+    def time_function(time: float) -> np.ndarray:
+        return 1.
+
+    b_phi_part = phi_part_of_b_separable_in_space_time(b_space, time_function)
 
     return b_phi_part
 
@@ -42,7 +44,7 @@ def phi_part_of_b_point_source_space_and_cte_time(
         n, big_l, radii, pii, azimuthal=False
     )
     mass_n_two_j_blocks = mass.n_two_j_blocks(big_l, radii, azimuthal=False)
-    b = amplitude * righthands.b_vector_n_spheres_mtf_point_source(
+    b_space = amplitude * righthands.b_vector_n_spheres_mtf_point_source(
         n,
         big_l,
         center_positions,
@@ -53,7 +55,13 @@ def phi_part_of_b_point_source_space_and_cte_time(
         mass_n_two_j_blocks,
     )
 
-    def b_phi_part(time: float) -> np.ndarray:
-        return b
+    def time_function(time: float) -> np.ndarray:
+        return 1.
+
+    b_phi_part = phi_part_of_b_separable_in_space_time(b_space, time_function)
 
     return b_phi_part
+
+
+def phi_part_of_b_linear_space_cte_time():
+    return
