@@ -23,7 +23,7 @@ def phi_part_of_b_cte_space_and_time(
     )
 
     def time_function(time: float) -> np.ndarray:
-        return 1.
+        return 1.0
 
     b_phi_part = phi_part_of_b_separable_in_space_time(b_space, time_function)
 
@@ -56,12 +56,32 @@ def phi_part_of_b_point_source_space_and_cte_time(
     )
 
     def time_function(time: float) -> np.ndarray:
-        return 1.
+        return 1.0
 
     b_phi_part = phi_part_of_b_separable_in_space_time(b_space, time_function)
 
     return b_phi_part
 
 
-def phi_part_of_b_linear_space_cte_time():
-    return
+def phi_part_of_b_linear_space_z_cte_time(
+    big_l: int,
+    n: int,
+    radii: np.ndarray,
+    center_positions,
+    cte: float,
+    pii: np.ndarray,
+):
+    x_dia, x_dia_inv = mtf.x_diagonal_with_its_inv(
+        n, big_l, radii, pii, azimuthal=False
+    )
+
+    b_space = righthands.b_vector_n_spheres_mtf_linear_function_z(
+        big_l, n, center_positions, cte, radii, x_dia
+    )
+
+    def time_function(time: float) -> np.ndarray:
+        return 1.0
+
+    b_phi_part = phi_part_of_b_separable_in_space_time(b_space, time_function)
+
+    return b_phi_part
