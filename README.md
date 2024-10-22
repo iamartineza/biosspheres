@@ -18,15 +18,15 @@ We recommend to install the package in its own python environment.
 
 ## Via pip
 
-The package is available in TestPyPi.
+The package is available in PyPi.
 
 For the minimum installation:
 
-`pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ biosspheres`
+`pip install biosspheres`
 
 For the installation including the dependencies necessary for running jupyter notebooks:
 
-`pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ biosspheres[all]`
+`pip install biosspheres[all]`
 
 ## Docker
 
