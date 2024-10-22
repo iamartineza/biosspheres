@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biosspheres"
-version = "0.1.0a1"
+version = "0.1.1a1"
 description = "Python package to obtain Helmholtz or Laplace boundary integral operator on spheres using spherical harmonics. It also implements the Multiple Traces Formulation to solve scattering transmission problems in an ensemble of spheres."
 authors = ["Isabel Martínez <iamartinez@uc.cl>"]
 license = "BSD-3-Clause"
