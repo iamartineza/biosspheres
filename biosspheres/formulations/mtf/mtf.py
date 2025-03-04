@@ -27,7 +27,7 @@ Extended summary
   - mtf_n_matrix
   - mtf_n_linear_operator_v1
   - mtf_n_reduced_matrix
-  are for multiple spheres. 
+  are for multiple spheres.
 
 Routine listings
 ----------------
@@ -44,7 +44,6 @@ mtf_1_reduced_matrix_helmholtz
 mtf_1_reduced_linear_operator_helmholtz
 mtf_n_reduced_matrix
 """
-from functools import lru_cache
 import numpy as np
 from scipy import sparse
 import biosspheres.helmholtz.selfinteractions as helmholtz
