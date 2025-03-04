@@ -1,5 +1,33 @@
 """
-This module ...
+This module contains routines for obtaining linear operators arising in
+multiple traces formulations when using spherical harmonics basis as
+test and trial functions.
+
+Extended summary
+----------------
+- The routines:
+  - x_j_diagonal
+  - x_j_diagonal_inv
+  - x_diagonal_with_its_inv
+  are for obtaining the operators denoted as X in the documentation.
+  x_diagonal and x_j_diagonal_inv are for one sphere.
+  x_diagonal_with_its_inv is for n spheres.
+- The routines:
+  - mtf_1_matrix
+  - mtf_1_linear_operator
+  - mtf_1_reduced_matrix_laplace
+  - mtf_1_reduced_linear_operator
+  - mtf_1_reduced_matrix_helmholtz
+  - mtf_1_reduced_linear_operator_helmholtz
+  are for one sphere. Each one has its matrix and linear operator (with
+  scipy) counterpart.
+  The reduced versions is a modification of the mtf using the Schur's
+  complement.
+- The routines:
+  - mtf_n_matrix
+  - mtf_n_linear_operator_v1
+  - mtf_n_reduced_matrix
+  are for multiple spheres. 
 
 Routine listings
 ----------------
