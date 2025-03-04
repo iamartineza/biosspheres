@@ -1,8 +1,76 @@
+"""
+This module ...
+
+Routine listings
+----------------
+x_j_diagonal
+x_j_diagonal_inv
+x_diagonal_with_its_inv
+mtf_1_matrix
+mtf_1_linear_operator
+mtf_n_matrix
+mtf_n_linear_operator_v1
+mtf_1_reduced_matrix_laplace
+mtf_1_reduced_linear_operator
+mtf_1_reduced_matrix_helmholtz
+mtf_1_reduced_linear_operator_helmholtz
+mtf_n_reduced_matrix
+"""
 from functools import lru_cache
 import numpy as np
 from scipy import sparse
 import biosspheres.helmholtz.selfinteractions as helmholtz
 import biosspheres.utils.validation.inputs as val
+
+
+def x_j_diagonal(
+    big_l: int, r: float, pi: np.ndarray, azimuthal: bool = True
+) -> np.ndarray:
+    """
+    Returns a numpy array with the diagonal of the matrix:
+    X_j = [I ,       0      ]
+          [0 , -(pi)^{-1} I ]
+    with I[l*(2l+1) + m] = < I Y_l,m ; Y_l,m >_L^2(S).
+              = r**2
+    for each l such that 0 <= l <= big_l, and with
+    S: surface sphere radius r
+    Y_l,m: spherical harmonic degree l, order m.
+
+    Parameters
+    ----------
+    big_l : int
+        >= 0
+    r : float
+        > 0, radius
+    pi : float
+        > 0, adimensional parameter.
+    azimuthal : bool, if True, then only the values for m = 0 are
+        computed.
+        default = True
+
+    Returns
+    -------
+    x_j : np.ndarray
+        of floats. If azimuthal = False, its is length 2*(big_l+1), else
+        it is 2*(big_l+1)**2.
+
+    """
+    # Input validation
+    val.big_l_validation(big_l, "big_l")
+    val.r_validation(r, "r")
+    val.pi_validation(pi, "pi")
+    val.bool_validation(azimuthal, "azimuthal")
+
+    num = big_l + 1
+    if not azimuthal:
+        num = num**2
+    eles = np.arange(0, num)
+    x_j = r**2 * np.ones((2 * num))
+    x_j[num + eles] = x_j[num + eles] / -pi
+
+    assert np.isfinite(x_j).all(), "Array contains NaN or Inf values."
+
+    return x_j
 
 
 def x_j_diagonal_inv(
@@ -26,8 +94,8 @@ def x_j_diagonal_inv(
         > 0, radius
     pi : float
         > 0, adimensional parameter.
-    azimuthal : bool
-        default = True
+    azimuthal : bool, if True, then only the values for m = 0 are
+        computed.
 
     Returns
     -------
@@ -74,8 +142,9 @@ def x_diagonal_with_its_inv(
         of float > 0, array with the radius
     pii : np.ndarray
         of float > 0, adimensional parameter.
-    azimuthal : bool
-        default = False
+    azimuthal : bool, if True, then only the values for m = 0 are
+        computed.
+        default = False.
 
     Returns
     -------
@@ -122,55 +191,6 @@ def x_diagonal_with_its_inv(
     assert np.isfinite(x_dia).all(), "Array contains NaN or Inf values."
     assert np.isfinite(x_inv).all(), "Array contains NaN or Inf values."
     return x_dia, x_inv
-
-
-def x_j_diagonal(
-    big_l: int, r: float, pi: np.ndarray, azimuthal: bool = True
-) -> np.ndarray:
-    """
-    Returns a numpy array with the diagonal of the matrix:
-    X_j = [I ,       0      ]
-          [0 , -(pi)^{-1} I ]
-    with I[l*(2l+1) + m] = < I Y_l,m ; Y_l,m >_L^2(S).
-              = r**2
-    for each l such that 0 <= l <= big_l, and with
-    S: surface sphere radius r
-    Y_l,m: spherical harmonic degree l, order m.
-
-    Parameters
-    ----------
-    big_l : int
-        >= 0
-    r : float
-        > 0, radius
-    pi : float
-        > 0, adimensional parameter.
-    azimuthal : bool
-        default = True
-
-    Returns
-    -------
-    x_j : np.ndarray
-        of floats. If azimuthal = False, its is length 2*(big_l+1), else
-        it is 2*(big_l+1)**2.
-
-    """
-    # Input validation
-    val.big_l_validation(big_l, "big_l")
-    val.r_validation(r, "r")
-    val.pi_validation(pi, "pi")
-    val.bool_validation(azimuthal, "azimuthal")
-
-    num = big_l + 1
-    if not azimuthal:
-        num = num**2
-    eles = np.arange(0, num)
-    x_j = r**2 * np.ones((2 * num))
-    x_j[num + eles] = x_j[num + eles] / -pi
-
-    assert np.isfinite(x_j).all(), "Array contains NaN or Inf values."
-
-    return x_j
 
 
 def mtf_1_matrix(
