@@ -1,14 +1,15 @@
 # Biosspheres
 
 A Python-based solver for Laplace and Helmholtz scattering by
-multiple disjoint spheres, utilizing spherical harmonic
-decomposition and local multiple trace formulations.
+multiple disjoint spheres, utilizing spherical harmonic 
+decomposition and local multiple trace formulations. 
 
 Its main routines are for:
 - Computing boundary integral operators evaluated and tested
 against spherical harmonics.
 - Building Calderón operators.
 - Solving transmission problems using the multiple trace formulation.
+- Coupling the problems with ordinary differential equations in time.
 
 # Installation
 
