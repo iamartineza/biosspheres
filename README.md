@@ -8,11 +8,11 @@ Its main routines are for:
 - Computing boundary integral operators evaluated and tested
 against spherical harmonics.
 - Building Calderón operators.
-- Solving transmission problems using the multiple trace formulation. 
-
-Tested with **python 3.9**
+- Solving transmission problems using the multiple trace formulation.
 
 # Installation
+
+Tested with **python 3.9**
 
 We recommend to install the package in its own python environment.
 
