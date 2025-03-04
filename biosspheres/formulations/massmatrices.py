@@ -2,6 +2,8 @@
 This module has implementation for routines that return mass matrices
 for one or several spheres when using spherical harmonics basis as
 test and trial functions in a boundary integral formulation setting.
+All routines return the diagonal of the matrix (the rest of the entries
+are zero).
 
 Routine listings
 ----------------
