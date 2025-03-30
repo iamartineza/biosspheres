@@ -93,7 +93,57 @@ def test_big_l_validation_warning():
     pass
 
 
+########################################################################
+# n validation
+########################################################################
+@pytest.mark.parametrize(
+    "n, name",
+    [
+        (1, "n"),
+        (150, "n"),
+        (3000, "n"),
+        (np.int32(100), "n"),
+    ],
+)
+def test_n_validation_valid(n, name):
+    # Should not raise any exception
+    n_validation(n, name)
+    pass
+
+
+@pytest.mark.parametrize(
+    "n, name, err",
+    [
+        ("100", "n", "integer"),
+        (10.5, "n", "integer"),
+        (None, "n", "integer"),
+        ([100], "n", "integer"),
+    ],
+)
+def test_n_validation_type_error(n, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        n_validation(n, name)
+    assert str(exc_info.value).__contains__(err)
+    pass
+
+
+@pytest.mark.parametrize(
+    "n, name, err",
+    [
+        (0, "n", "positive"),
+        (-100, "n", "positive"),
+    ],
+)
+def test_n_validation_value_error(n, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        n_validation(n, name)
+    assert str(exc_info.value).__contains__(err)
+    pass
+
+
+########################################################################
 # Tests for radius_validation
+########################################################################
 @pytest.mark.parametrize(
     "r, name",
     [
@@ -332,52 +382,6 @@ def test_pii_validation_type_errors(pii, name, err):
 def test_pii_validation_value_errors(pii, name, err):
     with pytest.raises(ValueError) as exc_info:
         pii_validation(pii, name)
-    assert str(exc_info.value).__contains__(err)
-    pass
-
-
-# n validation
-@pytest.mark.parametrize(
-    "n, name",
-    [
-        (1, "n"),
-        (150, "n"),
-        (3000, "n"),
-        (np.int32(100), "n"),
-    ],
-)
-def test_n_validation_valid(n, name):
-    # Should not raise any exception
-    n_validation(n, name)
-    pass
-
-
-@pytest.mark.parametrize(
-    "n, name, err",
-    [
-        ("100", "n", "integer"),
-        (10.5, "n", "integer"),
-        (None, "n", "integer"),
-        ([100], "n", "integer"),
-    ],
-)
-def test_n_validation_type_error(n, name, err):
-    with pytest.raises(TypeError) as exc_info:
-        n_validation(n, name)
-    assert str(exc_info.value).__contains__(err)
-    pass
-
-
-@pytest.mark.parametrize(
-    "n, name, err",
-    [
-        (0, "n", "positive"),
-        (-100, "n", "positive"),
-    ],
-)
-def test_n_validation_value_error(n, name, err):
-    with pytest.raises(ValueError) as exc_info:
-        n_validation(n, name)
     assert str(exc_info.value).__contains__(err)
     pass
 
