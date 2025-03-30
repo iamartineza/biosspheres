@@ -8,6 +8,7 @@ from biosspheres.utils.validation.inputs import (
     bool_validation,
     numpy_array_validation,
     finite_values_in_array,
+    float_array_validation,
     radii_validation,
     pi_validation,
     pii_validation,
@@ -195,9 +196,9 @@ def test_float_validation_type_error(fl, name, err):
         (np.inf, "infinity", "finite"),
         (-np.inf, "negative_infinity", "finite"),
         (np.nan, "nan", "finite"),
-        (float('inf'), "float_infinity", "finite"),
-        (float('-inf'), "float_negative_infinity", "finite"),
-        (float('nan'), "float_nan", "finite"),
+        (float("inf"), "float_infinity", "finite"),
+        (float("-inf"), "float_negative_infinity", "finite"),
+        (float("nan"), "float_nan", "finite"),
     ],
 )
 def test_float_validation_value_error(fl, name, err):
@@ -216,7 +217,7 @@ def test_float_validation_value_error(fl, name, err):
         # Largest positive float64
         (np.finfo(np.float64).min, "float64_min"),
         # Smallest negative float64
-        (1.7976931348623157e+308, "max_float"),
+        (1.7976931348623157e308, "max_float"),
         # Python float max
         (2.2250738585072014e-308, "min_float"),
         # Python float min
@@ -238,7 +239,7 @@ def test_float_validation_edge_cases(fl, name):
         (np.array([1.0, 2.0, 3.0]), "float_array"),
         (np.array([True, False]), "boolean_array"),
         (np.array(["a", "b", "c"]), "string_array"),
-        (np.array([1+2j, 3+4j]), "complex_array"),
+        (np.array([1 + 2j, 3 + 4j]), "complex_array"),
         (np.array([]), "empty_array"),
         (np.zeros(5), "zeros_array"),
         (np.ones(5), "ones_array"),
@@ -291,7 +292,10 @@ def test_numpy_array_validation_invalid(array, name, err):
         (np.identity(4), "identity_matrix"),
         (np.diag([1, 2, 3]), "diagonal_matrix"),
         (np.random.rand(3, 3), "random_array"),
-        (np.array(np.ma.masked_array([1, 2, 3], mask=[0, 1, 0])), "masked_array"),
+        (
+            np.array(np.ma.masked_array([1, 2, 3], mask=[0, 1, 0])),
+            "masked_array",
+        ),
         (np.array(np.matrix([[1, 2], [3, 4]])), "matrix_array"),
     ],
 )
@@ -312,8 +316,8 @@ def test_numpy_array_validation_numpy_functions(array, name):
         (np.array([1.0, 2.0, 3.0], dtype=np.float32), "float32_array"),
         (np.array([1.0, 2.0, 3.0], dtype=np.float64), "float64_array"),
         (np.array([True, False], dtype=np.bool_), "bool_array"),
-        (np.array([1+2j, 3+4j], dtype=np.complex64), "complex64_array"),
-        (np.array([1+2j, 3+4j], dtype=np.complex128), "complex128_array"),
+        (np.array([1 + 2j, 3 + 4j], dtype=np.complex64), "complex64_array"),
+        (np.array([1 + 2j, 3 + 4j], dtype=np.complex128), "complex128_array"),
         (np.array(["a", "b", "c"], dtype=np.unicode_), "unicode_array"),
         (np.array([b"a", b"b", b"c"], dtype=np.bytes_), "bytes_array"),
     ],
@@ -361,8 +365,8 @@ def test_finite_values_in_array_valid(array, name):
         (np.array([[1.0, 2.0], [3.0, np.inf]]), "2d_inf_array", "finite"),
         (np.array([[[np.inf]]]), "3d_inf_array", "finite"),
         (np.array([np.inf, -np.inf]), "mixed_inf_array", "finite"),
-        (np.array([float('inf'), 2.0, 3.0]), "py_inf_array", "finite"),
-        (np.array([float('-inf'), 2.0, 3.0]), "py_neg_inf_array", "finite"),
+        (np.array([float("inf"), 2.0, 3.0]), "py_inf_array", "finite"),
+        (np.array([float("-inf"), 2.0, 3.0]), "py_neg_inf_array", "finite"),
     ],
 )
 def test_finite_values_in_array_infinite(array, name, err):
@@ -380,7 +384,7 @@ def test_finite_values_in_array_infinite(array, name, err):
         (np.array([[1.0, 2.0], [3.0, np.nan]]), "2d_nan_array", "finite"),
         (np.array([[[np.nan]]]), "3d_nan_array", "finite"),
         (np.array([np.nan, np.nan]), "all_nan_array", "finite"),
-        (np.array([float('nan'), 2.0, 3.0]), "py_nan_array", "finite"),
+        (np.array([float("nan"), 2.0, 3.0]), "py_nan_array", "finite"),
     ],
 )
 def test_finite_values_in_array_nan(array, name, err):
@@ -403,6 +407,83 @@ def test_finite_values_in_array_mixed(array, name, err):
     with pytest.raises(ValueError) as exc_info:
         finite_values_in_array(array, name)
     assert str(exc_info.value).__contains__(err)
+
+
+########################################################################
+# Tests for float_array_validation
+########################################################################
+# Tests for valid float arrays
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1.0, 2.0, 3.0]), "float64_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float32), "float32_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float16), "float16_array"),
+        (np.array([-1.0, -2.0, -3.0]), "negative_float_array"),
+        (np.array([0.0]), "zero_array"),
+        (np.array([]), "empty_float_array"),
+        (np.array([[1.0, 2.0], [3.0, 4.0]]), "2d_float_array"),
+        (np.array([[[1.0]]]), "3d_float_array"),
+        (np.array(1.0), "scalar_float_array"),
+        (np.zeros((2, 2), dtype=np.float64), "zeros_float_array"),
+        (np.ones((2, 2), dtype=np.float32), "ones_float_array"),
+        (np.array([np.inf, -np.inf, np.nan]), "special_values_array"),
+        (
+            np.array([np.finfo(np.float32).max], dtype=np.float32),
+            "max_float32_array",
+        ),
+        (
+            np.array([np.finfo(np.float64).min], dtype=np.float64),
+            "min_float64_array",
+        ),
+    ],
+)
+def test_float_array_validation_valid(array, name):
+    # Should not raise any exception
+    float_array_validation(array, name)
+
+
+# Tests for non-float arrays
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1, 2, 3], dtype=np.int32), "int32_array", "float"),
+        (np.array([1, 2, 3], dtype=np.int64), "int64_array", "float"),
+        (np.array([True, False]), "bool_array", "float"),
+        (np.array(["1.0", "2.0", "3.0"]), "string_array", "float"),
+        (np.array([1 + 2j, 3 + 4j]), "complex_array", "float"),
+        (np.array([1, 2, 3], dtype=np.uint8), "uint8_array", "float"),
+        (np.array([[1, 2], [3, 4]], dtype=np.int16), "2d_int_array", "float"),
+        (np.zeros(5, dtype=np.int32), "zeros_int_array", "float"),
+        (np.ones(5, dtype=bool), "ones_bool_array", "float"),
+        (np.array(5, dtype=np.int64), "scalar_int_array", "float"),
+    ],
+)
+def test_float_array_validation_invalid_dtype(array, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        float_array_validation(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with mixed float subclasses
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (
+            np.array([np.float16(1.0), np.float32(2.0), np.float64(3.0)]),
+            "mixed_float_types",
+        ),
+        (np.array([1.0, np.float32(2.0)]), "python_and_numpy_float"),
+    ],
+)
+def test_float_array_validation_mixed_float_types(array, name):
+    # Should not raise any exception as all are float subtypes
+    float_array_validation(array, name)
+
+
+########################################################################
+# Tests for full_float_array_validation
+########################################################################
 
 
 ########################################################################
