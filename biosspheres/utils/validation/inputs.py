@@ -101,7 +101,8 @@ def dimensions_array_validation(array: np.ndarray, name: str, dim: int) -> None:
 
 
 def float_array_validation(array: np.ndarray, name: str) -> None:
-    """To check if array (named name) is a numpy array of floats."""
+    """To check if array (named name) is a numpy array of floats.
+    It assumes that array is a numpy array. """
     if not issubclass(array.dtype.type, np.floating):
         raise TypeError(
             f"{name} must be an array of floats, got array with dtype"
