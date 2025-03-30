@@ -7,6 +7,7 @@ from biosspheres.utils.validation.inputs import (
     radius_validation,
     bool_validation,
     numpy_array_validation,
+    finite_values_in_array,
     radii_validation,
     pi_validation,
     pii_validation,
@@ -320,6 +321,88 @@ def test_numpy_array_validation_numpy_functions(array, name):
 def test_numpy_array_validation_dtypes(array, name):
     # Should not raise any exception
     numpy_array_validation(array, name)
+
+
+########################################################################
+# Tests for finite_values_in_array
+########################################################################
+# Tests for arrays with all finite values
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1.0, 2.0, 3.0]), "float_array"),
+        (np.array([-1.0, -2.0, -3.0]), "negative_float_array"),
+        (np.array([0.0]), "zero_array"),
+        (np.array([1.0e-10, 2.0e-10]), "small_values_array"),
+        (np.array([1.0e10, 2.0e10]), "large_values_array"),
+        (np.array([]), "empty_array"),
+        (np.array([[1.0, 2.0], [3.0, 4.0]]), "2d_array"),
+        (np.array([[[1.0]]]), "3d_array"),
+        (np.array([np.finfo(np.float64).max]), "max_float_array"),
+        (np.array([np.finfo(np.float64).min]), "min_float_array"),
+        (np.array([np.finfo(np.float64).eps]), "eps_float_array"),
+        (np.array([1, 2, 3], dtype=np.int32), "int_array"),
+        (np.array([True, False], dtype=bool), "bool_array"),
+    ],
+)
+def test_finite_values_in_array_valid(array, name):
+    # Should not raise any exception
+    finite_values_in_array(array, name)
+
+
+# Tests for arrays with infinite values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1.0, np.inf, 3.0]), "inf_array", "finite"),
+        (np.array([1.0, -np.inf, 3.0]), "neg_inf_array", "finite"),
+        (np.array([np.inf]), "single_inf_array", "finite"),
+        (np.array([-np.inf]), "single_neg_inf_array", "finite"),
+        (np.array([[1.0, 2.0], [3.0, np.inf]]), "2d_inf_array", "finite"),
+        (np.array([[[np.inf]]]), "3d_inf_array", "finite"),
+        (np.array([np.inf, -np.inf]), "mixed_inf_array", "finite"),
+        (np.array([float('inf'), 2.0, 3.0]), "py_inf_array", "finite"),
+        (np.array([float('-inf'), 2.0, 3.0]), "py_neg_inf_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_infinite(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with NaN values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1.0, np.nan, 3.0]), "nan_array", "finite"),
+        (np.array([np.nan]), "single_nan_array", "finite"),
+        (np.array([[1.0, 2.0], [3.0, np.nan]]), "2d_nan_array", "finite"),
+        (np.array([[[np.nan]]]), "3d_nan_array", "finite"),
+        (np.array([np.nan, np.nan]), "all_nan_array", "finite"),
+        (np.array([float('nan'), 2.0, 3.0]), "py_nan_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_nan(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with mixed non-finite values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([np.inf, np.nan]), "inf_nan_array", "finite"),
+        (np.array([1.0, np.inf, np.nan]), "mixed_array", "finite"),
+        (np.array([[np.inf, 2.0], [3.0, np.nan]]), "2d_mixed_array", "finite"),
+        (np.array([np.inf, np.nan, -np.inf]), "all_special_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_mixed(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
 
 
 ########################################################################
