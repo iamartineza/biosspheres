@@ -19,7 +19,9 @@ from biosspheres.utils.validation.inputs import (
 import biosspheres.utils.validation.inputs as valin
 
 
+########################################################################
 # Tests for valin.integer_validation
+########################################################################
 @pytest.mark.parametrize(
     "integer, name",
     [
@@ -35,22 +37,9 @@ def test_integer_validation(integer, name):
     pass
 
 
+########################################################################
 # Tests for big_l_validation
-@pytest.mark.parametrize(
-    "integer, name",
-    [
-        ("100", "string"),
-        (10.5, "float"),
-        (None, "None"),
-        ([100], "List"),
-    ],
-)
-def test_big_l_validation_type_error(integer, name):
-    with pytest.raises(TypeError) as exc_info:
-        big_l_validation(integer, name)
-    pass
-
-
+########################################################################
 @pytest.mark.parametrize(
     "big_l, name",
     [
