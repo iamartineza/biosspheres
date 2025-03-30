@@ -78,7 +78,8 @@ def bool_validation(b: bool, name: str) -> None:
 def numpy_array_validation(array: np.ndarray, name: str) -> None:
     """To check if array (named name) is a numpy array."""
     if not isinstance(array, np.ndarray):
-        raise TypeError(f"{name} must be an array, got {type(array).__name__}")
+        raise TypeError(
+            f"{name} must be an numpy array, got {type(array).__name__}")
     pass
 
 

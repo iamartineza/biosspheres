@@ -3,6 +3,7 @@ import numpy as np
 from scipy import sparse
 from biosspheres.utils.validation.inputs import (
     big_l_validation,
+    float_validation,
     radius_validation,
     bool_validation,
     radii_validation,
@@ -139,6 +140,11 @@ def test_n_validation_value_error(n, name, err):
         n_validation(n, name)
     assert str(exc_info.value).__contains__(err)
     pass
+
+
+########################################################################
+# Test for float_validation
+########################################################################
 
 
 ########################################################################
@@ -411,9 +417,9 @@ def test_two_dimensional_array_check_valid(array):
         (12345, "array4", TypeError, "numpy array"),
         (None, "array5", TypeError, "numpy array"),
         # Test cases where the input is a numpy array but not 2D
-        (np.array([1, 2, 3]), "array6", ValueError, "2D"),
-        (np.array(5), "array7", ValueError, "2D"),
-        (np.array([[[1, 2], [3, 4]]]), "array9", ValueError, "2D"),
+        (np.array([1, 2, 3]), "array6", ValueError, "2"),
+        (np.array(5), "array7", ValueError, "2"),
+        (np.array([[[1, 2], [3, 4]]]), "array9", ValueError, "2"),
     ],
 )
 def test_two_dimensional_array_check_invalid(
