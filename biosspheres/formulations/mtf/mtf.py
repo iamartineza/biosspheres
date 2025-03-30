@@ -84,7 +84,7 @@ def x_j_diagonal(
     """
     # Input validation
     val.big_l_validation(big_l, "big_l")
-    val.r_validation(r, "r")
+    val.radius_validation(r, "r")
     val.pi_validation(pi, "pi")
     val.bool_validation(azimuthal, "azimuthal")
 
