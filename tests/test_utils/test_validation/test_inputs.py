@@ -146,6 +146,79 @@ def test_n_validation_value_error(n, name, err):
 # Test for float_validation
 ########################################################################
 
+# Tests for valid floating point values
+@pytest.mark.parametrize(
+    "fl, name",
+    [
+        (0.0, "zero"),
+        (1.0, "one"),
+        (-1.0, "negative_one"),
+        (3.14159, "pi"),
+        (1e-10, "small_value"),
+        (1e10, "large_value"),
+        (np.float32(2.5), "numpy_float32"),
+        (np.float64(3.7), "numpy_float64"),
+    ],
+)
+def test_float_validation_valid(fl, name):
+    # Should not raise any exception
+    float_validation(fl, name)
+
+
+# Tests for invalid types (not float)
+@pytest.mark.parametrize(
+    "fl, name, err",
+    [
+        (1, "integer", "float"),
+        ("1.0", "string", "float"),
+        (True, "boolean", "float"),
+        (None, "none", "float"),
+        ([1.0], "list", "float"),
+        (np.array([1.0]), "numpy_array", "float"),
+        ((1.0,), "tuple", "float"),
+        ({1.0}, "set", "float"),
+        ({"key": 1.0}, "dict", "float"),
+        (np.int32(5), "numpy_int", "float"),
+    ],
+)
+def test_float_validation_type_error(fl, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        float_validation(fl, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for non-finite float values
+@pytest.mark.parametrize(
+    "fl, name, err",
+    [
+        (np.inf, "infinity", "finite"),
+        (-np.inf, "negative_infinity", "finite"),
+        (np.nan, "nan", "finite"),
+        (float('inf'), "float_infinity", "finite"),
+        (float('-inf'), "float_negative_infinity", "finite"),
+        (float('nan'), "float_nan", "finite"),
+    ],
+)
+def test_float_validation_value_error(fl, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        float_validation(fl, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for edge cases
+@pytest.mark.parametrize(
+    "fl, name",
+    [
+        (np.finfo(np.float64).eps, "float64_epsilon"),  # Smallest positive float64
+        (np.finfo(np.float64).max, "float64_max"),      # Largest positive float64
+        (np.finfo(np.float64).min, "float64_min"),      # Smallest negative float64
+        (1.7976931348623157e+308, "max_float"),         # Python float max
+        (2.2250738585072014e-308, "min_float"),         # Python float min
+    ],
+)
+def test_float_validation_edge_cases(fl, name):
+    # Should not raise any exception
+    float_validation(fl, name)
 
 ########################################################################
 # Tests for radius_validation
