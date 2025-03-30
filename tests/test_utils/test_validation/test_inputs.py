@@ -35,6 +35,7 @@ def test_integer_validation(integer, name):
     pass
 
 
+# Tests for big_l_validation
 @pytest.mark.parametrize(
     "integer, name",
     [
@@ -50,7 +51,6 @@ def test_big_l_validation_type_error(integer, name):
     pass
 
 
-# Tests for big_l_validation
 @pytest.mark.parametrize(
     "big_l, name",
     [
