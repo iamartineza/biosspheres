@@ -193,7 +193,7 @@ def same_type_check(
     if array1.dtype != array2.dtype:
         raise ValueError(
             f"{name1} has different type than {name2}: "
-            f"{array1.shape} vs {array2.shape}."
+            f"{array1.dtype} vs {array2.dtype}."
         )
     pass
 
