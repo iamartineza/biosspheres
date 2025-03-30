@@ -133,7 +133,7 @@ def trigonometric_arrays_validation(
         )
     if not np.all(array <= 1.0):
         raise ValueError(
-            f"All elements in {name} must be greater or equal to 1"
+            f"All elements in {name} must be less than or equal to 1"
         )
     pass
 
