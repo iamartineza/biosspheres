@@ -54,11 +54,14 @@ each subdomain independent and makes the time coupling explicit
 [@Henriquez2018; @MartinezAvila2024]. `biosspheres` provides this coupling for
 arbitrary numbers of spheres and conductivities.
 
-The second is verification. Solutions obtained with spherical harmonics on
-spheres converge exponentially in the maximum degree $L$, so they serve as
-reference solutions for general boundary element codes, for preconditioners of
-the MTF [@Ayala2022; @EscapilInchauspe2025], and for generating families of
-solutions for uncertainty quantification or scientific machine learning.
+The second is verification. For one sphere the discrete MTF is diagonal in
+each degree and reproduces the Mie series of the transmission problem exactly,
+up to the truncation degree; the package tests this against the Mie coefficients
+to $10^{-14}$. For several spheres the solutions converge exponentially in the
+maximum degree $L$. They therefore serve as analytic or near-analytic reference
+solutions for general boundary element codes, for preconditioners of the MTF
+[@Ayala2022; @EscapilInchauspe2025], and for generating families of solutions
+for uncertainty quantification or scientific machine learning.
 
 The package is aimed at researchers in numerical analysis of boundary integral
 equations and at modellers of cell electrophysiology who need fast, accurate
@@ -130,8 +133,9 @@ Bessel and Hankel functions and with a direct quadrature of the kernel, check
 the discrete Calderón identity $(2A)^2 = I$ for the Laplace operators, and check
 the
 agreement between the matrix and linear-operator versions, between the one- and
-two-dimensional versions, between the reduced and full MTF, and in
-phantom-sphere experiments whose exact solution is known. Jupyter notebooks
+two-dimensional versions, between the reduced and full MTF, in
+phantom-sphere experiments whose exact solution is known, and between the
+one-sphere Helmholtz MTF and the Mie series. Jupyter notebooks
 document each module and reproduce the examples of the associated articles;
 they run in continuous integration together with the tests.
 
