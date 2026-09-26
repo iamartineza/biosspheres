@@ -60,7 +60,7 @@ def testing_mtf_linear_operators_and_matrices_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -92,7 +92,7 @@ def testing_mtf_linear_operators_and_matrices_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -176,7 +176,7 @@ def testing_mtf_azimuthal_and_no_azimuthal_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=tole,
+        rtol=tole,
         restart=(4 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -194,7 +194,7 @@ def testing_mtf_azimuthal_and_no_azimuthal_helmholtz(
     solution2, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(4 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -270,7 +270,7 @@ def testing_mtf_reduced_linear_operators_and_matrices_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -296,7 +296,7 @@ def testing_mtf_reduced_linear_operators_and_matrices_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -371,7 +371,7 @@ def testing_mtf_reduced_azimuthal_and_no_azimuthal_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -387,7 +387,7 @@ def testing_mtf_reduced_azimuthal_and_no_azimuthal_helmholtz(
     solution2, info_2 = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 2,
         callback=callback_function,
         callback_type="pr_norm",
@@ -465,7 +465,7 @@ def testing_mtf_reduced_vs_not_helmholtz(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tole,
+        rtol=tole,
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -481,7 +481,7 @@ def testing_mtf_reduced_vs_not_helmholtz(
     sol_red_1, info_2 = scipy.sparse.linalg.gmres(
         linear_operator_red,
         b_red_1,
-        tol=tole,
+        rtol=tole,
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",

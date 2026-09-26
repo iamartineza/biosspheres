@@ -89,7 +89,7 @@ def testing_mtf_linear_operators_and_matrices_n_spheres() -> None:
     solution_indirect, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=tolerance,
+        rtol=tolerance,
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
