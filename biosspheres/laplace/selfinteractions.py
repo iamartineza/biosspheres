@@ -214,7 +214,7 @@ def a_0j_matrix(big_l: int, r: float, azimuthal: bool = True) -> np.ndarray:
     integral operator
     A_{j,j}^0 = [ -K_{j,j}^0 , V_{j,j}^0  ]
                 [  W_{j,j}^0 , K*_{j,j}^0 ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics
+    with Laplace kernel evaluated and tested with spherical harmonics
     of order 0 if azimuthal = True, or all orders if azimuthal = False.
 
     Each block is a diagonal matrix.
@@ -276,9 +276,9 @@ def a_j_matrix(big_l: int, r: float, azimuthal: bool = True) -> np.ndarray:
     """
     Returns a numpy array that represents the following matrix boundary
     integral operator
-    A_{j,j}^0 = [ -K_{j,j} , V_{j,j}  ]
-                [  W_{j,j} , K*_{j,j} ]
-    with Helmholtz kernel evaluated and tested with spherical harmonics
+    A_{j,j} = [ -K_{j,j} , V_{j,j}  ]
+              [  W_{j,j} , K*_{j,j} ]
+    with Laplace kernel evaluated and tested with spherical harmonics
     of order 0 if azimuthal = True, or all orders if azimuthal = False.
 
     Each block is a diagonal matrix.
