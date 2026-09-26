@@ -97,6 +97,7 @@ def test_phantom_spheres_field_is_the_incident_wave() -> None:
     assert np.max(np.abs(u_outside)) < 1e-10
     inside = np.concatenate(
         [random_points(c, 0.1 * r, 0.9 * r, 30) for c, r in zip(centers, radii)]
+        + [np.asarray(centers)]
     )
     u_inside = reconstructions.rf_helmholtz_n_spheres(
         inside, 3, radii, centers, kii, big_l, coefficients

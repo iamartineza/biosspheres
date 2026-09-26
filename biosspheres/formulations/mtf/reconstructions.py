@@ -573,8 +573,9 @@ def rf_helmholtz_n_spheres(
             wave_number = kii[j + 1] if interior else kii[0]
             x = points[region] - np.asarray(positions[j])
             r = np.linalg.norm(x, axis=1)
+            cos_theta = np.divide(x[:, 2], r, out=np.ones_like(r), where=r > 0)
             sh = complex_spherical_harmonics_at_points(
-                big_l, x[:, 2] / r, np.arctan2(x[:, 1], x[:, 0])
+                big_l, cos_theta, np.arctan2(x[:, 1], x[:, 0])
             )
             kr = wave_number * radii[j]
             j_l = special.spherical_jn(eles, kr)[eles_repeated]
