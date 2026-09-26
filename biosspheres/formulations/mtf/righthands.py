@@ -40,7 +40,7 @@ def b_vector_1_sphere_mtf(
         Length 4 * length(b_d)
     """
     valin.radius_validation(r, "r")
-    valin.pii_validation(pi_inv, "pi_inv")
+    valin.pi_validation(pi_inv, "pi_inv")
     valin.numpy_array_validation(b_d, "b_d")
     valin.numpy_array_validation(b_n, "b_n")
     valin.dimensions_array_validation(b_d, "b_d", 1)
