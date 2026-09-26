@@ -197,8 +197,6 @@ def phantom_1_point_source_azimuthal(
 
     p = np.array([0.0, 0.0, distance])
 
-    r = 1.0
-
     cut = 1
     x1, y1, data = (
         draw.draw_cut_representation_formula_one_sphere_azimuthal_symmetry(
