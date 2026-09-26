@@ -31,6 +31,7 @@ import scipy.special
 import pyshtools
 import biosspheres.quadratures.sphere as quadratures
 import biosspheres.utils.auxindexes as auxindexes
+import biosspheres.utils.validation.inputs as valin
 
 
 def sj_pre_single_layer_semi_analytic_v1d(
@@ -2930,6 +2931,9 @@ def all_cross_interactions_n_spheres_from_v_1d(
     j_l: np.ndarray,
     j_lp: np.ndarray,
 ) -> np.ndarray:
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
@@ -3013,6 +3017,9 @@ def all_cross_interactions_n_spheres_from_v_2d(
     j_l: np.ndarray,
     j_lp: np.ndarray,
 ) -> np.ndarray:
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
@@ -3102,6 +3109,9 @@ def all_cross_interactions_n_spheres_1d(
     radii: np.ndarray,
     center_positions: list[np.ndarray],
 ) -> np.ndarray:
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)
@@ -3205,6 +3215,9 @@ def all_cross_interactions_n_spheres_2d(
     radii: np.ndarray,
     center_positions: list[np.ndarray],
 ) -> np.ndarray:
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num), dtype=np.complex128)

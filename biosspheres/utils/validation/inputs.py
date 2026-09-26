@@ -160,6 +160,26 @@ def pii_validation(pii: np.ndarray, name: str) -> None:
     pass
 
 
+def disjoint_spheres_validation(
+    radii: np.ndarray, center_positions: list, name: str
+) -> None:
+    """Checks that the spheres are pairwise disjoint, so neither
+    overlapping, touching nor nested (e.g. concentric)."""
+    for s in np.arange(0, len(radii)):
+        for j in np.arange(s + 1, len(radii)):
+            distance = np.linalg.norm(
+                np.asarray(center_positions[s]) - np.asarray(center_positions[j])
+            )
+            if distance <= radii[s] + radii[j]:
+                raise ValueError(
+                    f"Spheres {s} and {j} in {name} are not disjoint: the "
+                    f"distance between their centers, {distance}, must be "
+                    f"larger than the sum of their radii, "
+                    f"{radii[s] + radii[j]}."
+                )
+    pass
+
+
 def one_dimensional_array_length_check(array, name, length):
     if len(array) != length:
         raise ValueError(f"{name} array has to be of length {length}")

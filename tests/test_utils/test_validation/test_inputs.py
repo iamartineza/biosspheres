@@ -1113,3 +1113,53 @@ def test_is_scipy_sparse_matrix_invalid(array, name, expected_msg):
         is_scipy_sparse_array(array, name)
     assert str(exc_info.value).__contains__(expected_msg)
     pass
+
+
+@pytest.mark.parametrize(
+    "radii, centers",
+    [
+        (np.asarray([1.0]), [np.zeros(3)]),
+        (np.asarray([1.0, 2.0]), [np.zeros(3), np.asarray([0.0, 0.0, 3.1])]),
+        (
+            np.asarray([1.0, 1.0, 1.0]),
+            [np.zeros(3), np.asarray([2.5, 0.0, 0.0]), np.asarray([0.0, 3, 0])],
+        ),
+    ],
+)
+def test_disjoint_spheres_validation_valid(radii, centers):
+    valin.disjoint_spheres_validation(radii, centers, "centers")
+    pass
+
+
+@pytest.mark.parametrize(
+    "radii, centers",
+    [
+        (np.asarray([1.0, 2.0]), [np.zeros(3), np.zeros(3)]),
+        (np.asarray([1.0, 3.0]), [np.zeros(3), np.asarray([0.5, 0.0, 0.0])]),
+        (np.asarray([1.0, 1.0]), [np.zeros(3), np.asarray([0.0, 1.5, 0.0])]),
+        (np.asarray([1.0, 1.0]), [np.zeros(3), np.asarray([0.0, 0.0, 2.0])]),
+    ],
+    ids=["concentric", "nested", "overlapping", "touching"],
+)
+def test_disjoint_spheres_validation_invalid(radii, centers):
+    with pytest.raises(ValueError) as exc_info:
+        valin.disjoint_spheres_validation(radii, centers, "centers")
+    assert str(exc_info.value).__contains__("not disjoint")
+    pass
+
+
+def test_cross_interactions_reject_concentric_spheres():
+    import biosspheres.laplace.crossinteractions as laplacecross
+    import biosspheres.helmholtz.crossinteractions as helmholtzcross
+
+    radii = np.asarray([1.0, 2.0])
+    centers = [np.zeros(3), np.zeros(3)]
+    with pytest.raises(ValueError):
+        laplacecross.all_cross_interactions_n_spheres_v2d(
+            2, 3, 10, radii, centers
+        )
+    with pytest.raises(ValueError):
+        helmholtzcross.all_cross_interactions_n_spheres_2d(
+            2, 3, 10, 1.0, radii, centers
+        )
+    pass
