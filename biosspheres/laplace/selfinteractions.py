@@ -385,9 +385,7 @@ def a_0j_linear_operator(
     def operator_0j_transpose_times_vector(v) -> np.ndarray:
         x = np.empty(np.shape(v))
         x[0:num] = (
-            r
-            * (-0.5 * r * v[0:num] + eles_1_eles * (r * v[num : 2 * num]))
-            / l2_1
+            r * (-0.5 * r * v[0:num] + eles_1_eles * v[num : 2 * num]) / l2_1
         )
         x[num : 2 * num] = r**2 * (r * v[0:num] + 0.5 * v[num : 2 * num]) / l2_1
         return x
