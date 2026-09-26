@@ -289,3 +289,25 @@ def test_all_cross_1d_vs_2d(big_l, big_l_c) -> None:
     )
     assert relative_error(cross_2d, cross_1d) < 2e-14
     pass
+
+
+@pytest.mark.parametrize(
+    "r_s, r_j, d",
+    [(1.0, 1.2, 3.0), (0.5, 2.0, 2.6), (1.0, 1.0, 2.05)],
+)
+def test_v_constant_densities_mean_distance(r_s, r_j, d) -> None:
+    """
+    For constant densities on two disjoint spheres the mean of 1/|x-y|
+    is 1/d, so the (0, 0) entry of V_{s,j} is r_s**2 r_j**2 / d.
+    """
+    big_l = 6
+    num = (big_l + 1) ** 2
+    direction = np.asarray([0.3, -0.4, 1.0]) / np.linalg.norm([0.3, -0.4, 1.0])
+    centers = [np.zeros(3), d * direction]
+    cross = crossinteractions.all_cross_interactions_n_spheres_v2d(
+        2, big_l, 30, np.asarray([r_s, r_j]), centers
+    )
+    exact = r_s**2 * r_j**2 / d
+    assert abs(cross[2 * num, num] - exact) / exact < 1e-13
+    assert abs(cross[0, 2 * num + num] - exact) / exact < 1e-13
+    pass
