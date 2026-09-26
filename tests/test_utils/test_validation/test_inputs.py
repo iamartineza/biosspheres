@@ -318,7 +318,7 @@ def test_numpy_array_validation_numpy_functions(array, name):
         (np.array([True, False], dtype=np.bool_), "bool_array"),
         (np.array([1 + 2j, 3 + 4j], dtype=np.complex64), "complex64_array"),
         (np.array([1 + 2j, 3 + 4j], dtype=np.complex128), "complex128_array"),
-        (np.array(["a", "b", "c"], dtype=np.unicode_), "unicode_array"),
+        (np.array(["a", "b", "c"], dtype=np.str_), "unicode_array"),
         (np.array([b"a", b"b", b"c"], dtype=np.bytes_), "bytes_array"),
     ],
 )
