@@ -1,90 +1,143 @@
 ---
-title: 'biosspheres'
+title: 'biosspheres: boundary integral operators and multiple traces formulations on ensembles of spheres'
 tags:
   - Python
-  - boundary integral formulation
-  - boundary integral operators
-  - spectral discretization
+  - boundary integral equations
+  - multiple traces formulation
+  - spherical harmonics
+  - electropermeabilization
 authors:
   - name: Isabel A. Martínez-Ávila
     orcid: 0000-0002-0803-6126
-    equal-contrib: true or false
-    affiliation: 1
-    corresponding: true # (This is how to denote the corresponding author)
-  - name: Paul
-    orcid: # if not delete this
-    equal-contrib: true or false # (This is how you can denote equal contributions between multiple authors)
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: 
-    orcid: # if not delete this
-    equal-contrib: true or false # (This is how you can denote equal contributions between multiple authors)
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-affiliations: # examples
- - name: Institution Name, Country
-   index: 1
- - name: Institution Name, Country
-   index: 2
- - name: Institution Name, Country
-   index: 3
-date: 06 April 2024 # Change later
+    corresponding: true
+  - name: Carlos Jerez-Hanckes
+    orcid: 0000-0001-8225-9558
+  - name: Paul Escapil-Inchauspé
+    orcid: 0000-0002-2187-9232
+  - name: Tobias Gebäck
+    orcid: 0000-0001-9899-9366
+date: 26 September 2026
 bibliography: paper.bib
 ---
 
 # Summary
 
-Write summary.
+`biosspheres` is a Python package for boundary integral equations posed on
+ensembles of disjoint spheres in three dimensions. It assembles the Laplace and
+Helmholtz single layer, double layer, adjoint double layer and hypersingular
+operators in a basis of real or complex spherical harmonics, both on each
+sphere (self-interactions) and between pairs of spheres (cross-interactions).
+With these operators it builds the Calderón operators and the local multiple
+traces formulation (MTF) of transmission problems [@Hiptmair2011], solves them
+with direct or iterative solvers, and reconstructs the volume solution from the
+computed traces. The same machinery is coupled in time with nonlinear ordinary
+differential equations on the sphere boundaries, which is the model used for
+biological cells under electrical stimulation [@Henriquez2016; @Henriquez2018;
+@MartinezAvila2024]. Membrane models of @Kavian2014 and of FitzHugh–Nagumo
+type [@FitzHugh1961] are included.
 
 # Statement of need
 
-Scattering by spheres can be efficiently solved through spherical harmonic functions. These functions diagonalize the Laplace operator for spheres in three dimensions, enabling a sparse representation of the operators under study. Typically, solvers based on spherical harmonics are restricted to solving transmission problems for a single sphere. However, there is currently no open-source library available for performing scattering problems involving multiple objects.
+On a sphere, spherical harmonics diagonalize the boundary integral operators of
+the Laplace and Helmholtz equations. A Galerkin discretization with
+spherical harmonics is then spectrally accurate, needs no mesh, and turns the
+self-interaction blocks into diagonal matrices with closed-form entries. When
+several spheres are present the cross-interaction blocks are dense but still
+smooth, and they can be computed to near machine precision with modest
+quadrature. This makes spheres the natural setting for two kinds of work.
 
-Biosspheres offers a comprehensive suite of routines designed to efficiently assemble boundary integral operators within spherical function spaces for a collection of three-dimensional disjoint spheres. In its operations, Biosspheres leverages the capabilities of pyshtools to accurately evaluate spherical harmonic functions, ensuring precise and reliable computations.
+The first is modelling. Cells in suspension or in tissue are often represented
+as spheres surrounded by a thin membrane, and the transmembrane potential obeys
+an ODE driven by the jump of the electric potential across the membrane. The MTF
+couples one pair of traces per sphere with the exterior medium, which keeps
+each subdomain independent and makes the time coupling explicit
+[@Henriquez2018; @MartinezAvila2024]. `biosspheres` provides this coupling for
+arbitrary numbers of spheres and conductivities.
 
-Direct applications serve as benchmarks for comparing and testing BEM solvers. They are also valuable for rapidly computing complex problems involving a large number of spheres. Furthermore, they can generate solutions for a range of scatterers, with direct relevance to uncertainty quantification, scientific machine learning, and cloaking.
+The second is verification. Solutions obtained with spherical harmonics on
+spheres converge exponentially in the maximum degree $L$, so they serve as
+reference solutions for general boundary element codes, for preconditioners of
+the MTF [@Ayala2022; @EscapilInchauspe2025], and for generating families of
+solutions for uncertainty quantification or scientific machine learning.
 
-# Mathematics
+The package is aimed at researchers in numerical analysis of boundary integral
+equations and at modellers of cell electrophysiology who need fast, accurate
+solutions on sphere ensembles.
 
-Consider the Laplace (resp., Helmholtz) scattering problem for $N$ disjoint spheres.
+# State of the field
 
-Be succinct with the mathematics. We could perhaps focus on Laplace or Helmholtz.
+Multiple scattering by spheres has a long history in electromagnetics, where
+T-matrix codes are the standard: MSTM [@Mackowski2011], CELES [@Egel2017],
+Smuthi [@Egel2021] and treams [@Beutel2024]. For acoustics, multipole
+reexpansion methods [@Gumerov2002] and packages such as MultipleScattering.jl
+[@MultipleScatteringjl] and biem-helmholtz-sphere [@biemhelmholtzsphere] solve
+Helmholtz scattering by several spheres. General boundary element libraries
+such as Bempp-cl [@Betcke2021] handle arbitrary geometries, including spheres,
+through surface meshes.
 
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
+None of these covers the setting `biosspheres` was written for. T-matrix codes
+work with the Maxwell equations or with Helmholtz scattering by impenetrable or
+homogeneous particles, and do not expose the boundary integral operators
+themselves. They do not treat the Laplace equation, which is the relevant model
+for quasi-static electrical stimulation of cells. Mesh-based boundary element
+libraries give only algebraic convergence on spheres, and a spectral basis
+cannot be added to them without replacing their assembly. `biosspheres`
+therefore implements the operators directly in the spherical harmonic basis,
+with the MTF and the time coupling on top, and relies on SHTools
+[@Wieczorek2018] for the associated Legendre functions and on NumPy and SciPy
+[@2020NumPy-Array; @2020SciPy-NMeth] for linear algebra and special functions.
 
-Double dollars make self-standing equations:
+# Software design
 
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
+The package is organized by equation and by level of abstraction. The modules
+`laplace` and `helmholtz` contain the operators; `formulations` builds mass
+matrices, the MTF systems and their right-hand sides; `quadratures` implements
+the Gauss–Legendre and trapezoidal rules on the sphere and the change of
+coordinates between spheres; `miscella` holds harmonic expansions of point
+sources and plane waves, membrane current models and sphere arrangements.
 
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
+Self-interactions are returned as the diagonals of the operators, with an
+azimuthal variant that keeps only order-zero harmonics when the problem is
+axisymmetric. Cross-interactions between spheres $j$ and $s$ are computed
+semi-analytically: the action of an operator of sphere $j$ on a spherical
+harmonic of sphere $j$ is known in closed form outside sphere $j$, and it is
+tested against the spherical harmonics of sphere $s$ with a quadrature of degree
+$L_c \geq L$ on sphere $s$. Two implementations are provided for each block. The
+first stores the quadrature points in one-dimensional arrays and is simple to
+read; the second uses two-dimensional arrays and a faster spherical harmonic
+transform. The tests check that both agree. The double layer, adjoint double
+layer and hypersingular blocks are obtained from the single layer block through
+their algebraic relations in this basis, instead of being integrated
+separately, which reduces the cost of assembling the Calderón operator.
 
-# Citations
+Each MTF system is available as a dense matrix and as a
+`scipy.sparse.linalg.LinearOperator`. The dense form is convenient for direct
+solvers and for studying spectra; the operator form avoids storing the
+diagonal and sparse blocks explicitly and is the one used with GMRES. For eight
+spheres with $L = 15$, the iterative solver is about three times faster than the
+direct one in the timing notebook shipped with the package. A reduced MTF
+eliminates the interior traces through a Schur complement; since the interior
+blocks are diagonal this is exact and halves the number of unknowns.
 
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
+The time-dependent problems use a semi-implicit scheme: the linear MTF system
+is treated implicitly, the nonlinear membrane current explicitly, so a single
+factorization of the system matrix is reused at every time step
+[@MartinezAvila2024].
 
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
+All public routines validate their inputs and raise explicit errors. The tests
+compare the one-sphere Helmholtz operators with their closed forms in spherical
+Bessel and Hankel functions and with a direct quadrature of the kernel, check
+the discrete Calderón identity $(2A)^2 = I$ for the Laplace operators, and check
+the
+agreement between the matrix and linear-operator versions, between the one- and
+two-dimensional versions, between the reduced and full MTF, and in
+phantom-sphere experiments whose exact solution is known. Jupyter notebooks
+document each module and reproduce the examples of the associated articles;
+they run in continuous integration together with the tests.
 
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
+# Research impact statement
 
-# Figures
-
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
-
-Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+# AI usage disclosure
 
 # Acknowledgements
 
