@@ -3,8 +3,12 @@ import numpy as np
 from scipy import sparse
 from biosspheres.utils.validation.inputs import (
     big_l_validation,
+    float_validation,
     radius_validation,
     bool_validation,
+    numpy_array_validation,
+    finite_values_in_array,
+    float_array_validation,
     radii_validation,
     pi_validation,
     pii_validation,
@@ -19,7 +23,9 @@ from biosspheres.utils.validation.inputs import (
 import biosspheres.utils.validation.inputs as valin
 
 
+########################################################################
 # Tests for valin.integer_validation
+########################################################################
 @pytest.mark.parametrize(
     "integer, name",
     [
@@ -35,22 +41,9 @@ def test_integer_validation(integer, name):
     pass
 
 
-@pytest.mark.parametrize(
-    "integer, name",
-    [
-        ("100", "string"),
-        (10.5, "float"),
-        (None, "None"),
-        ([100], "List"),
-    ],
-)
-def test_big_l_validation_type_error(integer, name):
-    with pytest.raises(TypeError) as exc_info:
-        big_l_validation(integer, name)
-    pass
-
-
+########################################################################
 # Tests for big_l_validation
+########################################################################
 @pytest.mark.parametrize(
     "big_l, name",
     [
@@ -104,7 +97,398 @@ def test_big_l_validation_warning():
     pass
 
 
+########################################################################
+# n validation
+########################################################################
+@pytest.mark.parametrize(
+    "n, name",
+    [
+        (1, "n"),
+        (150, "n"),
+        (3000, "n"),
+        (np.int32(100), "n"),
+    ],
+)
+def test_n_validation_valid(n, name):
+    # Should not raise any exception
+    n_validation(n, name)
+    pass
+
+
+@pytest.mark.parametrize(
+    "n, name, err",
+    [
+        ("100", "n", "integer"),
+        (10.5, "n", "integer"),
+        (None, "n", "integer"),
+        ([100], "n", "integer"),
+    ],
+)
+def test_n_validation_type_error(n, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        n_validation(n, name)
+    assert str(exc_info.value).__contains__(err)
+    pass
+
+
+@pytest.mark.parametrize(
+    "n, name, err",
+    [
+        (0, "n", "positive"),
+        (-100, "n", "positive"),
+    ],
+)
+def test_n_validation_value_error(n, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        n_validation(n, name)
+    assert str(exc_info.value).__contains__(err)
+    pass
+
+
+########################################################################
+# Test for float_validation
+########################################################################
+# Tests for valid floating point values
+@pytest.mark.parametrize(
+    "fl, name",
+    [
+        (0.0, "zero"),
+        (1.0, "one"),
+        (-1.0, "negative_one"),
+        (3.14159, "pi"),
+        (1e-10, "small_value"),
+        (1e10, "large_value"),
+        (np.float32(2.5), "numpy_float32"),
+        (np.float64(3.7), "numpy_float64"),
+    ],
+)
+def test_float_validation_valid(fl, name):
+    # Should not raise any exception
+    float_validation(fl, name)
+
+
+# Tests for invalid types (not float)
+@pytest.mark.parametrize(
+    "fl, name, err",
+    [
+        (1, "integer", "float"),
+        ("1.0", "string", "float"),
+        (True, "boolean", "float"),
+        (None, "none", "float"),
+        ([1.0], "list", "float"),
+        (np.array([1.0]), "numpy_array", "float"),
+        ((1.0,), "tuple", "float"),
+        ({1.0}, "set", "float"),
+        ({"key": 1.0}, "dict", "float"),
+        (np.int32(5), "numpy_int", "float"),
+    ],
+)
+def test_float_validation_type_error(fl, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        float_validation(fl, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for non-finite float values
+@pytest.mark.parametrize(
+    "fl, name, err",
+    [
+        (np.inf, "infinity", "finite"),
+        (-np.inf, "negative_infinity", "finite"),
+        (np.nan, "nan", "finite"),
+        (float("inf"), "float_infinity", "finite"),
+        (float("-inf"), "float_negative_infinity", "finite"),
+        (float("nan"), "float_nan", "finite"),
+    ],
+)
+def test_float_validation_value_error(fl, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        float_validation(fl, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for edge cases
+@pytest.mark.parametrize(
+    "fl, name",
+    [
+        (np.finfo(np.float64).eps, "float64_epsilon"),
+        # Smallest positive float64
+        (np.finfo(np.float64).max, "float64_max"),
+        # Largest positive float64
+        (np.finfo(np.float64).min, "float64_min"),
+        # Smallest negative float64
+        (1.7976931348623157e308, "max_float"),
+        # Python float max
+        (2.2250738585072014e-308, "min_float"),
+        # Python float min
+    ],
+)
+def test_float_validation_edge_cases(fl, name):
+    # Should not raise any exception
+    float_validation(fl, name)
+
+
+########################################################################
+# Tests for numpy_array_validation
+########################################################################
+# Tests for valid numpy arrays of different types and dimensions
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1, 2, 3]), "integer_array"),
+        (np.array([1.0, 2.0, 3.0]), "float_array"),
+        (np.array([True, False]), "boolean_array"),
+        (np.array(["a", "b", "c"]), "string_array"),
+        (np.array([1 + 2j, 3 + 4j]), "complex_array"),
+        (np.array([]), "empty_array"),
+        (np.zeros(5), "zeros_array"),
+        (np.ones(5), "ones_array"),
+        (np.eye(3), "identity_array"),
+        (np.array([[1, 2], [3, 4]]), "2d_array"),
+        (np.array([[[1, 2], [3, 4]]]), "3d_array"),
+        (np.array(5), "scalar_array"),
+        (np.array(np.nan), "nan_array"),
+        (np.array(np.inf), "inf_array"),
+        (np.arange(10), "arange_array"),
+        (np.linspace(0, 1, 5), "linspace_array"),
+    ],
+)
+def test_numpy_array_validation_valid(array, name):
+    # Should not raise any exception
+    numpy_array_validation(array, name)
+
+
+# Tests for invalid inputs (not numpy arrays)
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        ([1, 2, 3], "list", "array"),
+        ((1, 2, 3), "tuple", "array"),
+        ({1, 2, 3}, "set", "array"),
+        ({"a": 1, "b": 2}, "dict", "array"),
+        (1, "integer", "array"),
+        (1.0, "float", "array"),
+        ("string", "string", "array"),
+        (True, "boolean", "array"),
+        (None, "none", "array"),
+        (lambda x: x, "function", "array"),
+        (np.int64(5), "numpy_scalar", "array"),
+        (np.float64(5.0), "numpy_float", "array"),
+    ],
+)
+def test_numpy_array_validation_invalid(array, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        numpy_array_validation(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays created with different numpy functions
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.zeros((2, 3)), "zeros_2d"),
+        (np.ones((2, 2, 2)), "ones_3d"),
+        (np.full((3, 3), 5), "full_array"),
+        (np.identity(4), "identity_matrix"),
+        (np.diag([1, 2, 3]), "diagonal_matrix"),
+        (np.random.rand(3, 3), "random_array"),
+        (
+            np.array(np.ma.masked_array([1, 2, 3], mask=[0, 1, 0])),
+            "masked_array",
+        ),
+        (np.array(np.matrix([[1, 2], [3, 4]])), "matrix_array"),
+    ],
+)
+def test_numpy_array_validation_numpy_functions(array, name):
+    # Should not raise any exception
+    numpy_array_validation(array, name)
+
+
+# Tests for arrays with different dtypes
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1, 2, 3], dtype=np.int8), "int8_array"),
+        (np.array([1, 2, 3], dtype=np.int16), "int16_array"),
+        (np.array([1, 2, 3], dtype=np.int32), "int32_array"),
+        (np.array([1, 2, 3], dtype=np.int64), "int64_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float16), "float16_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float32), "float32_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float64), "float64_array"),
+        (np.array([True, False], dtype=np.bool_), "bool_array"),
+        (np.array([1 + 2j, 3 + 4j], dtype=np.complex64), "complex64_array"),
+        (np.array([1 + 2j, 3 + 4j], dtype=np.complex128), "complex128_array"),
+        (np.array(["a", "b", "c"], dtype=np.str_), "unicode_array"),
+        (np.array([b"a", b"b", b"c"], dtype=np.bytes_), "bytes_array"),
+    ],
+)
+def test_numpy_array_validation_dtypes(array, name):
+    # Should not raise any exception
+    numpy_array_validation(array, name)
+
+
+########################################################################
+# Tests for finite_values_in_array
+########################################################################
+# Tests for arrays with all finite values
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1.0, 2.0, 3.0]), "float_array"),
+        (np.array([-1.0, -2.0, -3.0]), "negative_float_array"),
+        (np.array([0.0]), "zero_array"),
+        (np.array([1.0e-10, 2.0e-10]), "small_values_array"),
+        (np.array([1.0e10, 2.0e10]), "large_values_array"),
+        (np.array([]), "empty_array"),
+        (np.array([[1.0, 2.0], [3.0, 4.0]]), "2d_array"),
+        (np.array([[[1.0]]]), "3d_array"),
+        (np.array([np.finfo(np.float64).max]), "max_float_array"),
+        (np.array([np.finfo(np.float64).min]), "min_float_array"),
+        (np.array([np.finfo(np.float64).eps]), "eps_float_array"),
+        (np.array([1, 2, 3], dtype=np.int32), "int_array"),
+        (np.array([True, False], dtype=bool), "bool_array"),
+    ],
+)
+def test_finite_values_in_array_valid(array, name):
+    # Should not raise any exception
+    finite_values_in_array(array, name)
+
+
+# Tests for arrays with infinite values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1.0, np.inf, 3.0]), "inf_array", "finite"),
+        (np.array([1.0, -np.inf, 3.0]), "neg_inf_array", "finite"),
+        (np.array([np.inf]), "single_inf_array", "finite"),
+        (np.array([-np.inf]), "single_neg_inf_array", "finite"),
+        (np.array([[1.0, 2.0], [3.0, np.inf]]), "2d_inf_array", "finite"),
+        (np.array([[[np.inf]]]), "3d_inf_array", "finite"),
+        (np.array([np.inf, -np.inf]), "mixed_inf_array", "finite"),
+        (np.array([float("inf"), 2.0, 3.0]), "py_inf_array", "finite"),
+        (np.array([float("-inf"), 2.0, 3.0]), "py_neg_inf_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_infinite(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with NaN values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1.0, np.nan, 3.0]), "nan_array", "finite"),
+        (np.array([np.nan]), "single_nan_array", "finite"),
+        (np.array([[1.0, 2.0], [3.0, np.nan]]), "2d_nan_array", "finite"),
+        (np.array([[[np.nan]]]), "3d_nan_array", "finite"),
+        (np.array([np.nan, np.nan]), "all_nan_array", "finite"),
+        (np.array([float("nan"), 2.0, 3.0]), "py_nan_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_nan(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with mixed non-finite values
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([np.inf, np.nan]), "inf_nan_array", "finite"),
+        (np.array([1.0, np.inf, np.nan]), "mixed_array", "finite"),
+        (np.array([[np.inf, 2.0], [3.0, np.nan]]), "2d_mixed_array", "finite"),
+        (np.array([np.inf, np.nan, -np.inf]), "all_special_array", "finite"),
+    ],
+)
+def test_finite_values_in_array_mixed(array, name, err):
+    with pytest.raises(ValueError) as exc_info:
+        finite_values_in_array(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+########################################################################
+# Tests for float_array_validation
+########################################################################
+# Tests for valid float arrays
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (np.array([1.0, 2.0, 3.0]), "float64_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float32), "float32_array"),
+        (np.array([1.0, 2.0, 3.0], dtype=np.float16), "float16_array"),
+        (np.array([-1.0, -2.0, -3.0]), "negative_float_array"),
+        (np.array([0.0]), "zero_array"),
+        (np.array([]), "empty_float_array"),
+        (np.array([[1.0, 2.0], [3.0, 4.0]]), "2d_float_array"),
+        (np.array([[[1.0]]]), "3d_float_array"),
+        (np.array(1.0), "scalar_float_array"),
+        (np.zeros((2, 2), dtype=np.float64), "zeros_float_array"),
+        (np.ones((2, 2), dtype=np.float32), "ones_float_array"),
+        (np.array([np.inf, -np.inf, np.nan]), "special_values_array"),
+        (
+            np.array([np.finfo(np.float32).max], dtype=np.float32),
+            "max_float32_array",
+        ),
+        (
+            np.array([np.finfo(np.float64).min], dtype=np.float64),
+            "min_float64_array",
+        ),
+    ],
+)
+def test_float_array_validation_valid(array, name):
+    # Should not raise any exception
+    float_array_validation(array, name)
+
+
+# Tests for non-float arrays
+@pytest.mark.parametrize(
+    "array, name, err",
+    [
+        (np.array([1, 2, 3], dtype=np.int32), "int32_array", "float"),
+        (np.array([1, 2, 3], dtype=np.int64), "int64_array", "float"),
+        (np.array([True, False]), "bool_array", "float"),
+        (np.array(["1.0", "2.0", "3.0"]), "string_array", "float"),
+        (np.array([1 + 2j, 3 + 4j]), "complex_array", "float"),
+        (np.array([1, 2, 3], dtype=np.uint8), "uint8_array", "float"),
+        (np.array([[1, 2], [3, 4]], dtype=np.int16), "2d_int_array", "float"),
+        (np.zeros(5, dtype=np.int32), "zeros_int_array", "float"),
+        (np.ones(5, dtype=bool), "ones_bool_array", "float"),
+        (np.array(5, dtype=np.int64), "scalar_int_array", "float"),
+    ],
+)
+def test_float_array_validation_invalid_dtype(array, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        float_array_validation(array, name)
+    assert str(exc_info.value).__contains__(err)
+
+
+# Tests for arrays with mixed float subclasses
+@pytest.mark.parametrize(
+    "array, name",
+    [
+        (
+            np.array([np.float16(1.0), np.float32(2.0), np.float64(3.0)]),
+            "mixed_float_types",
+        ),
+        (np.array([1.0, np.float32(2.0)]), "python_and_numpy_float"),
+    ],
+)
+def test_float_array_validation_mixed_float_types(array, name):
+    # Should not raise any exception as all are float subtypes
+    float_array_validation(array, name)
+
+
+########################################################################
+# Tests for full_float_array_validation
+########################################################################
+
+
+########################################################################
 # Tests for radius_validation
+########################################################################
 @pytest.mark.parametrize(
     "r, name",
     [
@@ -152,7 +536,58 @@ def test_radius_validation_value_error(r, name, error_msg):
     pass
 
 
+########################################################################
+# Test for pi_validation
+########################################################################
+@pytest.mark.parametrize(
+    "pi, name",
+    [
+        (1.0, "pi"),
+        (np.float64(2.5), "pi"),
+    ],
+)
+def test_pi_validation_valid(pi, name):
+    # Should not raise any exception
+    pi_validation(pi, name)
+    pass
+
+
+@pytest.mark.parametrize(
+    "pi, name, err",
+    [
+        (2, "pi", "float"),
+        ("1.0", "pi", "float"),
+        (True, "pi", "float"),
+        (None, "pi", "float"),
+        ([1.0], "pi", "float"),
+    ],
+)
+def test_pi_validation_type_error(pi, name, err):
+    with pytest.raises(TypeError) as exc_info:
+        pi_validation(pi, name)
+    assert str(exc_info.value).__contains__(err)
+    pass
+
+
+@pytest.mark.parametrize(
+    "pi, name, error_msg",
+    [
+        (np.inf, "pi", "finite"),
+        (-np.inf, "pi", "finite"),
+        (np.nan, "pi", "finite"),
+        (0.0, "pi", "0"),
+    ],
+)
+def test_pi_validation_value_error(pi, name, error_msg):
+    with pytest.raises(ValueError) as exc_info:
+        pi_validation(pi, name)
+    assert str(exc_info.value).__contains__(error_msg)
+    pass
+
+
+########################################################################
 # Tests for bool_validation
+########################################################################
 @pytest.mark.parametrize(
     "b, name",
     [
@@ -185,7 +620,9 @@ def test_bool_validation_invalid_type(b, name, err):
     pass
 
 
+########################################################################
 # Tests for radii_validation
+########################################################################
 @pytest.mark.parametrize(
     "radii, name",
     [
@@ -240,53 +677,6 @@ def test_radii_validation_value_error(radii, name, err):
     with pytest.raises(ValueError) as exc_info:
         radii_validation(radii, name)
     assert str(exc_info.value).__contains__(err)
-    pass
-
-
-# Test for pi_validation
-@pytest.mark.parametrize(
-    "pi, name",
-    [
-        (1.0, "pi"),
-        (np.float64(2.5), "pi"),
-    ],
-)
-def test_pi_validation_valid(pi, name):
-    # Should not raise any exception
-    pi_validation(pi, name)
-    pass
-
-
-@pytest.mark.parametrize(
-    "pi, name, err",
-    [
-        (2, "pi", "float"),
-        ("1.0", "pi", "float"),
-        (True, "pi", "float"),
-        (None, "pi", "float"),
-        ([1.0], "pi", "float"),
-    ],
-)
-def test_pi_validation_type_error(pi, name, err):
-    with pytest.raises(TypeError) as exc_info:
-        pi_validation(pi, name)
-    assert str(exc_info.value).__contains__(err)
-    pass
-
-
-@pytest.mark.parametrize(
-    "pi, name, error_msg",
-    [
-        (np.inf, "pi", "finite"),
-        (-np.inf, "pi", "finite"),
-        (np.nan, "pi", "finite"),
-        (0.0, "pi", "0"),
-    ],
-)
-def test_pi_validation_value_error(pi, name, error_msg):
-    with pytest.raises(ValueError) as exc_info:
-        pi_validation(pi, name)
-    assert str(exc_info.value).__contains__(error_msg)
     pass
 
 
@@ -347,52 +737,6 @@ def test_pii_validation_value_errors(pii, name, err):
     pass
 
 
-# n validation
-@pytest.mark.parametrize(
-    "n, name",
-    [
-        (1, "n"),
-        (150, "n"),
-        (3000, "n"),
-        (np.int32(100), "n"),
-    ],
-)
-def test_n_validation_valid(n, name):
-    # Should not raise any exception
-    n_validation(n, name)
-    pass
-
-
-@pytest.mark.parametrize(
-    "n, name, err",
-    [
-        ("100", "n", "integer"),
-        (10.5, "n", "integer"),
-        (None, "n", "integer"),
-        ([100], "n", "integer"),
-    ],
-)
-def test_n_validation_type_error(n, name, err):
-    with pytest.raises(TypeError) as exc_info:
-        n_validation(n, name)
-    assert str(exc_info.value).__contains__(err)
-    pass
-
-
-@pytest.mark.parametrize(
-    "n, name, err",
-    [
-        (0, "n", "positive"),
-        (-100, "n", "positive"),
-    ],
-)
-def test_n_validation_value_error(n, name, err):
-    with pytest.raises(ValueError) as exc_info:
-        n_validation(n, name)
-    assert str(exc_info.value).__contains__(err)
-    pass
-
-
 # Test of function two_dimensional_array_check_valid
 @pytest.mark.parametrize(
     "array",
@@ -418,9 +762,9 @@ def test_two_dimensional_array_check_valid(array):
         (12345, "array4", TypeError, "numpy array"),
         (None, "array5", TypeError, "numpy array"),
         # Test cases where the input is a numpy array but not 2D
-        (np.array([1, 2, 3]), "array6", ValueError, "2D"),
-        (np.array(5), "array7", ValueError, "2D"),
-        (np.array([[[1, 2], [3, 4]]]), "array9", ValueError, "2D"),
+        (np.array([1, 2, 3]), "array6", ValueError, "2"),
+        (np.array(5), "array7", ValueError, "2"),
+        (np.array([[[1, 2], [3, 4]]]), "array9", ValueError, "2"),
     ],
 )
 def test_two_dimensional_array_check_invalid(

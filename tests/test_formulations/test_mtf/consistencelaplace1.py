@@ -49,7 +49,7 @@ def testing_mtf_linear_operators_and_matrices_one_sphere(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -79,7 +79,7 @@ def testing_mtf_linear_operators_and_matrices_one_sphere(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -150,7 +150,7 @@ def testing_mtf_azimuthal_and_no_azimuthal(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -168,7 +168,7 @@ def testing_mtf_azimuthal_and_no_azimuthal(
     solution2, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -231,7 +231,7 @@ def testing_mtf_reduced_linear_operators_and_matrices(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -256,7 +256,7 @@ def testing_mtf_reduced_linear_operators_and_matrices(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -315,7 +315,7 @@ def testing_mtf_reduced_azimuthal_and_no_azimuthal(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -329,7 +329,7 @@ def testing_mtf_reduced_azimuthal_and_no_azimuthal(
     solution2, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -394,7 +394,7 @@ def testing_mtf_reduced_vs_not_one_sphere(
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(4 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -410,7 +410,7 @@ def testing_mtf_reduced_vs_not_one_sphere(
     sol_red_1, info = scipy.sparse.linalg.gmres(
         linear_operator_red,
         b_red_1,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",

@@ -78,7 +78,8 @@ def bool_validation(b: bool, name: str) -> None:
 def numpy_array_validation(array: np.ndarray, name: str) -> None:
     """To check if array (named name) is a numpy array."""
     if not isinstance(array, np.ndarray):
-        raise TypeError(f"{name} must be an array, got {type(array).__name__}")
+        raise TypeError(
+            f"{name} must be an numpy array, got {type(array).__name__}")
     pass
 
 
@@ -100,7 +101,8 @@ def dimensions_array_validation(array: np.ndarray, name: str, dim: int) -> None:
 
 
 def float_array_validation(array: np.ndarray, name: str) -> None:
-    """To check if array (named name) is a numpy array of floats."""
+    """To check if array (named name) is a numpy array of floats.
+    It assumes that array is a numpy array. """
     if not issubclass(array.dtype.type, np.floating):
         raise TypeError(
             f"{name} must be an array of floats, got array with dtype"
@@ -133,7 +135,7 @@ def trigonometric_arrays_validation(
         )
     if not np.all(array <= 1.0):
         raise ValueError(
-            f"All elements in {name} must be greater or equal to 1"
+            f"All elements in {name} must be less than or equal to 1"
         )
     pass
 
@@ -193,7 +195,7 @@ def same_type_check(
     if array1.dtype != array2.dtype:
         raise ValueError(
             f"{name1} has different type than {name2}: "
-            f"{array1.shape} vs {array2.shape}."
+            f"{array1.dtype} vs {array2.dtype}."
         )
     pass
 

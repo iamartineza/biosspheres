@@ -13,13 +13,11 @@ against spherical harmonics.
 
 # Installation
 
-Tested with **python 3.9**
+Tested with **Python 3.10 to 3.13** on Linux and macOS.
 
 We recommend to install the package in its own python environment.
 
 ## Via pip
-
-The package is available in PyPi.
 
 For the minimum installation:
 
@@ -27,14 +25,25 @@ For the minimum installation:
 
 For the installation including the dependencies necessary for running jupyter notebooks:
 
-`pip install biosspheres[all]`
+`pip install "biosspheres[all]"`
+
+## From source
+
+```
+git clone https://github.com/iamartineza/biosspheres
+cd biosspheres
+pip install -e ".[dev]"
+pytest
+```
 
 ## Docker
 
-The biosspheres-notebook Docker image is configured to run biosspheres with Python 3.10. This can be done running:
+The biosspheres-notebook Docker image runs biosspheres with Python 3.12 and JupyterLab.
+It can be built and run with:
 
 ```
-docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 pescapil/biosspheres-notebook
+docker build -t biosspheres-notebook .
+docker run -v $(pwd):/root/shared -w "/root/shared" -p 8888:8888 biosspheres-notebook
 ```
 
 ## Additional comments

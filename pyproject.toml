@@ -1,50 +1,78 @@
-[tool.poetry]
-name = "biosspheres"
-version = "0.1.2.dev0"
-description = "Python package to obtain Helmholtz or Laplace boundary integral operator on spheres using spherical harmonics. It also implements the Multiple Traces Formulation to solve scattering transmission problems in an ensemble of spheres."
-authors = [
-    {name = "Isabel Martínez, Carlos Jerez-Hanckes, Paul Escapil, Tobias Gebäck"}]
-maintainers = [
-    {name = "Biosspheres Developers", email="biosspheres@pm.me"},
-]
-license = "BSD-3-Clause"
-readme = "README.md"
-repository = "https://github.com/iamartineza/biosspheres"
-
-[tool.poetry.dependencies]
-python = ">=3.9, <3.13"
-pyshtools = ">=4.10.4"
-numpy = ">=1.26.4"
-scipy = ">=1.11.4,<1.14.0"
-
-# Extras
-matplotlib = { version = ">=3.8", optional = true }
-notebook = { version = ">=7.2.2", optional = true }
-jupyterlab = { version = ">=3.0", optional = true }
-ipython = { version = ">=7.0", optional = true }
-ipykernel = { version = ">=6.0", optional = true }
-
-[tool.poetry.dev-dependencies]
-pytest = "^8.3"
-black = "^24.8"
-
-[tool.poetry.extras]
-plotting = ["matplotlib"]
-jupyter = [
-    "matplotlib",
-    "notebook",
-    "jupyterlab",
-    "ipython",
-    "ipykernel"
-]
-all = [
-    "matplotlib",
-    "notebook",
-    "jupyterlab",
-    "ipython",
-    "ipykernel"
-]
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "biosspheres"
+version = "0.2.0"
+description = "Laplace and Helmholtz boundary integral operators on multiple spheres in a spherical harmonic basis, and the local multiple traces formulation for transmission problems, including coupling with ODEs in time."
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [
+    { name = "Isabel A. Martínez-Ávila" },
+    { name = "Carlos Jerez-Hanckes" },
+    { name = "Paul Escapil-Inchauspé" },
+    { name = "Tobias Gebäck" },
+]
+maintainers = [
+    { name = "Biosspheres Developers", email = "biosspheres@pm.me" },
+]
+keywords = [
+    "boundary integral equations",
+    "multiple traces formulation",
+    "spherical harmonics",
+    "Laplace",
+    "Helmholtz",
+    "scattering",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.26.4",
+    "scipy>=1.12",
+    "pyshtools>=4.12",
+]
+
+[project.optional-dependencies]
+plotting = ["matplotlib>=3.8"]
+jupyter = [
+    "matplotlib>=3.8",
+    "notebook>=7.2.2",
+    "jupyterlab>=3.0",
+    "ipython>=7.0",
+    "ipykernel>=6.0",
+]
+all = ["biosspheres[jupyter]"]
+test = ["pytest>=8", "matplotlib>=3.8"]
+docs = [
+    "sphinx>=7",
+    "pydata-sphinx-theme>=0.15",
+    "nbsphinx>=0.9",
+    "matplotlib>=3.8",
+    "ipykernel>=6.0",
+]
+dev = ["biosspheres[test]", "black>=24.8", "nbmake>=1.5"]
+
+[project.urls]
+Repository = "https://github.com/iamartineza/biosspheres"
+Issues = "https://github.com/iamartineza/biosspheres/issues"
+Documentation = "https://iamartineza.github.io/biosspheres/"
+
+[tool.hatch.build.targets.sdist]
+include = ["biosspheres", "tests", "README.md", "LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: long-running physics checks"]
+
+[tool.black]
+line-length = 80
+target-version = ["py310"]

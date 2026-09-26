@@ -37,7 +37,7 @@ def testing_big_a_linear_operators_and_matrices() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -57,7 +57,7 @@ def testing_big_a_linear_operators_and_matrices() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -79,7 +79,7 @@ def testing_big_a_linear_operators_and_matrices() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -98,7 +98,7 @@ def testing_big_a_linear_operators_and_matrices() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -148,7 +148,7 @@ def testing_big_a_azimuthal_and_no_azimuthal() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -162,7 +162,7 @@ def testing_big_a_azimuthal_and_no_azimuthal() -> None:
     solution2, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=(2 * num) ** 3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -187,7 +187,7 @@ def testing_big_a_azimuthal_and_no_azimuthal() -> None:
     solution, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b2,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
@@ -201,7 +201,7 @@ def testing_big_a_azimuthal_and_no_azimuthal() -> None:
     solution2, info = scipy.sparse.linalg.gmres(
         linear_operator,
         b,
-        tol=10 ** (-13),
+        rtol=10 ** (-13),
         restart=2 * num**3,
         callback=callback_function,
         callback_type="pr_norm",
