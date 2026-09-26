@@ -25,7 +25,6 @@ def phantom_1_plane_wave_azimuthal() -> None:
     a = 1.0
     num = max_l + 1
 
-    # --- Build of phi_e.
     b_d = harmonicex.plane_wave_coefficients_dirichlet_expansion_0j(
         max_l, r, p_z, k0, a, azimuthal=True
     )
@@ -38,44 +37,6 @@ def phantom_1_plane_wave_azimuthal() -> None:
     a_1 = self.a_j_matrix(max_l, r, k0, azimuthal=True)
     matrix = mtf.mtf_1_matrix(r, pi, a_0, a_1)
     solution2 = np.linalg.solve(matrix, b)
-
-    print("--- Checking of errors.")
-    dirichlet_ex = solution2[0:num]
-    neumann_ex = solution2[num : 2 * num]
-    dirichlet_in = solution2[2 * num : 3 * num]
-    neumann_in = solution2[3 * num : 4 * num]
-    exterior_u = solution2[0 : 2 * num]
-    print("---- Norm of the exterior trace (should be near zero).")
-    print(np.linalg.norm(exterior_u))
-    print("---- Norm of the difference between $\\gamma^{01} \\phi_e^L$")
-    print("and the interior trace (absolute error):")
-    print(
-        np.linalg.norm(
-            np.concatenate((b_d, -b_n)) - solution2[2 * num : 4 * num]
-        )
-    )
-    print("---- Discrete Calderon errors:")
-    print(
-        np.linalg.norm(
-            2 * np.matmul(a_0, solution2[0 : 2 * num])
-            - r**2 * solution2[0 : 2 * num]
-        )
-    )
-    print(
-        np.linalg.norm(
-            2 * np.matmul(a_1, solution2[2 * num : 4 * num])
-            - r**2 * solution2[2 * num : 4 * num]
-        )
-    )
-    print("---- Jump errors.")
-    print("----- Dirichlet trace:")
-    jump_dirichlet = np.linalg.norm(dirichlet_ex - dirichlet_in + b_d)
-    print(jump_dirichlet)
-    print("----- Neumann trace:")
-    jump_neumann = np.linalg.norm((neumann_ex + b_n) + neumann_in)
-    print(jump_neumann)
-    print("----- Total jump error:")
-    print(np.sqrt(jump_dirichlet**2 + jump_neumann**2))
 
     print("--- For plotting the convergence when the degree is increasing.")
     solutions = np.zeros((4 * num, max_l), dtype=np.complex128)
@@ -295,41 +256,6 @@ def mix_phantom_total_3_different_1_plane_wave():
     )
     solution2 = np.linalg.solve(matrix, b)
 
-    print("--- Discrete Calderon errors:")
-    print(
-        np.linalg.norm(
-            2.0
-            * (
-                np.matmul(
-                    big_a_0_cross, solution2[0 : 2 * n * (big_l + 1) ** 2]
-                )
-                + sparse_big_a_0_self.dot(
-                    solution2[0 : 2 * n * (big_l + 1) ** 2]
-                )
-            )
-            - mass_n_two * solution2[0 : 2 * n * (big_l + 1) ** 2]
-        )
-    )
-    print(
-        np.linalg.norm(
-            2.0
-            * sparse_big_a_n.dot(
-                solution2[2 * n * (big_l + 1) ** 2 : 4 * n * (big_l + 1) ** 2]
-            )
-            - mass_n_two
-            * solution2[2 * n * (big_l + 1) ** 2 : 4 * n * (big_l + 1) ** 2]
-        )
-    )
-
-    print("--- Jump error:")
-    jump_error = np.linalg.norm(
-        -solution2[0 : 2 * n * (big_l + 1) ** 2] * x_dia
-        + mass_n_two
-        * solution2[2 * n * (big_l + 1) ** 2 : 4 * n * (big_l + 1) ** 2]
-        - b[2 * n * (big_l + 1) ** 2 : 4 * n * (big_l + 1) ** 2]
-    )
-    print(jump_error)
-
     plt.figure()
     plt.plot(np.abs(solution2), marker="x")
     plt.xlabel("index")
@@ -377,20 +303,6 @@ def mix_phantom_total_3_different_1_plane_wave():
         )
     )
 
-    analytic_error = np.linalg.norm(
-        result_one_sphere
-        - np.concatenate(
-            (
-                solution2[0 : 2 * (big_l + 1) ** 2],
-                solution2[
-                    2 * n * (big_l + 1) ** 2 : 2 * n * (big_l + 1) ** 2
-                    + 2 * (big_l + 1) ** 2
-                ],
-            )
-        )
-    ) / np.linalg.norm(result_one_sphere)
-    print("--- Analytic error of the first sphere:")
-    print(analytic_error)
     print("-- Coefficients of analytic solution 1.")
     plt.figure()
     plt.plot(np.abs(result_one_sphere), marker="x")
