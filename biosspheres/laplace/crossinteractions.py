@@ -25,6 +25,7 @@ from scipy import sparse
 import pyshtools
 import biosspheres.quadratures.sphere as quadratures
 import biosspheres.utils.auxindexes as auxindexes
+import biosspheres.utils.validation.inputs as valin
 
 
 def v_0_sj_semi_analytic_v1d(
@@ -2166,6 +2167,9 @@ def all_cross_interactions_n_spheres_v1d(
     all_cross_interactions_n_spheres_v2d
 
     """
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num))
@@ -2268,6 +2272,9 @@ def all_cross_interactions_n_spheres_v2d(
     all_cross_interactions_n_spheres_v1d
 
     """
+    valin.disjoint_spheres_validation(
+        radii, center_positions, "center_positions"
+    )
     big_l_plus_1_square = (big_l + 1) ** 2
     num = 2 * n * big_l_plus_1_square
     almost_big_a_0 = np.zeros((num, num))
