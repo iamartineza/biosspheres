@@ -1,0 +1,23 @@
+name: notebooks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ".[jupyter]" nbmake
+      - run: >-
+          pytest --nbmake --nbmake-timeout=1800
+          $(ls notebooks/*.ipynb | grep -v onesphere_ode_kavian)
+        env:
+          MPLBACKEND: Agg
