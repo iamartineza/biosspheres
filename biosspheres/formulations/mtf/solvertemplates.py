@@ -211,7 +211,7 @@ def mtf_laplace_n_spheres_point_source_indirect_solver(
     del x_dia_inv, pii
 
     solution, info = scipy.sparse.linalg.gmres(
-        linear_operator, b, tol=tolerance, restart=(4 * (big_l + 1) ** 2) ** 3
+        linear_operator, b, rtol=tolerance, restart=(4 * (big_l + 1) ** 2) ** 3
     )
 
     return solution

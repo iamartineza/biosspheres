@@ -1,5 +1,5 @@
 numpy>=1.26.4
-scipy>=1.11.4
+scipy>=1.12
 pyshtools>=4.12
 matplotlib>=3.8
 notebook>=7.2.2
