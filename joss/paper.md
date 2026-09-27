@@ -13,22 +13,24 @@ authors:
     affiliation: 1
   - name: Carlos Jerez-Hanckes
     orcid: 0000-0001-8225-9558
-    affiliation: 2
+    affiliation: "2, 3"
   - name: Paul Escapil-Inchauspé
     orcid: 0000-0002-2187-9232
-    affiliation: 3
+    affiliation: 4
   - name: Tobias Gebäck
     orcid: 0000-0001-9899-9366
-    affiliation: 4
+    affiliation: 5
 affiliations:
   - name: Pontificia Universidad Católica de Chile, Santiago, Chile
     index: 1
-  - name: Department of Mathematical Sciences, University of Bath, United Kingdom
+  - name: KTH Royal Institute of Technology, Stockholm, Sweden
     index: 2
-  - name: Facultad de Ingeniería y Ciencias, Universidad Adolfo Ibáñez, Santiago, Chile
+  - name: Inria Chile, Santiago, Chile
     index: 3
-  - name: Chalmers University of Technology and University of Gothenburg, Sweden
+  - name: Facultad de Ingeniería y Ciencias, Universidad Adolfo Ibáñez, Santiago, Chile
     index: 4
+  - name: Chalmers University of Technology and University of Gothenburg, Sweden
+    index: 5
 date: 27 September 2026
 bibliography: paper.bib
 ---
