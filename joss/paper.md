@@ -203,6 +203,16 @@ reference and tutorial notebooks, and is tested on Linux and macOS with Python
 
 # AI usage disclosure
 
+Claude Code (Anthropic, with the Claude Opus 5.5 model) was used to strengthen
+the test suite and for debugging. It turned the existing check scripts into
+automated tests, wrote new tests against closed-form references (spherical
+Bessel and Hankel forms of the operators, the Calderón identity and the Mie
+series), and helped locate and fix the bugs these tests revealed. Every change
+was submitted as a pull request and reviewed by the authors before merging, and
+the tests run in continuous integration.
+
 # Acknowledgements
+
+None.
 
 # References
