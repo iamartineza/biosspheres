@@ -145,9 +145,10 @@ separately, which reduces the cost of assembling the Calderón operator.
 Each MTF system is available as a dense matrix and as a
 `scipy.sparse.linalg.LinearOperator`. The dense form is convenient for direct
 solvers and for studying spectra; the operator form avoids storing the
-diagonal and sparse blocks explicitly and is the one used with GMRES. For eight
-spheres with $L = 15$, the iterative solver is about three times faster than the
-direct one in the timing notebook shipped with the package. A reduced MTF
+diagonal and sparse blocks explicitly and is the one used with GMRES. The
+notebook `mtf_times` times both for eight spheres with $L = 15$ on one thread:
+on one core of an AMD EPYC 7302, GMRES takes 2.3 s and the direct solver 25 s.
+A reduced MTF
 eliminates the interior traces through a Schur complement; since the interior
 blocks are diagonal this is exact and halves the number of unknowns.
 
