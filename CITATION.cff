@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use biosspheres, please cite it as below."
+title: biosspheres
+type: software
+version: 0.2.0
+license: BSD-3-Clause
+repository-code: "https://github.com/iamartineza/biosspheres"
+abstract: >-
+  Laplace and Helmholtz boundary integral operators on multiple disjoint
+  spheres in a spherical harmonic basis, the local multiple traces
+  formulation for transmission problems, and its coupling with ordinary
+  differential equations in time.
+keywords:
+  - boundary integral equations
+  - multiple traces formulation
+  - spherical harmonics
+  - Laplace
+  - Helmholtz
+authors:
+  - given-names: Isabel A.
+    family-names: Martínez-Ávila
+    orcid: "https://orcid.org/0000-0002-0803-6126"
+  - given-names: Carlos
+    family-names: Jerez-Hanckes
+    orcid: "https://orcid.org/0000-0001-8225-9558"
+  - given-names: Paul
+    family-names: Escapil-Inchauspé
+    orcid: "https://orcid.org/0000-0002-2187-9232"
+  - given-names: Tobias
+    family-names: Gebäck
+    orcid: "https://orcid.org/0000-0001-9899-9366"

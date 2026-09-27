@@ -5,3 +5,5 @@ dist/
 build/
 docs/_build/
 .ipynb_checkpoints/
+docs/notebooks/
+docs/generated/
