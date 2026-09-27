@@ -1,5 +1,10 @@
 # Biosspheres
 
+[![tests](https://github.com/iamartineza/biosspheres/actions/workflows/tests.yml/badge.svg)](https://github.com/iamartineza/biosspheres/actions/workflows/tests.yml)
+[![docs](https://github.com/iamartineza/biosspheres/actions/workflows/docs.yml/badge.svg)](https://iamartineza.github.io/biosspheres/)
+[![PyPI](https://img.shields.io/pypi/v/biosspheres)](https://pypi.org/project/biosspheres/)
+[![License](https://img.shields.io/badge/license-BSD--3--Clause-blue)](LICENSE)
+
 A Python-based solver for Laplace and Helmholtz scattering by
 multiple disjoint spheres, utilizing spherical harmonic 
 decomposition and local multiple trace formulations. 
@@ -53,7 +58,9 @@ they can be installed using `pip install -r requirements.txt`
 
 # How to use
 
-See the Jupyter notebook examples in the folder "notebooks" to see how biosspheres can be used.
+The documentation, with the API reference and the notebooks rendered, is at
+https://iamartineza.github.io/biosspheres/. The notebooks are also in the folder
+"notebooks".
 
 # Contributing
 
