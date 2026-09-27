@@ -177,7 +177,7 @@ error decreases by an order of magnitude every two degrees.\label{fig:spheres}](
 
 The numerical experiments of @MartinezAvila2024, which follow the
 electropermeabilization of up to eight cells in a cubic lattice under nonlinear
-membrane dynamics, were computed with the code that became `biosspheres`. The
+membrane dynamics, were computed with `biosspheres`. The
 simulation of Section 4.3.2 of that article is shipped as a notebook that runs
 in continuous integration, so it stays reproducible as the package evolves.
 
