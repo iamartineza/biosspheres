@@ -19,18 +19,26 @@ authors:
     affiliation: 4
   - name: Tobias Gebäck
     orcid: 0000-0001-9899-9366
-    affiliation: 5
+    affiliation: "5, 6"
 affiliations:
   - name: Universidad Técnica Federico Santa María, Chile
     index: 1
+    ror: 05510vn56
   - name: KTH Royal Institute of Technology, Stockholm, Sweden
     index: 2
+    ror: 026vcq606
   - name: Inria Chile, Santiago, Chile
     index: 3
+    ror: 03c3zes23
   - name: Facultad de Ingeniería y Ciencias, Universidad Adolfo Ibáñez, Santiago, Chile
     index: 4
-  - name: Chalmers University of Technology and University of Gothenburg, Sweden
+    ror: 0326knt82
+  - name: Chalmers University of Technology, Gothenburg, Sweden
     index: 5
+    ror: 040wg7k59
+  - name: University of Gothenburg, Gothenburg, Sweden
+    index: 6
+    ror: 01tm6cn81
 date: 27 September 2026
 bibliography: paper.bib
 ---
@@ -89,15 +97,21 @@ T-matrix codes are the standard: MSTM [@Mackowski2011], CELES [@Egel2017],
 Smuthi [@Egel2021] and treams [@Beutel2024]. For acoustics, multipole
 reexpansion methods [@Gumerov2002] and packages such as MultipleScattering.jl
 [@MultipleScatteringjl] and biem-helmholtz-sphere [@biemhelmholtzsphere] solve
-Helmholtz scattering by several spheres. General boundary element libraries
-such as Bempp-cl [@Betcke2021] handle arbitrary geometries, including spheres,
-through surface meshes.
+Helmholtz scattering by several spheres, and ParticleScattering.jl
+[@Blankrot2018] solves multiple scattering by cylinders in two dimensions.
+SphericalScattering.jl [@Hofmann2023] computes semi-analytical solutions for
+one sphere under electromagnetic excitations and is used to verify integral
+equation solvers. General boundary element libraries such as Bempp-cl
+[@Betcke2021] handle arbitrary geometries, including spheres, through surface
+meshes, and PyGBe [@Cooper2016] applies boundary elements to the electrostatics
+of biomolecules.
 
 None of these covers the setting `biosspheres` was written for. T-matrix codes
 work with the Maxwell equations or with Helmholtz scattering by impenetrable or
 homogeneous particles, and do not expose the boundary integral operators
 themselves. They do not treat the Laplace equation, which is the relevant model
-for quasi-static electrical stimulation of cells. Mesh-based boundary element
+for quasi-static electrical stimulation of cells, and analytic references such
+as SphericalScattering.jl stop at a single sphere. Mesh-based boundary element
 libraries give only algebraic convergence on spheres, and a spectral basis
 cannot be added to them without replacing their assembly. `biosspheres`
 therefore implements the operators directly in the spherical harmonic basis,
@@ -131,9 +145,10 @@ separately, which reduces the cost of assembling the Calderón operator.
 Each MTF system is available as a dense matrix and as a
 `scipy.sparse.linalg.LinearOperator`. The dense form is convenient for direct
 solvers and for studying spectra; the operator form avoids storing the
-diagonal and sparse blocks explicitly and is the one used with GMRES. For eight
-spheres with $L = 15$, the iterative solver is about three times faster than the
-direct one in the timing notebook shipped with the package. A reduced MTF
+diagonal and sparse blocks explicitly and is the one used with GMRES. The
+notebook `mtf_times` times both for eight spheres with $L = 15$ on one thread:
+on one core of an AMD EPYC 7302, GMRES takes 2.3 s and the direct solver 25 s.
+A reduced MTF
 eliminates the interior traces through a Schur complement; since the interior
 blocks are diagonal this is exact and halves the number of unknowns.
 
@@ -163,7 +178,7 @@ error decreases by an order of magnitude every two degrees.\label{fig:spheres}](
 
 The numerical experiments of @MartinezAvila2024, which follow the
 electropermeabilization of up to eight cells in a cubic lattice under nonlinear
-membrane dynamics, were computed with the code that became `biosspheres`. The
+membrane dynamics, were computed with `biosspheres`. The
 simulation of Section 4.3.2 of that article is shipped as a notebook that runs
 in continuous integration, so it stays reproducible as the package evolves.
 
