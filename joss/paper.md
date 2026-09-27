@@ -151,8 +151,7 @@ agreement between the matrix and linear-operator versions, between the one- and
 two-dimensional versions, between the reduced and full MTF, in
 phantom-sphere experiments whose exact solution is known, and between the
 one-sphere Helmholtz MTF and the Mie series. Jupyter notebooks
-document each module; one of them reproduces a simulation of Section 4.3.2 of
-@MartinezAvila2024. They run in continuous integration together with the tests.
+document each module and run in continuous integration together with the tests.
 
 ![(a) Real part of the total field on the plane $y = 0$ for a plane wave of
 wave number $k_0 = 4$ scattered by 27 spheres of refractive index 2 with random
@@ -162,13 +161,30 @@ error decreases by an order of magnitude every two degrees.\label{fig:spheres}](
 
 # Research impact statement
 
+The numerical experiments of @MartinezAvila2024, which follow the
+electropermeabilization of up to eight cells in a cubic lattice under nonlinear
+membrane dynamics, were computed with the code that became `biosspheres`. The
+simulation of Section 4.3.2 of that article is shipped as a notebook that runs
+in continuous integration, so it stays reproducible as the package evolves.
+
 FAIR-SciML [@fairsciml] uses `biosspheres` to generate datasets for neural
-operators: each sample is the field scattered by a random array of 27
-penetrable spheres (\autoref{fig:spheres}), computed in about two minutes on one
-core with $L = 8$, at which the field is within $2 \times 10^{-6}$ of the
-$L = 14$ solution. A first set of 1536 samples was used to train a DeepONet.
-The same accuracy makes the package a source of reference solutions for
-boundary element codes and MTF preconditioners [@EscapilInchauspe2025].
+operators: each sample is the field scattered by a random array of 27 penetrable
+spheres (\autoref{fig:spheres}), computed in about two minutes on one core with
+$L = 8$, at which the field is within $2 \times 10^{-6}$ of the $L = 14$
+solution. A DeepONet trained on a first set of 1536 samples reaches a relative
+$\ell^2$ test error of 0.30, down from 0.38 with 512 samples. This use depends
+on the analytic character of the solutions: the labels are exact up to the
+truncation degree, and a dataset of thousands of multi-sphere configurations
+would be costly to produce, and harder to certify, with a mesh-based solver.
+
+The same property makes `biosspheres` a verification tool beyond its own
+applications. @EscapilInchauspe2025 validates a multiple traces solver against
+the Mie series on a single sphere; for the Laplace and Helmholtz equations,
+`biosspheres` extends such references to any number of penetrable spheres, with
+the one-sphere case matching the Mie series to $10^{-14}$ and exponential
+convergence in $L$ otherwise. The package is installable from PyPI, has an API
+reference and tutorial notebooks, and is tested on Linux and macOS with Python
+3.10 to 3.13.
 
 # AI usage disclosure
 
