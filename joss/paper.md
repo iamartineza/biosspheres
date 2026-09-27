@@ -19,18 +19,26 @@ authors:
     affiliation: 4
   - name: Tobias Gebäck
     orcid: 0000-0001-9899-9366
-    affiliation: 5
+    affiliation: "5, 6"
 affiliations:
   - name: Universidad Técnica Federico Santa María, Chile
     index: 1
+    ror: 05510vn56
   - name: KTH Royal Institute of Technology, Stockholm, Sweden
     index: 2
+    ror: 026vcq606
   - name: Inria Chile, Santiago, Chile
     index: 3
+    ror: 03c3zes23
   - name: Facultad de Ingeniería y Ciencias, Universidad Adolfo Ibáñez, Santiago, Chile
     index: 4
-  - name: Chalmers University of Technology and University of Gothenburg, Sweden
+    ror: 0326knt82
+  - name: Chalmers University of Technology, Gothenburg, Sweden
     index: 5
+    ror: 040wg7k59
+  - name: University of Gothenburg, Gothenburg, Sweden
+    index: 6
+    ror: 01tm6cn81
 date: 27 September 2026
 bibliography: paper.bib
 ---
