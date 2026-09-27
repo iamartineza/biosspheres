@@ -89,15 +89,21 @@ T-matrix codes are the standard: MSTM [@Mackowski2011], CELES [@Egel2017],
 Smuthi [@Egel2021] and treams [@Beutel2024]. For acoustics, multipole
 reexpansion methods [@Gumerov2002] and packages such as MultipleScattering.jl
 [@MultipleScatteringjl] and biem-helmholtz-sphere [@biemhelmholtzsphere] solve
-Helmholtz scattering by several spheres. General boundary element libraries
-such as Bempp-cl [@Betcke2021] handle arbitrary geometries, including spheres,
-through surface meshes.
+Helmholtz scattering by several spheres, and ParticleScattering.jl
+[@Blankrot2018] solves multiple scattering by cylinders in two dimensions.
+SphericalScattering.jl [@Hofmann2023] computes semi-analytical solutions for
+one sphere under electromagnetic excitations and is used to verify integral
+equation solvers. General boundary element libraries such as Bempp-cl
+[@Betcke2021] handle arbitrary geometries, including spheres, through surface
+meshes, and PyGBe [@Cooper2016] applies boundary elements to the electrostatics
+of biomolecules.
 
 None of these covers the setting `biosspheres` was written for. T-matrix codes
 work with the Maxwell equations or with Helmholtz scattering by impenetrable or
 homogeneous particles, and do not expose the boundary integral operators
 themselves. They do not treat the Laplace equation, which is the relevant model
-for quasi-static electrical stimulation of cells. Mesh-based boundary element
+for quasi-static electrical stimulation of cells, and analytic references such
+as SphericalScattering.jl stop at a single sphere. Mesh-based boundary element
 libraries give only algebraic convergence on spheres, and a spectral basis
 cannot be added to them without replacing their assembly. `biosspheres`
 therefore implements the operators directly in the spherical harmonic basis,
