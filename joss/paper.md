@@ -10,13 +10,26 @@ authors:
   - name: Isabel A. Martínez-Ávila
     orcid: 0000-0002-0803-6126
     corresponding: true
+    affiliation: 1
   - name: Carlos Jerez-Hanckes
     orcid: 0000-0001-8225-9558
+    affiliation: 2
   - name: Paul Escapil-Inchauspé
     orcid: 0000-0002-2187-9232
+    affiliation: 3
   - name: Tobias Gebäck
     orcid: 0000-0001-9899-9366
-date: 26 September 2026
+    affiliation: 4
+affiliations:
+  - name: Pontificia Universidad Católica de Chile, Santiago, Chile
+    index: 1
+  - name: Department of Mathematical Sciences, University of Bath, United Kingdom
+    index: 2
+  - name: Facultad de Ingeniería y Ciencias, Universidad Adolfo Ibáñez, Santiago, Chile
+    index: 3
+  - name: Chalmers University of Technology and University of Gothenburg, Sweden
+    index: 4
+date: 27 September 2026
 bibliography: paper.bib
 ---
 
@@ -136,10 +149,24 @@ agreement between the matrix and linear-operator versions, between the one- and
 two-dimensional versions, between the reduced and full MTF, in
 phantom-sphere experiments whose exact solution is known, and between the
 one-sphere Helmholtz MTF and the Mie series. Jupyter notebooks
-document each module and reproduce the examples of the associated articles;
-they run in continuous integration together with the tests.
+document each module; one of them reproduces a simulation of Section 4.3.2 of
+@MartinezAvila2024. They run in continuous integration together with the tests.
+
+![(a) Real part of the total field on the plane $y = 0$ for a plane wave of
+wave number $k_0 = 4$ scattered by 27 spheres of refractive index 2 with random
+radii and positions; the arrow shows the direction of incidence. (b) Relative
+$\ell^2$ difference of the field on that plane with respect to $L = 14$: the
+error decreases by an order of magnitude every two degrees.\label{fig:spheres}](figure.png)
 
 # Research impact statement
+
+FAIR-SciML [@fairsciml] uses `biosspheres` to generate datasets for neural
+operators: each sample is the field scattered by a random array of 27
+penetrable spheres (\autoref{fig:spheres}), computed in about two minutes on one
+core with $L = 8$, at which the field is within $2 \times 10^{-6}$ of the
+$L = 14$ solution. A first set of 1536 samples was used to train a DeepONet.
+The same accuracy makes the package a source of reference solutions for
+boundary element codes and MTF preconditioners [@EscapilInchauspe2025].
 
 # AI usage disclosure
 
