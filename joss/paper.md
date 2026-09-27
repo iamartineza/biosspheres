@@ -21,7 +21,7 @@ authors:
     orcid: 0000-0001-9899-9366
     affiliation: 5
 affiliations:
-  - name: Pontificia Universidad Católica de Chile, Santiago, Chile
+  - name: Universidad Técnica Federico Santa María, Chile
     index: 1
   - name: KTH Royal Institute of Technology, Stockholm, Sweden
     index: 2
