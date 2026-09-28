@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (unreleased)
+## 0.2.0 (2026-09-27)
 
 ### Fixed
 - Installing from source failed: `pyproject.toml` listed the authors in a format Poetry rejects.
@@ -11,6 +11,8 @@
 - Typos in the notebooks and in the Laplace docstrings (#12).
 - `rf_helmholtz_n_spheres` raised `NameError` on every call; it is rewritten, vectorized over points, in the complex spherical harmonic basis of the Helmholtz routines (#18).
 - Overlapping, touching or nested (e.g. concentric) spheres gave wrong cross interactions without any error; they now raise `ValueError` (#17).
+- Equations in the notebooks that MathJax failed to render on the documentation site (#21).
+- The timing notebook printed the minimum instead of the maximum (#22).
 
 ### Changed
 - Packaging moved to PEP 621 with hatchling. Python >=3.10, SciPy >=1.12, no upper bounds.
@@ -21,6 +23,8 @@
 - Tests for the Laplace and Helmholtz operators and the MTF, converted from the former check scripts, with closed-form references for one sphere (#11, #13, #14).
 - Documentation built with Sphinx and published on GitHub Pages (#12).
 - Tests against the Mie series for one sphere, for the traces and for the field in and out of the sphere (#18, #20).
+- `codemeta.json`, issue and pull request templates (#22).
+- Release workflow that publishes to PyPI from a GitHub release.
 
 ## 0.1.1a1 (2024-10-22)
 
