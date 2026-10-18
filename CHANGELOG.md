@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2026-09-27)
+## 0.2.0 (2026-10-18)
 
 ### Fixed
 - Installing from source failed: `pyproject.toml` listed the authors in a format Poetry rejects.
@@ -25,6 +25,7 @@
 - Tests against the Mie series for one sphere, for the traces and for the field in and out of the sphere (#18, #20).
 - `codemeta.json`, issue and pull request templates (#22).
 - Release workflow that publishes to PyPI from a GitHub release.
+- Security policy.
 
 ## 0.1.1a1 (2024-10-22)
 
